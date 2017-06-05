@@ -1,0 +1,8 @@
+.gradle
+.idea
+*.iml
+damascus.ipr
+damascus.iws
+build
+classes
+.settings
