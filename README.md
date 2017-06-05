@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
 
----
-
 Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality from a json file. For more detailed usage, pleaase consult to https://github.com/yasuflatland-lf/damascus/wiki
 
 ### Install
@@ -25,6 +23,4 @@ Let's make a Todo app with damascus
 4. Type ```damascus -create``` and damascus will create a scaffolding service and portlet according to the base.json file.
 5. Start up your Liferay server and in the ```Todo``` folder, type ```blade deploy```. Blade will run properly and service and portlet will be deployed.
 
----
-
-Damascus is named after "Damascus blade", which is a strong / sharp blade made out from Damascus steel and forged with a lost technology. Liferay has it's official development tool,"Blade", so I gave this name in hope of reinforcement or extension of Blade tool. 
+Damascus is named after "Damascus blade", which is a strong / sharp blade made out from Damascus steel and forged with a lost technology. Liferay has it's official development tool,"Blade", so I gave this name in hope of reinforcement or extension of Blade tool.
