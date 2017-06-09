@@ -10,6 +10,7 @@ import java.nio.file.InvalidPathException
 
 class CommonUtilTest extends Specification {
     static def DS = DamascusProps.DS;
+	static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
     static def template_path = DamascusProps.TEMPLATE_FOLDER_NAME;
 
@@ -41,7 +42,7 @@ class CommonUtilTest extends Specification {
     @Unroll("Correct path given")
     def "Correct path given"() {
         when:
-        def file_path = DS + template_path + DS + DamascusProps.VERSION_70 + DS + DamascusProps.BASE_JSON;
+        def file_path = SEP + template_path + SEP + DamascusProps.VERSION_70 + SEP + DamascusProps.BASE_JSON;
         def result = CommonUtil.readResource(CommonUtilTest.class, file_path);
 
         then:
@@ -116,15 +117,15 @@ class CommonUtilTest extends Specification {
     def "Gradlew getDirFromPath test for a file"() {
         when:
         fileCreate(dir1)
-        def resultFile = CommonUtil.getDirFromPath(new File(dir1))
+        def resultFile = CommonUtil.getDirFromPath(new File(workTempDir + DS + dir1))
         def expectedFile = new File(dir2);
 
         then:
-        expectedFile == resultFile
-
+		expectedFile == resultFile
+		
         where:
         dir1                                        | dir2
-        workTempDir + DS + "foo" + DS + "dummy.txt" | workTempDir + DS + "foo" + DS
+        "foo" + DS + "dummy.txt" | workTempDir + DS + "foo" + DS
     }
 
     @Unroll("Gradlew getDirFromPath test for a directory")

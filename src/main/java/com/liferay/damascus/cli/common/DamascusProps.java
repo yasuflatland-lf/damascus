@@ -21,6 +21,8 @@ public class DamascusProps {
     public static final String FILE_ENCODING = "UTF-8";
 
     public static final String USER_NAME = System.getProperty("user.name");
+    
+    public static final String SEP = "/";
 
     public static final String TEMPLATE_FOLDER_NAME = "templates";
 
@@ -60,7 +62,7 @@ public class DamascusProps {
 
     public static final String PROPERTY_FILE_PATH = CACHE_DIR_PATH + DamascusProps.DS + PROPERTY_FILE_NAME;
 
-    public static final String TEMPLATE_FILE_PATH = CACHE_DIR_PATH + DamascusProps.DS + TEMPLATE_FOLDER_NAME;
+	public static final String TEMPLATE_FILE_PATH = CACHE_DIR_PATH + DamascusProps.DS + TEMPLATE_FOLDER_NAME;
 
     /**
      * Liferay Version
