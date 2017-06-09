@@ -114,7 +114,7 @@ public class TemplateUtil {
         log.debug("getResourceRootPath : rootPath : " + rootPath);
 
         if (rootPath.equals("")) {
-            rootPath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.DS + version;
+            rootPath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
             PropertyUtil.getInstance().setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, rootPath).save();
             System.out.println(DamascusProps.PROP_RESOURCE_ROOT_PATH + " is initilized with <" + rootPath + ">");
         }
@@ -329,7 +329,7 @@ public class TemplateUtil {
             final Enumeration<JarEntry> entries = jarObj.entries(); //gives ALL entries in jarObj
             while (entries.hasMoreElements()) {
                 final String name = entries.nextElement().getName();
-                if (name.startsWith(templateRootPath + DamascusProps.DS)) {
+                if (name.startsWith(templateRootPath + DamascusProps.SEP)) {
                     //filter according to the path
                     files.add(name);
                 }
@@ -381,7 +381,7 @@ public class TemplateUtil {
 
         log.debug("copy from <" + resourcePath + "> to <" + distinationRoot + ">");
 
-        URL url = Resources.getResource(clazz, resourcePath);
+        URL url = CommonUtil.getResource(clazz, resourcePath);
         FileUtils.copyDirectory(new File(url.toURI()), new File(distinationRoot));
     }
 
@@ -399,17 +399,17 @@ public class TemplateUtil {
         throws IOException, URISyntaxException {
         for (String file : files) {
 
-            if (file.endsWith(DamascusProps.DS)) {
+            if (file.endsWith(DamascusProps.SEP)) {
                 //This is directory
                 continue;
             }
 
             String resourcePath = file;
-            if (!file.startsWith(DamascusProps.DS)) {
-                resourcePath = DamascusProps.DS + file;
+            if (!file.startsWith(DamascusProps.SEP)) {
+                resourcePath = DamascusProps.SEP + file;
             }
 
-            URL url = Resources.getResource(clazz, resourcePath);
+            URL url = CommonUtil.getResource(clazz, resourcePath);
 
             //If it's directory, skip to next.
             if (url.getProtocol().equals("file")) {
@@ -418,6 +418,8 @@ public class TemplateUtil {
                 }
             }
 
+            log.debug("copy file : " + url.toURI().toString());
+            
             String      contents = Resources.toString(url, StandardCharsets.UTF_8);
             InputStream is       = new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
             FileUtils.copyInputStreamToFile(is, new File(distinationRoot + file));
@@ -451,8 +453,6 @@ public class TemplateUtil {
             return;
         }
 
-        log.debug("Initialize Templates.");
-
         if (isInsideJar(clazz)) {
 
             //Production environment
@@ -484,5 +484,8 @@ public class TemplateUtil {
             DamascusProps.PROP_RESOURCE_ROOT_PATH,
             targetPath
         );
+        
+        System.out.println("Initialized Templates.");
+
     }
 }
