@@ -15,6 +15,7 @@ import spock.lang.Unroll
 
 class TemplateUtilTest extends Specification {
     static def DS = DamascusProps.DS;
+	static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
     static def targetTempDir = TestUtils.getTempPath() + "target" + DS + DamascusProps.TEMPLATE_FOLDER_NAME;
     static def CDIR = DamascusProps.TARGET_TEMPLATE_PREFIX;
@@ -134,7 +135,7 @@ class TemplateUtilTest extends Specification {
         when:
         // Resource root path and initialize Freemarker configration with the path
         String resourceRootPath = DamascusProps.DS + DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS + DamascusProps.VERSION_70
-        URL url = Resources.getResource(TemplateUtilTest.class, resourceRootPath);
+        URL url = CommonUtil.getResource(TemplateUtilTest.class, resourceRootPath);
         def resultFiles = TemplateUtil.getInstance().getTargetTemplates(target_fetch_file, new File(url.toURI()));
 
         then:
@@ -211,10 +212,13 @@ class TemplateUtilTest extends Specification {
         when:
         def resourceDir = DS + DamascusProps.TEMPLATE_FOLDER_NAME;
         def outputDir = targetTempDir;
-        URL url = Resources.getResource(TemplateUtilTest.class, resourceDir);
+        URL url = CommonUtil.getResource(TemplateUtilTest.class, resourceDir);
         def cf = FileUtils.listFiles(new File(url.toURI()),new WildcardFileFilter("*"),new WildcardFileFilter("*"))
         List<String> fl = new ArrayList<String>()
-        cf.collect { fl.add(it.toURI().toString().substring(it.toURI().toString().lastIndexOf(DS + DamascusProps.TEMPLATE_FOLDER_NAME))) }
+        cf.collect { 
+			def pathc = it.toURI().toString().substring(it.toURI().toString().lastIndexOf(SEP + DamascusProps.TEMPLATE_FOLDER_NAME))
+			fl.add(pathc.replace(SEP+SEP, SEP)) 
+		}
 
         TemplateUtil.getInstance().copyTemplatesToCache(
             TemplateUtilTest.class,

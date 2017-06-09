@@ -1,9 +1,11 @@
 package com.liferay.damascus.cli.common;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import com.liferay.damascus.cli.ProjectTemplatesBuilder;
-import lombok.extern.slf4j.Slf4j;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.InvalidPathException;
+import java.util.Collection;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -11,11 +13,11 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.InvalidPathException;
-import java.util.Collection;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import com.liferay.damascus.cli.ProjectTemplatesBuilder;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility Class
@@ -35,7 +37,18 @@ public class CommonUtil {
     }
 
     /**
-     * Load Resouce file
+     * Given a {@code resourceName} that is relative to {@code contextClass}, returns a {@code URL}
+     * pointing to the named resource.
+     *
+     * @throws IllegalArgumentException if the resource is not found
+     */
+    static public URL getResource(Class<?> classContext, String path) {
+      String convertedPath = path.replace(DamascusProps.DS, DamascusProps.SEP);
+      return Resources.getResource(classContext, convertedPath);
+    }
+    
+    /**
+     * Load Resource file
      *
      * @param classContext
      * @param path
@@ -43,7 +56,7 @@ public class CommonUtil {
      * @throws IOException
      */
     static protected String readResource(Class<?> classContext, String path) throws IOException {
-        URL url = Resources.getResource(classContext, path);
+        URL url = CommonUtil.getResource(classContext, path);
         return Resources.toString(url, Charsets.UTF_8);
     }
 

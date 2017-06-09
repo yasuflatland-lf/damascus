@@ -10,10 +10,11 @@ import spock.lang.Unroll
 
 class JsonUtilTest extends Specification {
     static def DS = DamascusProps.DS;
+	static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
 
     def template_path = DamascusProps.TEMPLATE_FOLDER_NAME;
-    def resource_path = DS + template_path + DS + DamascusProps.VERSION_70 + DS
+    def resource_path = SEP + template_path + SEP + DamascusProps.VERSION_70 + SEP
     def base_json_path = resource_path + DamascusProps.BASE_JSON;
 
     def setup() {
