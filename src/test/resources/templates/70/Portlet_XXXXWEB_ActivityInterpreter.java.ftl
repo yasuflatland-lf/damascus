@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/social/${capFirstModel}ActivityInterpreter.java">
 
@@ -15,7 +16,10 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
+ * ${capFirstModel} Activity Interpreter
+ *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Component(
     property = {"javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel}},

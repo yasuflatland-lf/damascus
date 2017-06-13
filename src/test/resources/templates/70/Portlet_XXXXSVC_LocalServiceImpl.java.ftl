@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/impl/${capFirstModel}LocalServiceImpl.java">
 
@@ -60,7 +61,10 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
 /**
+ * ${capFirstModel}LocalServiceImpl
+ *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 public class ${capFirstModel}LocalServiceImpl
     extends ${capFirstModel}LocalServiceBaseImpl {

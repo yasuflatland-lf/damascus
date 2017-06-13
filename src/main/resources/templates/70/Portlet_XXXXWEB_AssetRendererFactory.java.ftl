@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRendererFactory.java">
 
@@ -16,6 +17,12 @@ import javax.servlet.ServletContext;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+/**
+ * ${capFirstModel} Asset Renderer Factory
+ *
+ * @author Yasuyuki Takeo
+ * @author ${damascus_author}
+ */
 @Component(
     immediate = true,
     property = {

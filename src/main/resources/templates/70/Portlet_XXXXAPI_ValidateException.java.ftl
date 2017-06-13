@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-api/src/main/java/${packagePath}/exception/${capFirstModel}ValidateException.java">
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 /**
 * @author Yasuyuki Takeo
+* @author ${damascus_author}
 */
 public class ${capFirstModel}ValidateException extends PortalException {
 

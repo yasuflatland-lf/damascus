@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCActionCommand.java">
 
@@ -40,6 +41,7 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Component(
     immediate = true, property = {

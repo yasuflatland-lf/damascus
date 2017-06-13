@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigrationAction.java">
 
@@ -30,7 +31,7 @@ import org.osgi.service.component.annotations.Modified;
 import aQute.bnd.annotation.metatype.Configurable;
 
 /**
- * Configuraion Aciton
+ * ${capFirstModel} Configuraion Aciton
  *
  * Determine the scope of the portlet configuration in DS properties of Portlet
  * class The default of this generator is Portlet Instance scope.
@@ -45,6 +46,7 @@ import aQute.bnd.annotation.metatype.Configurable;
  * Portlet Instance
  *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  *
  */
 @Component(
