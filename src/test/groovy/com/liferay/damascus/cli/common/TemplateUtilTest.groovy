@@ -92,6 +92,7 @@ class TemplateUtilTest extends Specification {
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, dmsb.applications[0]);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, paramFilePath);
+        params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),"TEST");
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(TemplateUtilTest.class, DamascusProps.VERSION_70, targetFile, params, paramFilePath)
