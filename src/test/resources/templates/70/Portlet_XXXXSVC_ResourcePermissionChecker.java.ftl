@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/permission/${capFirstModel}ResourcePermissionChecker.java">
 
@@ -13,7 +14,10 @@ import ${application.packageName}.constants.${capFirstModel}PortletKeys;
 import org.osgi.service.component.annotations.Component;
 
 /**
+ * ${capFirstModel} Resource Permission Checker
+ *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Component(
     immediate = true,

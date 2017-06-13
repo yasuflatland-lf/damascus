@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}Configuration.java">
 
@@ -8,7 +9,10 @@ import ${application.packageName}.constants.${capFirstModel}PortletKeys;
 import aQute.bnd.annotation.metatype.Meta;
 
 /**
+ * ${capFirstModel} Configuration
+ *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Meta.OCD(id = ${capFirstModel}PortletKeys.${uppercaseModel}_CONFIG)
 public interface ${capFirstModel}Configuration {
