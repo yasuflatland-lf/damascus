@@ -60,6 +60,8 @@ public class CreateCommand implements ICommand {
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
+        String author = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_AUTHOR);
+        params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),author);
 
         //Parse template and output
         TemplateUtil.getInstance().process(CreateCommand.class, damascusBase.getLiferayVersion(), templateFileName, params, outputFilePath);

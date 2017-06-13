@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/workflow/${capFirstModel}WorkflowHandler.java">
 
@@ -24,6 +25,7 @@ import org.osgi.service.component.annotations.Reference;
  * Workflow Handler
  *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Component(
     property = {"model.class.name=${application.packageName}.model.${capFirstModel}"},

@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/util/${capFirstModel}Validator.java">
 
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 * Validators
 *
 * @author Yasuyuki Takeo
+* @author ${damascus_author}
 */
 public class ${capFirstModel}Validator
 implements ModelValidator<${capFirstModel}> {

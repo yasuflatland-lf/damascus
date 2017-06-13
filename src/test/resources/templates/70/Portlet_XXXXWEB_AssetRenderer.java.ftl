@@ -1,3 +1,4 @@
+<#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRenderer.java">
 
@@ -20,9 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Asset Renderer
+ * ${capFirstModel} Asset Renderer
  *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 public class ${capFirstModel}AssetRenderer
     extends BaseJSPAssetRenderer<${capFirstModel}>
