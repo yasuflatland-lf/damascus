@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
 
-Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, pleaase see https://github.com/yasuflatland-lf/damascus/wiki
+Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see https://github.com/yasuflatland-lf/damascus/wiki
 
-The list of what Damascus automaticaly generate is as follows
+The list of what Damascus automatically generate is as follows
 * CRUD functionality with a model
     * CRUD api / corresponding jsp pages
-    * Document & Librarly access field (if you have a corresponding field in base.json)
-    * Assets reqired field (if you have a corresponding field in base.json)
+    * Document & Library access field (if you have a corresponding field in base.json)
+    * Assets required field (if you have a corresponding field in base.json)
 * Workflow
 * Trashbox
 * Search
@@ -51,15 +51,15 @@ Let's make a Todo app with damascus
 3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install it with ```jpm install ./damascus.jar```.
 
 ### IDE settings
-Damascus is including lombok libraly, so you need to configure annotations of lombok to be properly working and complied on IDEs. Here are how to apply lombok to Eclipse / IntelliJ
+Damascus is including lombok library, so you need to configure annotations of lombok to be properly working and complied on IDEs. Here are how to apply lombok to Eclipse / IntelliJ
 ##### Eclipse
 1. Download lombok https://projectlombok.org/download
 2. double click ```lombok.jar``` and select the directory where ```eclipse.exe``` exist
-3. Run ```gradle eclipse``` at the project directory and restart IDE, and right click on the project and display context mene, and choose ```gradle > Refresh gradle project```
-4. Java files will be displaed properly without errors.
+3. Run ```gradle eclipse``` at the project directory and restart IDE, and right click on the project and display context name, and choose ```gradle > Refresh gradle project```
+4. Java files will be displayed properly without errors.
 ##### IntelliJ
 1. ```Preferences - Plugins``` and search Lombok. Install the Lombok plugin.
-2. ```Preferences - Build, Execution, Deployment - Complier - Annotation Processors``` and check ```Enable annotation processing```
+2. ```Preferences - Build, Execution, Deployment - Compiler - Annotation Processors``` and check ```Enable annotation processing```
 
 ### Bug reports / Enhancement requests
 In terms of bugs, please post Github issues or send me a PR. In terms of a Enhancement request, please post a issue. Contribution is always welcome!
