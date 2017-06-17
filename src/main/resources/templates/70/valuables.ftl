@@ -7,7 +7,7 @@
 
 <#assign primaryKeyParam = "">
 <#list application.fields as field >
-    <#if field.primaly?? && field.primaly == true >
+    <#if field.primary?? && field.primary == true >
         <#assign primaryKeyParam = "${field.name}">
     </#if>
 </#list>

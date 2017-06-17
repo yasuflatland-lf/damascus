@@ -15,11 +15,11 @@ class ApplicationTest extends Specification {
         def app = new Application()
         app.fields = Lists.newArrayList()
         def field1 = new com.liferay.damascus.cli.json.fields.Long();
-        field1.setPrimaly(var1);
+        field1.setprimary(var1);
         def field2 = new com.liferay.damascus.cli.json.fields.Double();
-        field2.setPrimaly(var2);
+        field2.setprimary(var2);
         def field3 = new com.liferay.damascus.cli.json.fields.Text();
-        field3.setPrimaly(var3);
+        field3.setprimary(var3);
 
         app.setTitle("This test") // for test
         app.fields.add(field1)
@@ -44,11 +44,11 @@ class ApplicationTest extends Specification {
         def app = new Application()
         app.fields = Lists.newArrayList()
         def field1 = new com.liferay.damascus.cli.json.fields.Long();
-        field1.setPrimaly(var1);
+        field1.setprimary(var1);
         def field2 = new com.liferay.damascus.cli.json.fields.Double();
-        field2.setPrimaly(var2);
+        field2.setprimary(var2);
         def field3 = new com.liferay.damascus.cli.json.fields.Text();
-        field3.setPrimaly(var3);
+        field3.setprimary(var3);
 
         app.setTitle("This test") // for test
         app.fields.add(field1)

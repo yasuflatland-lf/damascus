@@ -773,7 +773,7 @@ public class ${capFirstModel}LocalServiceImpl
         <#-- ---------------- -->
         <#list application.fields as field >
         <#-- Primary key is ommited here because the pk is already created in newEntry -->
-            <#if field.primaly?? && field.primaly == false >
+            <#if field.primary?? && field.primary == false >
         newEntry.set${field.name?cap_first}(entry.get${field.name?cap_first}());
             </#if>
         </#list>
@@ -953,7 +953,7 @@ public class ${capFirstModel}LocalServiceImpl
             <#-- ---------------- -->
             <#list application.fields as field >
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
-                    <#if field.primaly?? && field.primaly == true >
+                    <#if field.primary?? && field.primary == true >
         entry.set${field.name?cap_first}(primaryKey);
                     <#else>
         entry.set${field.name?cap_first}(ParamUtil.getLong(request, "${field.name}"));
@@ -1011,7 +1011,7 @@ public class ${capFirstModel}LocalServiceImpl
     /**
      * Populate Model with values from a form
      *
-     * @param primaryKey primaly key
+     * @param primaryKey primary key
      * @param request PortletRequest
      * @return ${capFirstModel} Object
      * @throws PortletException
@@ -1029,7 +1029,7 @@ public class ${capFirstModel}LocalServiceImpl
         <#-- ---------------- -->
         <#list application.fields as field >
             <#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
-                <#if field.primaly?? && field.primaly == true >
+                <#if field.primary?? && field.primary == true >
                     entry.set${field.name?cap_first}(primaryKey);
                 <#else>
                     entry.set${field.name?cap_first}(0);

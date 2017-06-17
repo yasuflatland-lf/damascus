@@ -37,7 +37,7 @@ implements ModelValidator<${capFirstModel}> {
     */
     protected void validate${field.name?cap_first}(${templateUtil?api.getTypeParameter(field.type?string)} field) {
         //TODO : This validation needs to be implemented.
-        <#if field.primaly?? && field.primaly == false >
+        <#if field.primary?? && field.primary == false >
             <#if field.required == true >
                 <#if
                 field.type?string == "com.liferay.damascus.cli.json.fields.Text" ||
