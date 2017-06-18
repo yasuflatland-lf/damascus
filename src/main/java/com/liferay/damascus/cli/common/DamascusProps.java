@@ -135,4 +135,8 @@ public class DamascusProps {
 
     public static final String DIR_WEB_SUFFIX = "-web";
 
+    public static final String _GRADLEW_UNIX_FILE_NAME = "gradlew";
+
+    public static final String _GRADLEW_WINDOWS_FILE_NAME = "gradlew.bat";
+
 }

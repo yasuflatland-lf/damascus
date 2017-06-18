@@ -118,13 +118,13 @@ public class CreateCommand implements ICommand {
         FileUtils.copyDirectory(srcDir, distDir);
         FileUtils.deleteDirectory(srcDir);
 
-        File gradlew = new File("." + DamascusProps.DS + _GRADLEW_UNIX_FILE_NAME);
+        File gradlew = new File("." + DamascusProps.DS + DamascusProps._GRADLEW_UNIX_FILE_NAME);
 
         if (gradlew.exists()) {
             gradlew.setExecutable(true);
         }
 
-        File gradlewBat = new File("." + DamascusProps.DS + _GRADLEW_WINDOWS_FILE_NAME);
+        File gradlewBat = new File("." + DamascusProps.DS + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
 
         if (gradlew.exists()) {
             gradlew.setExecutable(true);
@@ -266,7 +266,4 @@ public class CreateCommand implements ICommand {
     @Parameter(names = "-create", description = "Create service according to base.json.")
     private boolean create = false;
 
-    private static final String _GRADLEW_UNIX_FILE_NAME = "gradlew";
-
-    private static final String _GRADLEW_WINDOWS_FILE_NAME = "gradlew.bat";
 }
