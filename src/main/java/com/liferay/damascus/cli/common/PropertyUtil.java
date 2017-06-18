@@ -117,7 +117,8 @@ public class PropertyUtil {
         return Lists.newArrayList(
             //User name for author in Javadoc
             Pair.of(DamascusProps.PROP_AUTHOR, DamascusProps.USER_NAME),
-            Pair.of(DamascusProps.PROP_RESOURCE_ROOT_PATH, "")
+            Pair.of(DamascusProps.PROP_RESOURCE_ROOT_PATH, ""),
+            Pair.of(DamascusProps.PROP_BUILD_NUMBER, "")
         );
     }
 
