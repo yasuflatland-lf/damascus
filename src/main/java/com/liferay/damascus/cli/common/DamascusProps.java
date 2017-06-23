@@ -126,6 +126,8 @@ public class DamascusProps {
 
     public static final String PROP_RESOURCE_ROOT_PATH = "damascus.resource.root.path";
 
+    public static final String PROP_BUILD_NUMBER = "damascus.build.number";
+    
     /**
      * Service Builder directory structure suffix
      */

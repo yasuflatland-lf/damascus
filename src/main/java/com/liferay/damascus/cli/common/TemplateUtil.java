@@ -2,6 +2,8 @@ package com.liferay.damascus.cli.common;
 
 import com.google.common.collect.*;
 import com.google.common.io.*;
+import com.liferay.damascus.cli.Damascus;
+
 import freemarker.core.*;
 import freemarker.template.*;
 import lombok.*;
@@ -16,6 +18,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.*;
 import java.security.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.jar.*;
 
@@ -436,9 +439,10 @@ public class TemplateUtil {
      * @param distinationRoot  Destination root path to output templates. e.g. /outputs
      * @throws URISyntaxException
      * @throws IOException
+     * @throws ConfigurationException 
      */
     public void cacheTemplates(Class<?> clazz, String templateRootPath, String distinationRoot, String version)
-        throws URISyntaxException, IOException {
+        throws URISyntaxException, IOException, ConfigurationException {
 
         log.debug("templateRootPath<" + templateRootPath + ">");
         log.debug("distinationRoot <" + distinationRoot + ">");
@@ -448,12 +452,18 @@ public class TemplateUtil {
         File   distFile = new File(distinationRoot);
         String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
 
-        if (distFile.exists() && !rootPath.equals("")) {
-            log.debug("Template folder has already existed. Skip initializing templates.");
+		boolean insideJar = isInsideJar(clazz);
+		
+		String buildNumber = getBuildNumber(clazz, insideJar);
+		String cacheBuildNumber = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_BUILD_NUMBER);
+ 
+        if (distFile.exists() && !rootPath.equals("") 
+        		&& buildNumber.equals(cacheBuildNumber)) {
+            log.debug("Template folder is already up-to-date. Skip initializing templates.");
             return;
         }
 
-        if (isInsideJar(clazz)) {
+		if (insideJar) {
 
             //Production environment
             List<String> files = getTemplateFileLists(templateRootPath);
@@ -485,7 +495,41 @@ public class TemplateUtil {
             targetPath
         );
         
+        //Store the build number into cache
+        PropertyUtil.getInstance().setProperty(
+            DamascusProps.PROP_BUILD_NUMBER,
+            buildNumber
+        );
+        
+        PropertyUtil.getInstance().save();
+        
         System.out.println("Initialized Templates.");
 
     }
+
+	protected String getBuildNumber(Class<?> clazz, boolean insideJar) {
+		
+		StringBuilder buildNumber =  new StringBuilder(25);
+		
+		// Add version part of build number
+		
+		buildNumber.append("V").append(Damascus.VERSION);
+		
+		// Add timestamp part of build number
+	
+		Date timestamp;
+		
+		if(insideJar) {
+			File jarFile = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+			timestamp = new Date(jarFile.lastModified());
+		} else {
+			timestamp = new Date();
+		}
+		
+		SimpleDateFormat timestampDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+		
+		buildNumber.append("TS").append(timestampDateFormat.format(timestamp));
+        
+		return buildNumber.toString();
+	}
 }
