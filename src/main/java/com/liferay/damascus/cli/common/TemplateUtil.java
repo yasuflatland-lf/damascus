@@ -244,6 +244,15 @@ public class TemplateUtil {
 
             targetFilePath = filePath.toString();
         }
+        
+        TemplateBooleanModel skipTemplate = (TemplateBooleanModel)env.getVariable(DamascusProps.TEMPKEY_SKIP_TEMPLATE);
+        
+        if(skipTemplate != null && skipTemplate.getAsBoolean()) {
+        	 
+        	log.debug("TemplateUtil#process skip file path <" + targetFilePath + ">");
+        	
+        	return;
+        }
 
         log.debug("TemplateUtil#process output file path <" + targetFilePath + ">");
 

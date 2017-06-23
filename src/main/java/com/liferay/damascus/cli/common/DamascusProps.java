@@ -90,6 +90,8 @@ public class DamascusProps {
      */
     public static final String TEMPKEY_FILEPATH = "createPath";
 
+    public static final String TEMPKEY_SKIP_TEMPLATE = "skipTemplate";
+    
     public static final String TEMPVALUE_FILEPATH = "createPath_val";
 
     public static final String TEMPVALUE_BOOLEAN = "boolean";
