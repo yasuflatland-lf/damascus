@@ -77,6 +77,6 @@ Contribution is always welcome! In terms of an Enhancement request, please follo
 3. Send a PR to /development branch. According to the status of Travis CI, I may create a feature branch and request you to make it pass the test on Travis CI environment.
 4. After all tests pass on Travis CI, will marge into development branch and relase into master at some points according to the impact of the code. 
 
-### What Damascus stands for?
+### What does Damascus stand for?
 Damascus is named after "Damascus blade", which is a strong / sharp blade made out from Damascus steel and forged with a lost technology. Liferay has it's official development tool,"Blade", so I gave this name in hope of reinforcement or extension of Blade tool.
 
