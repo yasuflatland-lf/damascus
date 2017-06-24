@@ -59,6 +59,7 @@
 <%@ page import="${application.packageName}.web.constants.${capFirstModel}WebKeys" %>
 <%@ page import="${application.packageName}.web.upload.${capFirstModel}ItemSelectorHelper" %>
 <%@ page import="${application.packageName}.web.util.${capFirstModel}ViewHelper" %>
+<%@ page import="${application.packageName}.constants.${capFirstModel}PortletKeys" %>
 
 <liferay-frontend:defineObjects/>
 <liferay-theme:defineObjects/>

@@ -5,8 +5,9 @@
 package ${application.packageName}.web.constants;
 
 /**
- * @author Yasuyuki Takeo
- */
+* @author Yasuyuki Takeo
+* @author ${damascus_author}
+*/
 public class ${capFirstModel}WebKeys {
     public static final String VIEW_JSP = "/view.jsp";
     public static final String VIEW_RECORD_JSP = "/view_record.jsp";
