@@ -20,7 +20,7 @@
 	String[] orderColumns = new String[] {
 	"${primaryKeyParam}"
 <#list application.fields as field >
-	<#if field.primaly?? && field.primaly == false >
+	<#if field.primary?? && field.primary == false >
     ,"${field.name}"
 	</#if>
 </#list>

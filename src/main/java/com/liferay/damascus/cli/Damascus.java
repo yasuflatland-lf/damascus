@@ -19,7 +19,7 @@ import java.io.*;
 @Data
 public class Damascus {
 
-    private String version = "20170605";
+    public final static String VERSION = "20170624";
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();
@@ -68,7 +68,7 @@ public class Damascus {
                 createCommand.run(damascus, args);
 
             } else {
-                System.out.println("Damascus version : " + version );
+                System.out.println("Damascus version : " + VERSION );
                 helpCommand.run(damascus, args);
 
             }

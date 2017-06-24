@@ -24,7 +24,7 @@
       "fields": [
         {
           "type": "com.liferay.damascus.cli.json.fields.Long",
-          "primaly":true,
+          "primary":true,
           "name": "${damascus.projectNameLower}Id",
           "title": "${damascus.projectName} Id",
           "showFieldInView": "false",

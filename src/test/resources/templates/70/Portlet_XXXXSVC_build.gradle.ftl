@@ -31,8 +31,8 @@ dependencies {
 
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	compile group: "com.liferay", name: "com.liferay.osgi.util", version: "3.0.0"
-	compile group: "com.liferay", name: "com.liferay.portal.spring.extender", version: "2.0.0"
-	compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.6.0"
+	compile group: "com.liferay", name: "com.liferay.portal.spring.extender", version: "2.0.13"
+	compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.15.0"
 	compile group: "javax.portlet", name: "portlet-api", version: "2.0"
 	compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
 	compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"

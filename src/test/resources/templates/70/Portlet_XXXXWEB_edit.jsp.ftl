@@ -47,7 +47,7 @@
 		<#-- ---------------- -->
 		<#list application.fields as field >
 			<#-- primary key check -->
-			<#if field.primaly?? && field.primaly == false >
+			<#if field.primary?? && field.primary == false >
 			<#if field.required?? && field.required == true>
 		<%
 			requiredLabel = "*";

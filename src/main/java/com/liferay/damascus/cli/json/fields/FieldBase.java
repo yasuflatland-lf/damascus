@@ -45,7 +45,7 @@ public abstract class FieldBase {
     @JsonProperty(required = true)
     public String type;
 
-    public boolean primaly = false;
+    public boolean primary = false;
 
     public boolean showFieldInView = true;
 

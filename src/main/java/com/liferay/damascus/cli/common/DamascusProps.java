@@ -90,6 +90,8 @@ public class DamascusProps {
      */
     public static final String TEMPKEY_FILEPATH = "createPath";
 
+    public static final String TEMPKEY_SKIP_TEMPLATE = "skipTemplate";
+    
     public static final String TEMPVALUE_FILEPATH = "createPath_val";
 
     public static final String TEMPVALUE_BOOLEAN = "boolean";
@@ -126,6 +128,8 @@ public class DamascusProps {
 
     public static final String PROP_RESOURCE_ROOT_PATH = "damascus.resource.root.path";
 
+    public static final String PROP_BUILD_NUMBER = "damascus.build.number";
+    
     /**
      * Service Builder directory structure suffix
      */
@@ -134,5 +138,9 @@ public class DamascusProps {
     public static final String DIR_API_SUFFIX = "-api";
 
     public static final String DIR_WEB_SUFFIX = "-web";
+
+    public static final String _GRADLEW_UNIX_FILE_NAME = "gradlew";
+
+    public static final String _GRADLEW_WINDOWS_FILE_NAME = "gradlew.bat";
 
 }

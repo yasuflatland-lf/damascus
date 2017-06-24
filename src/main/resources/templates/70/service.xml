@@ -12,10 +12,10 @@
         <#-- field loop start -->
         <#-- ---------------- -->
         <#list application.fields as field >
-            <#if field.primaly?? && field.primaly == true >
+            <#if field.primary?? && field.primary == true >
         <!-- PK field -->
             </#if>
-        <column name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" <#if field.primaly?? && field.primaly == true >primary="true"</#if> />
+        <column name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" <#if field.primary?? && field.primary == true >primary="true"</#if> />
         </#list>
         <#-- ---------------- -->
         <#-- field loop ends  -->

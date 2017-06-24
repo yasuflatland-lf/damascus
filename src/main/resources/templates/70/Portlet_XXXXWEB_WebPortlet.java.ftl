@@ -26,6 +26,7 @@ import aQute.bnd.annotation.metatype.Configurable;
  * ${capFirstModel} Portlet
  *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Component(
     configurationPid =${capFirstModel}PortletKeys.${uppercaseModel}_CONFIG,

@@ -13,14 +13,19 @@
         <weight>1</weight>
         <permissions>
             <supports>
+                <action-key>UPDATE</action-key>
+                <action-key>VIEW</action-key>
                 <action-key>ADD_ENTRY</action-key>
                 <action-key>PERMISSIONS</action-key>
             </supports>
             <site-member-defaults>
+                <action-key>VIEW</action-key>
             </site-member-defaults>
             <guest-defaults>
+                <action-key>VIEW</action-key>
             </guest-defaults>
             <guest-unsupported>
+                <action-key>UPDATE</action-key>
                 <action-key>ADD_ENTRY</action-key>
                 <action-key>PERMISSIONS</action-key>
             </guest-unsupported>
@@ -34,21 +39,23 @@
         <weight>2</weight>
         <permissions>
             <supports>
+                <action-key>ADD_ENTRY</action-key>
                 <action-key>DELETE</action-key>
                 <action-key>PERMISSIONS</action-key>
                 <action-key>UPDATE</action-key>
                 <action-key>VIEW</action-key>
             </supports>
             <site-member-defaults>
-                <action-key>DELETE</action-key>
-                <action-key>UPDATE</action-key>
                 <action-key>VIEW</action-key>
             </site-member-defaults>
             <guest-defaults>
                 <action-key>VIEW</action-key>
             </guest-defaults>
             <guest-unsupported>
+                <action-key>ADD_ENTRY</action-key>
+                <action-key>DELETE</action-key>
                 <action-key>PERMISSIONS</action-key>
+                <action-key>UPDATE</action-key>
             </guest-unsupported>
         </permissions>
     </model-resource>

@@ -225,7 +225,7 @@ class CreateCommandTest extends Specification {
             webPath    : workTempDir + DS + projectName + DS + projectName + "-web"
         ];
 
-        //Spock can't retrclt setup block to run for one time for a method, so list up all tests as below.
+        //Spock can't setup block to run for one time for a method, so list up all tests as below.
 
         def targetFile1 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*ActivityKeys.java"), TrueFileFilter.INSTANCE)
         def targetFile2 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*bnd.bnd"), TrueFileFilter.INSTANCE)
@@ -272,6 +272,9 @@ class CreateCommandTest extends Specification {
         def targetFile43 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*portlet.properties"), TrueFileFilter.INSTANCE)
         def targetFile44 = FileUtils.listFiles(new File(pathMap["rootPath"]), new RegexFileFilter(".*build.gradle"), TrueFileFilter.INSTANCE)
         def targetFile45 = FileUtils.listFiles(new File(pathMap["rootPath"]), new RegexFileFilter(".*settings.gradle"), TrueFileFilter.INSTANCE)
+        def targetFile46 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*FindEntryAction.java"), TrueFileFilter.INSTANCE)
+        def targetFile47 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*FindEntryHelper.java"), TrueFileFilter.INSTANCE)
+        def targetFile48 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*PortletLayoutFinder.java"), TrueFileFilter.INSTANCE)
 
         then:
         1 == targetFile1.size();
@@ -319,7 +322,10 @@ class CreateCommandTest extends Specification {
         1 == targetFile43.size();
         4 == targetFile44.size();
         1 == targetFile45.size();
-        
+        1 == targetFile46.size();
+        1 == targetFile47.size();
+        1 == targetFile48.size();
+
         where:
         projectName | liferayVersion | packageName
         "SampleSB"  | "70"           | "com.liferay.test"
