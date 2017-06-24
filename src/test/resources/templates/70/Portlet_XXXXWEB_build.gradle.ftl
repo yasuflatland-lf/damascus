@@ -28,6 +28,10 @@ repositories {
     }
 }
 
+task getHomeDir << {
+    println gradle.gradleHomeDir
+}
+
 dependencies {
     compile 'biz.aQute.bnd:biz.aQute.bndlib:3.1.0'
     compile 'com.google.errorprone:error_prone_annotations:2.0.19'
@@ -42,9 +46,10 @@ dependencies {
     compile group: "com.liferay", name: "com.liferay.item.selector.taglib", version: "1.0.0"
     compile group: "com.liferay", name: "com.liferay.frontend.taglib", version: "2.0.0"
     compile group: "com.liferay", name: "com.liferay.trash.taglib", version: "2.0.0"
-    compile group: "com.liferay", name: "com.liferay.portal.spring.extender", version: "2.0.0"
-    compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.6.0"
-    compile group: "com.liferay.portal", name: "com.liferay.util.taglib", version: "2.0.0"
+    compile group: "com.liferay", name: "com.liferay.portal.spring.extender", version: "2.0.13"
+    compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.15.0"
+    compile group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "2.15.0"
+    compile group: "com.liferay.portal", name: "com.liferay.util.taglib", version: "2.8.0"
     compile group: "javax.portlet", name: "portlet-api", version: "2.0"
     compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
     compile group: "jstl", name: "jstl", version: "1.2"

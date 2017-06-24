@@ -55,11 +55,11 @@ public class Application {
     }
 
     @JsonIgnore
-    public boolean hasPrivmaly() {
+    public boolean hasPrimary() {
 
-        //Primaly key must be one. Throw exeption to let user know to fix base.json
-        if (1 != (getFields().stream().filter(f -> (true == f.primaly)).count())) {
-            throw new InvalidParameterException("Multiple primaly keys have been detected in application<" + getTitle() + ">. Primaly key should be only one.");
+        //Primary key must be one. Throw exception to let user know to fix base.json
+        if (1 != (getFields().stream().filter(f -> (true == f.primary)).count())) {
+            throw new InvalidParameterException("Multiple primary keys have been detected in application<" + getTitle() + ">. Primary key should be only one.");
         }
 
         return true;

@@ -55,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import javax.portlet.PortletException;
@@ -750,8 +751,10 @@ public class ${capFirstModel}LocalServiceImpl
     protected ${capFirstModel} _addEntry(${capFirstModel} entry, ServiceContext serviceContext)
         throws PortalException {
 
+        long id = counterLocalService.increment(${capFirstModel}.class.getName());
+
         ${capFirstModel} newEntry = ${uncapFirstModel}Persistence
-            .create(counterLocalService.increment(${capFirstModel}.class.getName()));
+            .create(id);
 
         User user = userPersistence.findByPrimaryKey(entry.getUserId());
 
@@ -764,7 +767,15 @@ public class ${capFirstModel}LocalServiceImpl
         newEntry.setModifiedDate(now);
 
         newEntry.setUuid(serviceContext.getUuid());
-        newEntry.setUrlTitle(_getUniqueURLTitle(newEntry));
+        newEntry.setUrlTitle(
+            getUniqueUrlTitle(
+            id,
+            entry.getGroupId(),
+            String.valueOf(newEntry.getPrimaryKey()),
+            entry.get${application.asset.assetTitleFieldName?cap_first}(),
+            null,
+            serviceContext));
+
         newEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
         newEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
 
@@ -773,7 +784,7 @@ public class ${capFirstModel}LocalServiceImpl
         <#-- ---------------- -->
         <#list application.fields as field >
         <#-- Primary key is ommited here because the pk is already created in newEntry -->
-            <#if field.primaly?? && field.primaly == false >
+            <#if field.primary?? && field.primary == false >
         newEntry.set${field.name?cap_first}(entry.get${field.name?cap_first}());
             </#if>
         </#list>
@@ -813,7 +824,15 @@ public class ${capFirstModel}LocalServiceImpl
         updateEntry.setModifiedDate(now);
 
         updateEntry.setUuid(entry.getUuid());
-        updateEntry.setUrlTitle(_getUniqueURLTitle(updateEntry));
+        updateEntry.setUrlTitle(
+            getUniqueUrlTitle(
+            updateEntry.getPrimaryKey(),
+            entry.getGroupId(),
+            String.valueOf(updateEntry.getPrimaryKey()),
+            entry.get${application.asset.assetTitleFieldName?cap_first}(),
+            updateEntry.getUrlTitle(),
+            serviceContext));
+
         updateEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
         updateEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
 
@@ -850,50 +869,111 @@ public class ${capFirstModel}LocalServiceImpl
      * @param title title for the asset
      * @return URL title string
      */
-    protected String _createUrlTitle(long entryId, String title) {
+    protected String getUrlTitle(long entryId, String title) {
         if (title == null) {
             return String.valueOf(entryId);
         }
 
-        title = title.trim().toLowerCase();
+        title = StringUtil.toLowerCase(title.trim());
 
         if (Validator.isNull(title) || Validator.isNumber(title)) {
             title = String.valueOf(entryId);
         } else {
-            title = FriendlyURLNormalizerUtil.normalize(title,
-                                                        _friendlyURLPattern);
+            title = FriendlyURLNormalizerUtil.normalizeWithPeriodsAndSlashes(title);
         }
 
-        return ModelHintsUtil.trimString(${capFirstModel}.class.getName(), "urlTitle",
-                                         title);
+        return ModelHintsUtil.trimString(
+                    ${capFirstModel}.class.getName(), "urlTitle", title);
+    }
+
+    /**
+     * Get Unique UrlTitle
+     *
+     * @param id CounterLocalService's generated ID at a record creation
+     * @param groupId Group ID
+     * @param primaryKey Generated record's id. Usually it's a primary Key
+     * @param title Title of the record. Usually asset's title.
+     * @return Unique UrlTitle strings
+     * @throws PortalException
+     */
+    protected String getUniqueUrlTitle(
+        long id, long groupId, String primaryKey, String title)
+        throws PortalException {
+
+        String urlTitle = getUrlTitle(id, title);
+
+        return getUniqueUrlTitle(groupId, primaryKey, urlTitle);
     }
 
     /**
      * Generating a unique URL for asset
      *
-     * @param entry ${capFirstModel} object
-     * @return unique URL strings
+     * @param id CounterLocalService's generated ID at a record creation
+     * @param groupId Group ID
+     * @param primaryKey Generated record's id. Usually it's a primary Key
+     * @param title Title of the record. Usually asset's title.
+     * @param oldUrlTitle Old url title to be repleaced with title
+     * @param serviceContext
+     * @return Unique UrlTitle strings
+     * @throws PortalException
      */
-    protected String _getUniqueURLTitle(${capFirstModel} entry) {
-        String urlTitle = _createUrlTitle(entry.getPrimaryKey(),
-                                          entry.get${application.asset.assetTitleFieldName?cap_first}());
+    protected String getUniqueUrlTitle(
+        long id, long groupId, String primaryKey, String title,
+        String oldUrlTitle, ServiceContext serviceContext)
+        throws PortalException {
 
-        long entryId = entry.getPrimaryKey();
+        String serviceContextUrlTitle = ParamUtil.getString(
+        serviceContext, "urlTitle");
+
+        String urlTitle = null;
+
+        if (Validator.isNotNull(serviceContextUrlTitle)) {
+            urlTitle = getUrlTitle(id, serviceContextUrlTitle);
+        }
+        else if (Validator.isNotNull(oldUrlTitle)) {
+            return oldUrlTitle;
+        }
+        else {
+            urlTitle = getUniqueUrlTitle(id, groupId, primaryKey, title);
+        }
+
+        ${capFirstModel} entry = get${capFirstModel}ByUrlTitle(
+        groupId, urlTitle, WorkflowConstants.STATUS_ANY);
+        if ((entry != null) &&
+        !Objects.equals(entry.getPrimaryKey(), primaryKey)) {
+
+            urlTitle = getUniqueUrlTitle(id, groupId, primaryKey, urlTitle);
+        }
+
+        return urlTitle;
+    }
+
+    /**
+     * Returns the record's unique URL title.
+     *
+     * @param  groupId the primary key of the record's group
+     * @param  primaryKey the primary key of the record
+     * @param  urlTitle the record's accessible URL title
+     * @return the record's unique URL title
+     */
+    public String getUniqueUrlTitle(
+        long groupId, String primaryKey, String urlTitle)
+        throws PortalException {
 
         for (int i = 1;; i++) {
-            ${capFirstModel} tmpEntry = ${uncapFirstModel}Persistence
-                .fetchByG_UT(entry.getGroupId(), urlTitle);
+            ${capFirstModel} entry = get${capFirstModel}ByUrlTitle(groupId, urlTitle, WorkflowConstants.STATUS_ANY);
 
-            if ((tmpEntry == null) || (entryId == tmpEntry.getPrimaryKey())) {
+            if ((entry == null) || primaryKey.equals(entry.getPrimaryKey())) {
                 break;
-            } else {
+            }
+            else {
                 String suffix = StringPool.DASH + i;
 
                 String prefix = urlTitle;
 
                 if (urlTitle.length() > suffix.length()) {
-                    prefix = urlTitle.substring(0,
-                                                urlTitle.length() - suffix.length());
+                    prefix = urlTitle.substring(
+                    0, urlTitle.length() - suffix.length());
                 }
 
                 urlTitle = prefix + suffix;
@@ -953,7 +1033,7 @@ public class ${capFirstModel}LocalServiceImpl
             <#-- ---------------- -->
             <#list application.fields as field >
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
-                    <#if field.primaly?? && field.primaly == true >
+                    <#if field.primary?? && field.primary == true >
         entry.set${field.name?cap_first}(primaryKey);
                     <#else>
         entry.set${field.name?cap_first}(ParamUtil.getLong(request, "${field.name}"));
@@ -1011,7 +1091,7 @@ public class ${capFirstModel}LocalServiceImpl
     /**
      * Populate Model with values from a form
      *
-     * @param primaryKey primaly key
+     * @param primaryKey primary key
      * @param request PortletRequest
      * @return ${capFirstModel} Object
      * @throws PortletException
@@ -1029,7 +1109,7 @@ public class ${capFirstModel}LocalServiceImpl
         <#-- ---------------- -->
         <#list application.fields as field >
             <#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
-                <#if field.primaly?? && field.primaly == true >
+                <#if field.primary?? && field.primary == true >
                     entry.set${field.name?cap_first}(primaryKey);
                 <#else>
                     entry.set${field.name?cap_first}(0);

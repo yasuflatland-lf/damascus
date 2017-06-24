@@ -17,8 +17,9 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Yasuyuki Takeo
- */
+* @author Yasuyuki Takeo
+* @author ${damascus_author}
+*/
 @Component(
     immediate = true,
     property = {

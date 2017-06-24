@@ -213,11 +213,19 @@ public class CommonUtil {
 
         //Delete gradlew files of *-web directory to force to use gradlew files of parent directory instead.
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
+        deleteGradlews(webPath);
 
-        File gradlewPath = new File(webPath + "gradlew");
-        File gradlewBatPath = new File(webPath + "gradlew.bat");
+    }
+
+    /**
+     * Delete gradlews
+     *
+     * @param path root path where gradlew/gradlew.bat placed
+     */
+    static public void deleteGradlews(String path) {
+        File gradlewPath = new File(path + DamascusProps._GRADLEW_UNIX_FILE_NAME);
+        File gradlewBatPath = new File(path + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
         FileUtils.deleteQuietly(gradlewPath);
         FileUtils.deleteQuietly(gradlewBatPath);
-
     }
 }

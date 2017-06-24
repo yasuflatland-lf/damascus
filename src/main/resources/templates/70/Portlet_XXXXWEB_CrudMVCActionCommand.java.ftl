@@ -118,7 +118,7 @@ public class ${capFirstModel}CrudMVCActionCommand
                 .split(ParamUtil.getString(request, "deleteEntryIds"), 0L);
         }
 
-        List<TrashedModel> trashedModels = new ArrayList<>();
+        List<TrashedModel> trashedModels = new ArrayList<TrashedModel>();
 
         for (long deleteEntryId : deleteEntryIds) {
 
@@ -172,7 +172,7 @@ public class ${capFirstModel}CrudMVCActionCommand
         // Permission check
         if (!${capFirstModel}ResourcePermissionChecker.contains(
                 permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.ADD_ENTRY)) {
-            List<String> error = new ArrayList<>();
+            List<String> error = new ArrayList<String>();
             error.add("permission-error");
             throw new ${capFirstModel}ValidateException(error);
         }
@@ -208,7 +208,7 @@ public class ${capFirstModel}CrudMVCActionCommand
         // Permission check
         if (!${capFirstModel}PermissionChecker.contains(
                 permissionChecker, entry.getPrimaryKey(), ActionKeys.UPDATE)) {
-            List<String> error = new ArrayList<>();
+            List<String> error = new ArrayList<String>();
             error.add("permission-error");
             throw new ${capFirstModel}ValidateException(error);
         }
