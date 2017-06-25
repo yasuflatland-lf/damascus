@@ -20,14 +20,13 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import ${application.packageName}.model.${capFirstModel};
 import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
+import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
 
 import java.util.Locale;
 
@@ -76,8 +75,8 @@ public class ${capFirstModel}Indexer
         PermissionChecker permissionChecker, String entryClassName,
         long entryClassPK, String actionId) throws Exception {
 
-        return ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, entryClassPK,
-                                                          ActionKeys.VIEW);
+        return ${capFirstModel}PermissionChecker.contains(
+            permissionChecker, entryClassPK, actionId);
     }
 
     @Override
