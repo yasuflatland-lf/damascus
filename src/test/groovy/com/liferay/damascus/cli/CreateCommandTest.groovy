@@ -330,4 +330,51 @@ class CreateCommandTest extends Specification {
         projectName | liferayVersion | packageName
         "SampleSB"  | "70"           | "com.liferay.test"
     }
+    
+    def "Template creation tests from various base.json"() {
+        setup:
+        Map params = Maps.newHashMap();
+
+        //Set parameters
+        params.put("projectName", projectName)
+        params.put("liferayVersion", liferayVersion)
+        params.put("packageName", packageName)
+        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        Map damascus = Maps.newHashMap();
+        damascus.put('damascus', params);
+
+        //Output base.json with parameters.
+        TemplateUtil.getInstance().process(
+            TemplateUtilTest.class,
+            liferayVersion,
+            baseFilename,
+            damascus,
+            workTempDir + DS + DamascusProps.BASE_JSON)
+
+        //Run damascus -create
+        String[] args = ["-create"]
+        Damascus.main(args)
+
+        when:
+        //Target path map of a project
+        def pathMap = [
+            rootPath   : workTempDir + DS + projectName,
+            apiPath    : workTempDir + DS + projectName + DS + projectName + "-api",
+            servicePath: workTempDir + DS + projectName + DS + projectName + "-service",
+            webPath    : workTempDir + DS + projectName + DS + projectName + "-web"
+        ];
+
+		def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*.java"), TrueFileFilter.INSTANCE)
+		def serviceTargetFiles = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*.java"), TrueFileFilter.INSTANCE)
+		def webTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*.java"), TrueFileFilter.INSTANCE)
+		
+        then:
+		apiTargetFiles.size() > 1;
+		serviceTargetFiles.size() > 1;
+		webTargetFiles.size() > 1;
+		
+        where:
+        projectName | liferayVersion | packageName        | baseFilename
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"
+    }
 }
