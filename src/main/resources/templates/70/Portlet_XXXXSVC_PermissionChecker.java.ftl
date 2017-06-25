@@ -20,10 +20,7 @@ import ${application.packageName}.service.${capFirstModel}LocalServiceUtil;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * ${capFirstModel} Permission Checker
- *
  * @author Yasuyuki Takeo
- * @author ${damascus_author}
  */
 @Component(
     immediate = true,
@@ -37,8 +34,9 @@ public class ${capFirstModel}PermissionChecker
         throws PortalException {
 
         if (!contains(permissionChecker, entry, actionId)) {
-            throw new PrincipalException.MustHavePermission(permissionChecker,
-                                                            ${capFirstModel}.class.getName(), entry.getPrimaryKey(), actionId);
+            throw new PrincipalException.MustHavePermission(
+                permissionChecker,${capFirstModel}.class.getName(),
+                entry.getPrimaryKey(), actionId);
         }
     }
 
@@ -47,24 +45,14 @@ public class ${capFirstModel}PermissionChecker
         throws PortalException, SystemException {
 
         if (!contains(permissionChecker, entryId, actionId)) {
-            throw new PrincipalException.MustHavePermission(permissionChecker,
-                                                            ${capFirstModel}.class.getName(), entryId, actionId);
+            throw new PrincipalException.MustHavePermission(
+                permissionChecker, ${capFirstModel}.class.getName(),
+                entryId, actionId);
         }
     }
 
     public static boolean contains(
         PermissionChecker permissionChecker, ${capFirstModel} entry, String actionId) {
-
-        String portletId = PortletProviderUtil.getPortletId(
-            ${capFirstModel}.class.getName(), PortletProvider.Action.EDIT);
-
-        Boolean hasPermission = StagingPermissionUtil.hasPermission(
-            permissionChecker, entry.getGroupId(), ${capFirstModel}.class.getName(),
-            entry.getPrimaryKey(), portletId, actionId);
-
-        if (hasPermission != null) {
-            return hasPermission.booleanValue();
-        }
 
         if (entry.isDraft() || entry.isScheduled()) {
             if (actionId.equals(ActionKeys.VIEW)
@@ -73,7 +61,7 @@ public class ${capFirstModel}PermissionChecker
                 return false;
             }
         } else if (entry.isPending()) {
-            hasPermission = WorkflowPermissionUtil.hasPermission(
+            Boolean hasPermission = WorkflowPermissionUtil.hasPermission(
                 permissionChecker, entry.getGroupId(), ${capFirstModel}.class.getName(),
                 entry.getPrimaryKey(), actionId);
 
@@ -82,15 +70,16 @@ public class ${capFirstModel}PermissionChecker
             }
         }
 
-        if (permissionChecker.hasOwnerPermission(entry.getCompanyId(),
-                                                 ${capFirstModel}.class.getName(), entry.getPrimaryKey(), entry.getUserId(),
-                                                 actionId)) {
+        if (permissionChecker.hasOwnerPermission(
+            entry.getCompanyId(),${capFirstModel}.class.getName(),
+            entry.getPrimaryKey(), entry.getUserId(),actionId)) {
 
             return true;
         }
 
-        return permissionChecker.hasPermission(entry.getGroupId(),
-                                               ${capFirstModel}.class.getName(), entry.getPrimaryKey(), actionId);
+        return permissionChecker.hasPermission(
+            entry.getGroupId(), ${capFirstModel}.class.getName(),
+            entry.getPrimaryKey(), actionId);
     }
 
     public static boolean contains(
@@ -106,6 +95,7 @@ public class ${capFirstModel}PermissionChecker
     public void checkBaseModel(
         PermissionChecker permissionChecker, long groupId, long primaryKey,
         String actionId) throws PortalException {
+
         check(permissionChecker, primaryKey, actionId);
 
     }
