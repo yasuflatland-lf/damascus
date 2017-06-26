@@ -21,7 +21,9 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.permission.ModelPermissions;
+<#if generateActivity>
 import com.liferay.portal.kernel.social.SocialActivityManagerUtil;
+</#if>
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
@@ -36,12 +38,16 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+<#if generateActivity>
 import com.liferay.social.kernel.model.SocialActivityConstants;
+</#if>
 import ${application.packageName}.exception.${capFirstModel}ValidateException;
 import ${application.packageName}.model.${capFirstModel};
 import ${application.packageName}.service.base.${capFirstModel}LocalServiceBaseImpl;
 import ${application.packageName}.service.util.${capFirstModel}Validator;
+<#if generateActivity>
 import ${application.packageName}.social.${capFirstModel}ActivityKeys;
+</#if>
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
@@ -442,8 +448,10 @@ public class ${capFirstModel}LocalServiceImpl
     /**
      * Moves the entry to the recycle bin.
      *
+<#if generateActivity>
      * Social activity counters for this entry get disabled.
      *
+</#if> 
      * @param userId the primary key of the user moving the entry
      * @param entry the entry to be moved
      * @return the moved entry
@@ -475,10 +483,11 @@ public class ${capFirstModel}LocalServiceImpl
         JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
 
         extraDataJSONObject.put("title", entry.get${application.asset.assetTitleFieldName?cap_first}());
-
+<#if generateActivity>
         SocialActivityManagerUtil.addActivity(userId, entry,
                                               SocialActivityConstants.TYPE_MOVE_TO_TRASH,
                                               extraDataJSONObject.toString(), 0);
+</#if>
 
         // Workflow
 
@@ -527,16 +536,19 @@ public class ${capFirstModel}LocalServiceImpl
         updateStatus(userId, entryId, trashEntry.getStatus(),
                      new ServiceContext(), new HashMap<String, Serializable>());
 
+<#if generateActivity>
         // Social
 
         JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
 
         extraDataJSONObject.put("title", entry.get${application.asset.assetTitleFieldName?cap_first}());
 
+
         SocialActivityManagerUtil.addActivity(userId, entry,
                                               SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,
                                               extraDataJSONObject.toString(), 0);
-
+                                              
+</#if>
         return entry;
     }
 
@@ -661,6 +673,7 @@ public class ${capFirstModel}LocalServiceImpl
             assetEntryLocalService.updateEntry(${capFirstModel}.class.getName(),
                                                entryId, entry.getModifiedDate(), null, true, true);
 
+<#if generateActivity>
             // Social
 
             if ((oldStatus != WorkflowConstants.STATUS_IN_TRASH)
@@ -679,6 +692,7 @@ public class ${capFirstModel}LocalServiceImpl
                 }
             }
 
+</#if>
             // Trash
 
             if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
@@ -696,6 +710,7 @@ public class ${capFirstModel}LocalServiceImpl
             assetEntryLocalService.updateVisible(${capFirstModel}.class.getName(),
                                                  entryId, false);
 
+<#if generateActivity>
             // Social
 
             if ((status == WorkflowConstants.STATUS_SCHEDULED)
@@ -714,6 +729,7 @@ public class ${capFirstModel}LocalServiceImpl
                 }
             }
 
+</#if>
             // Trash
 
             if (status == WorkflowConstants.STATUS_IN_TRASH) {
