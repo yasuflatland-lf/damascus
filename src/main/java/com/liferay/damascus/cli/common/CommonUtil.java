@@ -50,8 +50,8 @@ public class CommonUtil {
     /**
      * Load Resource file
      *
-     * @param classContext
-     * @param path
+     * @param classContext Class context of where this method is called.
+     * @param path Path to the resource file in a jar.
      * @return Path to the resource
      * @throws IOException
      */

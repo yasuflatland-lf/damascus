@@ -18,6 +18,7 @@ The list of what Damascus automatically generate is as follows
 * Activities (The activities on the portlet will be recorded and visible on an activity portlet)
 * Multiple service builder portlets at once
 ### Required enviroment
+* Liferay 7.0 CE GA4 and Liferay DXP SP3 or higher versions.
 * Java 1.8 or above
 * gradle 3.0 or above need to be installed
 * jpm needs to be installed. (instruction to install is as follows)
@@ -52,7 +53,7 @@ Let's make a Todo app with damascus
 3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install it with ```jpm install ./damascus.jar```.
 
 ### IDE settings
-Damascus is including lombok library, so you need to configure annotations of lombok to be properly working and complied on IDEs. Here are how to apply lombok to Eclipse / IntelliJ
+Damascus is including lombok library, so annotation library for lombok needs to be properly installed on IDEs. Here are how to apply lombok to Eclipse / IntelliJ
 ##### Eclipse
 1. Download lombok https://projectlombok.org/download
 2. double click ```lombok.jar``` and select the directory where ```eclipse.exe``` exist

@@ -70,7 +70,7 @@ public class CreateCommand implements ICommand {
     /**
      * Generate product skelton
      * <p>
-     * Generating service and web project skelton at once.
+     * Generating service and web project skeleton at once.
      *
      * @param projectName    Project Name
      * @param packageName    Package Name
@@ -207,9 +207,9 @@ public class CreateCommand implements ICommand {
                     app.getModel()
                 );
 
-                System.out.println("Generating *-api, *-service, *-web skeltons for Model " + app.getModel());
+                System.out.println("Generating *-api, *-service, *-web skeletons for Model " + app.getModel());
 
-                // Generate skeleton of the project
+                // Generate skeletons of the project
                 generateProjectSkeleton(
                     app.getModel(),
                     app.getPackageName(),

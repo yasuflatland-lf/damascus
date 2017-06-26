@@ -31,7 +31,7 @@ public class InitCommand implements ICommand {
     /**
      * Judge if Init is runnable
      *
-     * @return true if it's runnnable or false
+     * @return true if it's runnable or false
      */
     public boolean isRunnable() {
         return ((null != projectName) && (null != packageName));
@@ -85,7 +85,7 @@ public class InitCommand implements ICommand {
     /**
      * Gather Parameters for a template parsing
      *
-     * @return Map with reqired parameters to parse base.json
+     * @return Map with required parameters to parse base.json
      */
     private Map getParameters() {
         Map params = Maps.newHashMap();
