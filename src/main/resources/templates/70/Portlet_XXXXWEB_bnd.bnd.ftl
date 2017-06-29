@@ -24,4 +24,7 @@ Bundle-ClassPath:\
 	lib/commons-io.jar=commons-io-[0-9]*.jar,\
 	lib/commons-lang3.jar=commons-lang[0-9]*.jar
 
+Web-ContextPath: /${lowercaseModel}-web
+
 -metatype: *
+-dsannotations-options: inherit

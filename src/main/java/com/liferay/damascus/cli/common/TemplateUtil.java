@@ -79,11 +79,11 @@ public class TemplateUtil {
                         version
                     );
 
-                    // You should do this ONLY ONCE in the whole application life-cycle:
+                    // You should do this ONLY ONCE in the whole application lifecycle:
                     // Create and adjust the configuration singleton
                     _cfg = new Configuration(Configuration.VERSION_2_3_25);
 
-                    // Resource root path and initialize Freemarker configration with the path
+                    // Resource root path and initialize Freemarker configuration with the path
                     _cfg.setDirectoryForTemplateLoading(getResourceRootPath(version));
 
                     _cfg.setDefaultEncoding("UTF-8");
@@ -103,7 +103,7 @@ public class TemplateUtil {
      * <p>
      * If a path outside of jar is configured, use the path instead of the resource path pointing inside of jar
      *
-     * @param version Lifeay version (e.g. 70)
+     * @param version Liferay version (e.g. 70)
      * @return File object pointing the resource location
      * @throws IOException            most likely when it can't access to the resource folder for some reasons.
      * @throws ConfigurationException settings.properties file manipulation error
@@ -111,7 +111,7 @@ public class TemplateUtil {
     public File getResourceRootPath(String version) throws IOException, ConfigurationException {
 
         //Fetch root path for resources from .damascus first.
-        //Damascus uses resource in this jar if no configration is found in .damascus.
+        //Damascus uses resource in this jar if no configuration is found in .damascus.
         String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
 
         log.debug("getResourceRootPath : rootPath : " + rootPath);
@@ -379,7 +379,7 @@ public class TemplateUtil {
      *
      * @param clazz            target class
      * @param templateRootPath Template root path. e.g. /templates
-     * @param distinationRoot  Distination root path to output templates. e.g. /outputs
+     * @param distinationRoot  Destination root path to output templates. e.g. /outputs
      * @throws URISyntaxException
      * @throws IOException
      */
@@ -416,6 +416,7 @@ public class TemplateUtil {
                 continue;
             }
 
+            // Generalize file path
             String resourcePath = file;
             if (!file.startsWith(DamascusProps.SEP)) {
                 resourcePath = DamascusProps.SEP + file;
@@ -448,7 +449,7 @@ public class TemplateUtil {
      * @param distinationRoot  Destination root path to output templates. e.g. /outputs
      * @throws URISyntaxException
      * @throws IOException
-     * @throws ConfigurationException 
+     * @throws ConfigurationException
      */
     public void cacheTemplates(Class<?> clazz, String templateRootPath, String distinationRoot, String version)
         throws URISyntaxException, IOException, ConfigurationException {
@@ -461,18 +462,18 @@ public class TemplateUtil {
         File   distFile = new File(distinationRoot);
         String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
 
-		boolean insideJar = isInsideJar(clazz);
-		
-		String buildNumber = getBuildNumber(clazz, insideJar);
-		String cacheBuildNumber = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_BUILD_NUMBER);
- 
-        if (distFile.exists() && !rootPath.equals("") 
-        		&& buildNumber.equals(cacheBuildNumber)) {
+        boolean insideJar = isInsideJar(clazz);
+
+        String buildNumber      = getBuildNumber(clazz, insideJar);
+        String cacheBuildNumber = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_BUILD_NUMBER);
+
+        if (distFile.exists() && !rootPath.equals("")
+            && buildNumber.equals(cacheBuildNumber)) {
             log.debug("Template folder is already up-to-date. Skip initializing templates.");
             return;
         }
 
-		if (insideJar) {
+        if (insideJar) {
 
             //Production environment
             List<String> files = getTemplateFileLists(templateRootPath);
@@ -503,42 +504,49 @@ public class TemplateUtil {
             DamascusProps.PROP_RESOURCE_ROOT_PATH,
             targetPath
         );
-        
+
         //Store the build number into cache
         PropertyUtil.getInstance().setProperty(
             DamascusProps.PROP_BUILD_NUMBER,
             buildNumber
         );
-        
+
         PropertyUtil.getInstance().save();
-        
+
         System.out.println("Initialized Templates.");
 
     }
 
-	protected String getBuildNumber(Class<?> clazz, boolean insideJar) {
-		
-		StringBuilder buildNumber =  new StringBuilder(25);
-		
-		// Add version part of build number
-		
-		buildNumber.append("V").append(Damascus.VERSION);
-		
-		// Add timestamp part of build number
-	
-		Date timestamp;
-		
-		if(insideJar) {
-			File jarFile = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
-			timestamp = new Date(jarFile.lastModified());
-		} else {
-			timestamp = new Date();
-		}
-		
-		SimpleDateFormat timestampDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-		
-		buildNumber.append("TS").append(timestampDateFormat.format(timestamp));
-        
-		return buildNumber.toString();
-	}
+    /**
+     * Get Build number
+     *
+     * @param clazz     Class context
+     * @param insideJar true if it's inside of a jar or false
+     * @return Build number
+     */
+    protected String getBuildNumber(Class<?> clazz, boolean insideJar) {
+
+        StringBuilder buildNumber = new StringBuilder(25);
+
+        // Add version part of build number
+
+        buildNumber.append("V").append(Damascus.VERSION);
+
+        // Add timestamp part of build number
+
+        Date timestamp;
+
+        if (insideJar) {
+            File jarFile = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+            timestamp = new Date(jarFile.lastModified());
+        } else {
+            timestamp = new Date();
+        }
+
+        SimpleDateFormat timestampDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+
+        buildNumber.append("TS").append(timestampDateFormat.format(timestamp));
+
+        return buildNumber.toString();
+    }
 }

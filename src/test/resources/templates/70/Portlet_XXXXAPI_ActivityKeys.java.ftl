@@ -1,6 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-api/src/main/java/${packagePath}/social/${capFirstModel}ActivityKeys.java">
+<#assign skipTemplate = !generateActivity>
 
 package ${application.packageName}.social;
 

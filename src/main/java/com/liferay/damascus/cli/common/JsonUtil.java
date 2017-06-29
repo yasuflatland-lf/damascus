@@ -46,8 +46,8 @@ public class JsonUtil {
      *
      * @param path  path to the json file
      * @param clazz class to map the json file
-     * @param <T>
-     * @return
+     * @param <T>   Mapped class
+     * @return Mapped Json object
      * @throws JsonParseException
      * @throws JsonMappingException
      * @throws IOException

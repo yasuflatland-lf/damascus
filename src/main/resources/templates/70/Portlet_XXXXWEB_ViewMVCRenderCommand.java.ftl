@@ -24,6 +24,7 @@ import org.osgi.service.component.annotations.Reference;
     immediate = true,
     property = {
         "javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel},
+        "javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN,
         "mvc.command.name=/",
         "mvc.command.name=/${lowercaseModel}/view"
     },

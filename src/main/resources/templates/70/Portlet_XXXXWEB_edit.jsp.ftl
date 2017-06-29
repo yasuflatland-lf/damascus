@@ -1,14 +1,10 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/edit.jsp">
-
 <%@ include file="/init.jsp"%>
 <%
 	PortletURL portletURL = PortletURLUtil.clone(renderResponse.createRenderURL(), liferayPortletResponse);
-	boolean fromAsset = (request.getAttribute("fromAsset") != null
-		? (Boolean) request.getAttribute("fromAsset")
-		: false);
-	String CMD = ParamUtil.getString(request, Constants.CMD,
-		Constants.UPDATE);
+	boolean fromAsset = ParamUtil.getBoolean(request,"fromAsset",false);
+	String CMD = ParamUtil.getString(request, Constants.CMD, Constants.UPDATE);
 	${capFirstModel} ${uncapFirstModel} = (${capFirstModel}) request.getAttribute("${uncapFirstModel}");
 	String redirect = ParamUtil.getString(request, "redirect");
 %>
@@ -18,12 +14,22 @@
 	<portlet:param name="redirect" value="<%=portletURL.toString()%>" />
 </portlet:actionURL>
 
-<aui:fieldset>
+<div class="container-fluid-1280">
 	<aui:form name="${lowercaseModel}Edit" action="<%=${lowercaseModel}EditURL%>"
 		method="post">
 		<aui:model-context bean="<%=${uncapFirstModel}%>" model="<%=${capFirstModel}.class%>" />
 		<aui:input name="<%=Constants.CMD%>" type="hidden" value="<%=CMD%>" />
+        <aui:input type="hidden" name="fromAsset" value="<%=fromAsset%>" />
+        <aui:input type="hidden" name="redirect" value="<%=redirect%>" />
 		<aui:input type="hidden" name="resourcePrimKey" value="<%=${uncapFirstModel}.getPrimaryKey()%>" />
+        <%
+        //This tags are only necessarily in Asset publisher
+        if(fromAsset) {
+        %>
+        <div class="lfr-form-content">
+		<%
+		}
+		%>
 		<c:if test='<%=Constants.ADD.equals(CMD)%>'>
 			<aui:input type="hidden" name="addGuestPermissions" value="true" />
 			<aui:input type="hidden" name="addGroupPermissions" value="true" />
@@ -137,6 +143,14 @@
 			</aui:fieldset>
 		</liferay-ui:panel>
 
+		<%
+		//This tags are only necessarily in Asset publisher
+		if(fromAsset) {
+		%>
+		</div>
+		<%
+		}
+		%>
 		<aui:button-row>
 			<%
 				String publishButtonLabel = "submit";
@@ -150,13 +164,13 @@
 						publishButtonLabel = "submit-for-publication";
 				}
 			%>
-			<aui:button cssClass="btn-lg"
+            <aui:button cssClass="btn-lg" type="submit" primary="<%= false %>"
 				onClick="<%=renderResponse.getNamespace() +\"saveEditors()\"%>"
 				value="<%=publishButtonLabel%>" />
-				&nbsp;&nbsp;&minus; or &minus;
 			<%
 				if (!fromAsset) {
 			%>
+            &nbsp;&nbsp;&minus; or &minus;
 			<aui:button onClick="<%=redirect%>" type="cancel" />
 			<%
 				}
@@ -164,7 +178,7 @@
 		</aui:button-row>
 	</aui:form>
 	<%
-		if (${uncapFirstModel}.getPrimaryKey() != 0) {
+    if (${uncapFirstModel}.getPrimaryKey() != 0 && false == fromAsset) {
 	%>
 	<liferay-ui:panel-container extended="<%=false%>"
 		id="${uncapFirstModel}CommentsPanelContainer" persistState="<%=true%>">
@@ -183,9 +197,9 @@
 
 	</liferay-ui:panel-container>
 	<%
-		}
+	}
 	%>
-</aui:fieldset>
+</div>
 
 <#list application.fields as field >
 	<#if field.type?string == "com.liferay.damascus.cli.json.fields.RichText" >
@@ -243,8 +257,7 @@
 				        },
 				        title: title,
 				        url: '<%=${uncapFirstModel}ItemSelectorHelper.getItemSelectorURL(
-						requestBackedPortletURLFactory, themeDisplay,
-						selectItemName)%>'
+						requestBackedPortletURLFactory, themeDisplay, selectItemName)%>'
 				    }
 				);
 				itemSelectorDialog.open();

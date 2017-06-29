@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import ${application.packageName}.constants.${capFirstModel}PortletKeys;
@@ -53,9 +54,11 @@ public class ${capFirstModel}AssetRendererFactory extends BaseAssetRendererFacto
 
     public ${capFirstModel}AssetRendererFactory() {
         setClassName(${capFirstModel}.class.getName());
+        setCategorizable(true);
         setPortletId(${capFirstModel}PortletKeys.${uppercaseModel});
         setLinkable(true);
         setSearchable(true);
+        setSelectable(true);
     }
 
     @Override
@@ -103,10 +106,11 @@ public class ${capFirstModel}AssetRendererFactory extends BaseAssetRendererFacto
 
         LiferayPortletURL liferayPortletURL =
             liferayPortletResponse.createLiferayPortletURL(
-                ${capFirstModel}PortletKeys.${uppercaseModel}, PortletRequest.RENDER_PHASE);
+                ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN, PortletRequest.RENDER_PHASE);
 
         liferayPortletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/crud");
         liferayPortletURL.setParameter(Constants.CMD, Constants.ADD);
+        liferayPortletURL.setParameter("fromAsset", StringPool.TRUE);
 
         return liferayPortletURL;
     }
@@ -118,10 +122,11 @@ public class ${capFirstModel}AssetRendererFactory extends BaseAssetRendererFacto
 
         LiferayPortletURL liferayPortletURL =
             liferayPortletResponse.createLiferayPortletURL(
-                ${capFirstModel}PortletKeys.${uppercaseModel}, PortletRequest.RENDER_PHASE);
+                ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN, PortletRequest.RENDER_PHASE);
 
         liferayPortletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/view");
         liferayPortletURL.setParameter(Constants.CMD, Constants.VIEW);
+        liferayPortletURL.setParameter("fromAsset", StringPool.TRUE);
 
         try {
             liferayPortletURL.setWindowState(windowState);

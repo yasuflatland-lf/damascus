@@ -13,6 +13,7 @@
         <weight>1</weight>
         <permissions>
             <supports>
+                <action-key>ACCESS_IN_CONTROL_PANEL</action-key>
                 <action-key>UPDATE</action-key>
                 <action-key>VIEW</action-key>
                 <action-key>ADD_ENTRY</action-key>
@@ -25,6 +26,7 @@
                 <action-key>VIEW</action-key>
             </guest-defaults>
             <guest-unsupported>
+                <action-key>ACCESS_IN_CONTROL_PANEL</action-key>
                 <action-key>UPDATE</action-key>
                 <action-key>ADD_ENTRY</action-key>
                 <action-key>PERMISSIONS</action-key>
@@ -39,6 +41,7 @@
         <weight>2</weight>
         <permissions>
             <supports>
+                <action-key>ACCESS_IN_CONTROL_PANEL</action-key>
                 <action-key>ADD_ENTRY</action-key>
                 <action-key>DELETE</action-key>
                 <action-key>PERMISSIONS</action-key>
@@ -52,6 +55,7 @@
                 <action-key>VIEW</action-key>
             </guest-defaults>
             <guest-unsupported>
+                <action-key>ACCESS_IN_CONTROL_PANEL</action-key>
                 <action-key>ADD_ENTRY</action-key>
                 <action-key>DELETE</action-key>
                 <action-key>PERMISSIONS</action-key>

@@ -40,6 +40,7 @@ dependencies {
     compile "commons-io:commons-io:2.5"
     compile "commons-validator:commons-validator:1.6"
     compile "org.apache.commons:commons-lang3:3.5"
+    compile group: "com.liferay", name: "com.liferay.application.list.api", version: "2.0.0"
     compile group: "com.liferay", name: "com.liferay.frontend.taglib", version: "2.0.0"
     compile group: "com.liferay", name: "com.liferay.item.selector.api", version: "2.0.0"
     compile group: "com.liferay", name: "com.liferay.item.selector.criteria.api", version: "2.0.0"
