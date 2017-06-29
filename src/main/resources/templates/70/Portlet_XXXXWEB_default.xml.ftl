@@ -21,6 +21,7 @@
             </guest-defaults>
             <guest-unsupported>
                 <action-key>ACCESS_IN_CONTROL_PANEL</action-key>
+                <action-key>CONFIGURATION</action-key>
             </guest-unsupported>
         </permissions>
     </portlet-resource>

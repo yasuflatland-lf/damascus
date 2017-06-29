@@ -1,7 +1,6 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCActionCommand.java">
-
 package ${application.packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
@@ -21,6 +20,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import ${application.packageName}.constants.${capFirstModel}PortletKeys;
 import ${application.packageName}.exception.${capFirstModel}ValidateException;
@@ -30,6 +30,7 @@ import ${application.packageName}.service.permission.${capFirstModel}PermissionC
 import ${application.packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
 import com.liferay.trash.kernel.util.TrashUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,16 +46,18 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
     immediate = true, property = {
-        "javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel},
-        "mvc.command.name=/${lowercaseModel}/crud"
-    },
+    "javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel},
+    "javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN,
+    "mvc.command.name=/${lowercaseModel}/crud"
+},
     service = MVCActionCommand.class
 )
 public class ${capFirstModel}CrudMVCActionCommand
     extends BaseMVCActionCommand {
 
     @Override
-    protected void doProcessAction(ActionRequest request, ActionResponse response) {
+    protected
+    void doProcessAction(ActionRequest request, ActionResponse response) throws IOException {
 
         try {
             // Fetch command
@@ -87,6 +90,14 @@ public class ${capFirstModel}CrudMVCActionCommand
             _log.error(t, t);
             SessionErrors.add(request, PortalException.class);
             hideDefaultSuccessMessage(request);
+        }
+
+        //For access from Asset Publisher
+        String redirect = ParamUtil.getString(request, "redirect");
+        Boolean fromAsset = ParamUtil.getBoolean(request, "fromAsset",false);
+
+        if(Validator.isNotNull(redirect) && true == fromAsset ) {
+            sendRedirect(request, response, redirect);
         }
     }
 

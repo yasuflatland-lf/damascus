@@ -1,10 +1,12 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/view_record.jsp">
-
 <%@ include file="/init.jsp"%>
 <%
     ${capFirstModel} ${uncapFirstModel} = (${capFirstModel}) request.getAttribute("${uncapFirstModel}");
     String redirect = ParamUtil.getString(request, "redirect");
+    boolean fromAsset = ParamUtil.getBoolean(request,"fromAsset",false);
+    portletDisplay.setShowBackIcon(true);
+    portletDisplay.setURLBack(redirect);
 %>
 
 <div class="container-fluid-1280">
@@ -38,9 +40,5 @@
         <#-- ---------------- -->
         <#--  field loop end  -->
         <#-- ---------------- -->
-        <aui:button-row>
-            <aui:button cssClass="btn-lg" href="<%=redirect%>" name="backToList"
-                        primary="<%=true%>" value="back-to-list" />
-        </aui:button-row>
     </aui:fieldset>
 </div>

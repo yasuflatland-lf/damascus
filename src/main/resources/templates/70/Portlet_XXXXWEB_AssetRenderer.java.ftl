@@ -5,14 +5,17 @@ package ${application.packageName}.web.asset;
 
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import ${application.packageName}.constants.${capFirstModel}PortletKeys;
 import ${application.packageName}.model.${capFirstModel};
 import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
@@ -27,9 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
-* @author Yasuyuki Takeo
-* @author ${damascus_author}
-*/
+ * @author Yasuyuki Takeo
+ * @author ${damascus_author}
+ */
 public class ${capFirstModel}AssetRenderer
     extends BaseJSPAssetRenderer<${capFirstModel}>
     implements TrashRenderer {
@@ -119,15 +122,18 @@ public class ${capFirstModel}AssetRenderer
         LiferayPortletResponse liferayPortletResponse)
         throws Exception {
 
-        LiferayPortletURL liferayPortletURL =
-            liferayPortletResponse.createLiferayPortletURL(
-                ${capFirstModel}PortletKeys.${uppercaseModel}, PortletRequest.RENDER_PHASE);
+        Group group = GroupLocalServiceUtil.fetchGroup(_entry.getGroupId());
 
-        liferayPortletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/crud");
-        liferayPortletURL.setParameter(Constants.CMD, Constants.UPDATE);
-        liferayPortletURL.setParameter("resourcePrimKey", String.valueOf(_entry.getPrimaryKey()));
+        PortletURL portletURL = PortalUtil.getControlPanelPortletURL(
+            liferayPortletRequest, group, ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN, 0, 0,
+            PortletRequest.RENDER_PHASE);
 
-        return liferayPortletURL;
+        portletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/crud");
+        portletURL.setParameter("fromAsset", StringPool.TRUE);
+        portletURL.setParameter(Constants.CMD, Constants.UPDATE);
+        portletURL.setParameter("resourcePrimKey", String.valueOf(_entry.getPrimaryKey()));
+
+        return portletURL;
     }
 
     @Override
@@ -148,6 +154,7 @@ public class ${capFirstModel}AssetRenderer
             liferayPortletResponse, windowState);
 
         portletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/crud");
+        portletURL.setParameter("fromAsset", StringPool.TRUE);
         portletURL.setParameter(Constants.CMD, Constants.VIEW);
         portletURL.setWindowState(windowState);
         portletURL.setParameter("resourcePrimKey", String.valueOf(_entry.getPrimaryKey()));

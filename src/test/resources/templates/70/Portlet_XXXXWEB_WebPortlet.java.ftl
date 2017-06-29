@@ -39,7 +39,7 @@ import aQute.bnd.annotation.metatype.Configurable;
         "com.liferay.portlet.instanceable=true",
         "com.liferay.portlet.render-weight=50",
         "com.liferay.portlet.scopeable=true",
-        "com.liferay.portlet.struts-path=samplesb",
+        "com.liferay.portlet.struts-path=${lowercaseModel}",
         "com.liferay.portlet.use-default-template=true",
         "javax.portlet.display-name=${capFirstModel}-web Portlet",
         "javax.portlet.init-param.mvc-action-command-package-prefix=${application.packageName}.web.portlet.action" + ${capFirstModel}PortletKeys.${uppercaseModel},

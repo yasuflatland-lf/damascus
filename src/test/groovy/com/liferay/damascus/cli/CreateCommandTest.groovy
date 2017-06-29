@@ -275,6 +275,8 @@ class CreateCommandTest extends Specification {
         def targetFile46 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*FindEntryAction.java"), TrueFileFilter.INSTANCE)
         def targetFile47 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*FindEntryHelper.java"), TrueFileFilter.INSTANCE)
         def targetFile48 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*PortletLayoutFinder.java"), TrueFileFilter.INSTANCE)
+        def targetFile49 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*AdminPortlet.java"), TrueFileFilter.INSTANCE)
+        def targetFile50 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*PanelApp.java"), TrueFileFilter.INSTANCE)
 
         then:
         1 == targetFile1.size();
@@ -325,6 +327,8 @@ class CreateCommandTest extends Specification {
         1 == targetFile46.size();
         1 == targetFile47.size();
         1 == targetFile48.size();
+        1 == targetFile49.size();
+        1 == targetFile50.size();
 
         where:
         projectName | liferayVersion | packageName
