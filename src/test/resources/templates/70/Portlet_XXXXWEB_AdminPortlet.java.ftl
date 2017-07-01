@@ -22,6 +22,7 @@ import org.osgi.service.component.annotations.Component;
  * META-INF/resources/blogs_admin/
  *
  * @author Yasuyuki Takeo
+ * @author ${damascus_author}
  */
 @Component(
     immediate = true,
