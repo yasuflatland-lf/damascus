@@ -122,6 +122,7 @@
 		<#-- field loop ends  -->
 		<#-- ---------------- -->
 
+<#if ratings > 
 		<%
 			if (${uncapFirstModel}.getPrimaryKey() != 0) {
 		%>
@@ -130,6 +131,7 @@
 		<%
 			}
 		%>
+</#if>		
 <#if categories >		
 		<aui:input name="categories" type="assetCategories" />
 </#if>		

@@ -267,10 +267,12 @@ public class ${capFirstModel}LocalServiceImpl
         deleteDiscussion(entry);
 </#if> 
 
+<#if ratings > 
         // Ratings
 
         ratingsStatsLocalService.deleteStats(${capFirstModel}.class.getName(),
                                              entry.getPrimaryKey());
+</#if>                                             
 
         // Trash
 
