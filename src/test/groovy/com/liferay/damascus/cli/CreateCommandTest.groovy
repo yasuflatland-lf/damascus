@@ -335,7 +335,7 @@ class CreateCommandTest extends Specification {
         "SampleSB"  | "70"           | "com.liferay.test"
     }
     
-    def "Template creation tests from various base.json"() {
+    def "Template creation tests with asset flags variations"() {
         setup:
         Map params = Maps.newHashMap();
 
@@ -368,17 +368,38 @@ class CreateCommandTest extends Specification {
             webPath    : workTempDir + DS + projectName + DS + projectName + "-web"
         ];
 
-		def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*.java"), TrueFileFilter.INSTANCE)
-		def serviceTargetFiles = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*.java"), TrueFileFilter.INSTANCE)
-		def webTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*.java"), TrueFileFilter.INSTANCE)
+		def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
+		def serviceTargetFiles = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
+		def webJavaTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
+		def webJspTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*\\.jsp.*"), TrueFileFilter.INSTANCE)
+		
+		def prohibitedTermsTargetFiles = new ArrayList(webJspTargetFiles)
+		
+		if(prohibitedInServiceImpl) {
+			prohibitedTermsTargetFiles.addAll(
+				serviceTargetFiles.findAll { it.name.endsWith('LocalServiceImpl.java') })
+		}
 		
         then:
-		apiTargetFiles.size() > 1;
-		serviceTargetFiles.size() > 1;
-		webTargetFiles.size() > 1;
+        
+		apiTargetFiles.size() > 1
+		serviceTargetFiles.size() > 1
+		webJavaTargetFiles.size() > 1
+		webJspTargetFiles.size() > 1
+		
+		noFileContainsAnyTerm(prohibitedTermsTargetFiles, prohibitedTerms)
 		
         where:
-        projectName | liferayVersion | packageName        | baseFilename
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"
+        projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms                | prohibitedInServiceImpl
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities']     | true
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories']     | false 
     }
+    
+    void noFileContainsAnyTerm(files, terms) {
+	  files.each { file -> 
+			terms.each { term ->
+				assert !file.text.contains(term)
+			} 
+		};
+	}
 }

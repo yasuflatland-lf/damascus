@@ -5,6 +5,7 @@
 <#assign packagePath = "${application.packageName?replace(\".\", \"/\")}">
 <#assign packageSnake = "${application.packageName?replace(\".\", \"_\")}">
 
+<#assign categories = application.asset?exists && application.asset.categories>
 <#assign generateActivity = application.asset?exists && application.asset.generateActivity>
 
 <#assign primaryKeyParam = "">

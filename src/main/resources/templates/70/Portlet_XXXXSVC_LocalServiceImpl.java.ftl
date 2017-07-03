@@ -509,8 +509,8 @@ public class ${capFirstModel}LocalServiceImpl
     }
 
     /**
-     * Restores the entry with the ID from the recycle bin. Social activity
-     * counters for this entry get activated.
+     * Restores the entry with the ID from the recycle bin.<#if generateActivity> Social activity
+     * counters for this entry get activated.</#if>
      *
      * @param userId the primary key of the user restoring the entry
      * @param entryId the primary key of the entry to be restored

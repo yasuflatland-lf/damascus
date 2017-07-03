@@ -130,7 +130,9 @@
 		<%
 			}
 		%>
+<#if categories >		
 		<aui:input name="categories" type="assetCategories" />
+</#if>		
 		<aui:input name="tags" type="assetTags" />
 
 		<liferay-ui:panel defaultState="closed" extended="<%=false%>"
