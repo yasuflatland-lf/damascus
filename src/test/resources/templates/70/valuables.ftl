@@ -8,6 +8,7 @@
 <#assign categories = application.asset?exists && application.asset.categories>
 <#assign discussion = application.asset?exists && application.asset.discussion>
 <#assign ratings = application.asset?exists && application.asset.ratings>
+<#assign tags = application.asset?exists && application.asset.tags>
 <#assign generateActivity = application.asset?exists && application.asset.generateActivity>
 
 <#assign primaryKeyParam = "">

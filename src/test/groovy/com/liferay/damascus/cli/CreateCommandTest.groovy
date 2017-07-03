@@ -395,6 +395,7 @@ class CreateCommandTest extends Specification {
         "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories']     | false 
         "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments','discussion']      | true        
         "SampleSB"  | "70"           | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                    | true       
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_tags_false.json"       | ['tags']                       | false 
     }
     
     void noFileContainsAnyTerm(files, terms) {

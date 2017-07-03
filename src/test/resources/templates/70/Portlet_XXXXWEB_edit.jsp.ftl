@@ -23,7 +23,7 @@
         <aui:input type="hidden" name="redirect" value="<%=redirect%>" />
 		<aui:input type="hidden" name="resourcePrimKey" value="<%=${uncapFirstModel}.getPrimaryKey()%>" />
         <%
-        //This tags are only necessarily in Asset publisher
+        //This tag is only necessary in Asset publisher
         if(fromAsset) {
         %>
         <div class="lfr-form-content">
@@ -135,7 +135,9 @@
 <#if categories >		
 		<aui:input name="categories" type="assetCategories" />
 </#if>		
+<#if tags >	
 		<aui:input name="tags" type="assetTags" />
+</#if>		
 
 		<liferay-ui:panel defaultState="closed" extended="<%=false%>"
 			id="${uncapFirstModel}EntryAssetLinksPanel" persistState="<%=true%>"
@@ -148,7 +150,7 @@
 		</liferay-ui:panel>
 
 		<%
-		//This tags are only necessarily in Asset publisher
+		//This tag is only necessary in Asset publisher
 		if(fromAsset) {
 		%>
 		</div>
