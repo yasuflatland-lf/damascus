@@ -139,6 +139,7 @@
 		<aui:input name="tags" type="assetTags" />
 </#if>		
 
+<#if relatedAssets >
 		<liferay-ui:panel defaultState="closed" extended="<%=false%>"
 			id="${uncapFirstModel}EntryAssetLinksPanel" persistState="<%=true%>"
 			title="related-assets">
@@ -148,6 +149,7 @@
 					classPK="<%=${uncapFirstModel}.getPrimaryKey()%>" />
 			</aui:fieldset>
 		</liferay-ui:panel>
+</#if>		
 
 		<%
 		//This tag is only necessary in Asset publisher
