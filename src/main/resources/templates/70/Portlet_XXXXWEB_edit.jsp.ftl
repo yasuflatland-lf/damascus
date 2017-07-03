@@ -179,6 +179,7 @@
 			%>
 		</aui:button-row>
 	</aui:form>
+<#if discussion >	
 	<%
     if (${uncapFirstModel}.getPrimaryKey() != 0 && false == fromAsset) {
 	%>
@@ -201,6 +202,7 @@
 	<%
 	}
 	%>
+</#if>	
 </div>
 
 <#list application.fields as field >

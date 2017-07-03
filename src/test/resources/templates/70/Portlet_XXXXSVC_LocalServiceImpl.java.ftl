@@ -6,7 +6,9 @@ package ${application.packageName}.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+<#if discussion > 
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
+</#if>
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -259,9 +261,11 @@ public class ${capFirstModel}LocalServiceImpl
         assetEntryLocalService.deleteEntry(${capFirstModel}.class.getName(),
                                            entry.getPrimaryKey());
 
+<#if discussion > 
         // Comment
 
         deleteDiscussion(entry);
+</#if> 
 
         // Ratings
 
@@ -282,6 +286,7 @@ public class ${capFirstModel}LocalServiceImpl
         return entry;
     }
 
+<#if discussion > 
     /**
      * Delete discussion (comments)
      *
@@ -292,6 +297,7 @@ public class ${capFirstModel}LocalServiceImpl
         CommentManagerUtil.deleteDiscussion(${capFirstModel}.class.getName(),
                                             entry.getPrimaryKey());
     }
+</#if>
 
     public List<${capFirstModel}> findAllInGroup(long groupId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
@@ -696,8 +702,10 @@ public class ${capFirstModel}LocalServiceImpl
             // Trash
 
             if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
+<#if discussion >            
                 CommentManagerUtil.restoreDiscussionFromTrash(
                     ${capFirstModel}.class.getName(), entryId);
+</#if>                    
 
                 trashEntryLocalService.deleteEntry(${capFirstModel}.class.getName(),
                                                    entryId);
@@ -733,16 +741,19 @@ public class ${capFirstModel}LocalServiceImpl
             // Trash
 
             if (status == WorkflowConstants.STATUS_IN_TRASH) {
+<#if discussion >              
                 CommentManagerUtil
                     .moveDiscussionToTrash(${capFirstModel}.class.getName(), entryId);
-
+</#if>
                 trashEntryLocalService.addTrashEntry(userId, entry.getGroupId(),
                                                      ${capFirstModel}.class.getName(), entry.getPrimaryKey(),
                                                      entry.getUuid(), null, oldStatus, null, null);
 
             } else if (oldStatus == WorkflowConstants.STATUS_IN_TRASH) {
+<#if discussion >             
                 CommentManagerUtil.restoreDiscussionFromTrash(
                     ${capFirstModel}.class.getName(), entryId);
+</#if>                   
 
                 trashEntryLocalService.deleteEntry(${capFirstModel}.class.getName(),
                                                    entryId);

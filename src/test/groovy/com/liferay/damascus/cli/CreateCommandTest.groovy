@@ -393,6 +393,7 @@ class CreateCommandTest extends Specification {
         projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms                | prohibitedInServiceImpl
         "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities']     | true
         "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories']     | false 
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments','discussion']      | true        
     }
     
     void noFileContainsAnyTerm(files, terms) {
