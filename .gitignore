@@ -6,3 +6,6 @@ damascus.iws
 build
 classes
 .settings
+.classpath
+.project
+/bin
