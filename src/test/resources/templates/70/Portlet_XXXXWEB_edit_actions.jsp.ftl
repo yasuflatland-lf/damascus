@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/edit_actions.jsp">
+<#assign createPath = "${entityWebResourcesPath}/edit_actions.jsp">
 
 <%@include file="/init.jsp"%>
 

@@ -12,6 +12,8 @@
 <#assign relatedAssets = application.asset?exists && application.asset.relatedAssets>
 <#assign generateActivity = application.asset?exists && application.asset.generateActivity>
 
+<#assign entityWebResourcesPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources">
+
 <#assign primaryKeyParam = "">
 <#list application.fields as field >
     <#if field.primary?? && field.primary == true >

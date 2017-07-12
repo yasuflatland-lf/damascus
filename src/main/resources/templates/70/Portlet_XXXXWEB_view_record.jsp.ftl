@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/view_record.jsp">
+<#assign createPath = "${entityWebResourcesPath}/view_record.jsp">
 <%@ include file="/init.jsp"%>
 <%
     ${capFirstModel} ${uncapFirstModel} = (${capFirstModel}) request.getAttribute("${uncapFirstModel}");

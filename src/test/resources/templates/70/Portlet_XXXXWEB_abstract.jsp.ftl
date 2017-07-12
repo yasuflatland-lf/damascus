@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/asset/abstract.jsp">
+<#assign createPath = "${entityWebResourcesPath}/asset/abstract.jsp">
 
 <%@include file="../init.jsp" %>
 <%@ page import="${application.packageName}.model.${capFirstModel}" %>
