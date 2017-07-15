@@ -28,6 +28,8 @@ repositories {
     }
 }
 
+// TODO : This can be removed once you set up IDE. When you import this project into a IDE, you may be asked
+// a path to the gradle root. Then you run "gradle getHomeDir" and use the path for the IDE.
 task getHomeDir << {
     println gradle.gradleHomeDir
 }

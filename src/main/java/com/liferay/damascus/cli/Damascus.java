@@ -19,7 +19,7 @@ import java.io.*;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20170629";
+    public final static String VERSION = "20170715";
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();

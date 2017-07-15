@@ -12,6 +12,14 @@ import ${application.packageName}.constants.${capFirstModel}PortletKeys;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
+/**
+ * PanelApp
+ *
+ * This class is used to display a portet in the product menu
+ *
+ * @author Yasuyuki Takeo
+ * @author ${damascus_author}
+ */
 @Component(
     immediate = true,
     property = {
