@@ -72,7 +72,7 @@ public class ${capFirstModel}AssetRenderer
         if (template.equals(TEMPLATE_ABSTRACT) ||
             template.equals(TEMPLATE_FULL_CONTENT)) {
             request.setAttribute("${uncapFirstModel}", _entry);
-            return "/asset/" + template + ".jsp";
+            return "/${snakecaseModel}/asset/" + template + ".jsp";
         } else {
             return null;
         }

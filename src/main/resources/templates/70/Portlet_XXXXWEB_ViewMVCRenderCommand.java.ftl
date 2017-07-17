@@ -39,7 +39,7 @@ public class ${capFirstModel}ViewMVCRenderCommand implements MVCRenderCommand {
 
         request.setAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER, _${uncapFirstModel}ViewHelper);
 
-        return "/view.jsp";
+        return "/${snakecaseModel}/view.jsp";
     }
 
     @Reference(unbind = "-")

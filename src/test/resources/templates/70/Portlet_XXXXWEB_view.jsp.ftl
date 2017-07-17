@@ -1,7 +1,7 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/view.jsp">
 
-<%@ include file="/init.jsp"%>
+<%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
 	String iconChecked = "checked";
 	String iconUnchecked = "unchecked";
@@ -121,7 +121,7 @@
 							"no-recodes-were-found")%>'>
 
 			<liferay-ui:search-container-results>
-				<%@ include file="/search_results.jspf"%>
+				<%@ include file="/${snakecaseModel}/search_results.jspf"%>
 			</liferay-ui:search-container-results>
 
 			<liferay-ui:search-container-row
@@ -194,7 +194,7 @@
 			<#-- ---------------- -->
 
 				<liferay-ui:search-container-column-jsp align="right"
-					path="/edit_actions.jsp" />
+					path="/${snakecaseModel}/edit_actions.jsp" />
 
 			</liferay-ui:search-container-row>
 			<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />

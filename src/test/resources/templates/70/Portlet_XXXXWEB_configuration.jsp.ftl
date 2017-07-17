@@ -1,7 +1,7 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/configuration.jsp">
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/${snakecaseModel}/init.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <liferay-portlet:actionURL portletConfiguration="<%= true %>"

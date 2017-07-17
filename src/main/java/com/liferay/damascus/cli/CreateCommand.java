@@ -58,6 +58,7 @@ public class CreateCommand implements ICommand {
         //Mapping values used in templates
         params.put(DamascusProps.BASE_DAMASCUS_OBJ, damascusBase);
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
+        params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
         String author = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_AUTHOR);

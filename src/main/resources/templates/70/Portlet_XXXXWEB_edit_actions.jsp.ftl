@@ -1,7 +1,7 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/edit_actions.jsp">
 
-<%@include file="/init.jsp"%>
+<%@include file="/${snakecaseModel}/init.jsp"%>
 
 <%
     PortletURL navigationPortletURL = renderResponse.createRenderURL();

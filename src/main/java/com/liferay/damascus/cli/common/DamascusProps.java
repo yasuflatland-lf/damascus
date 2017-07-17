@@ -42,6 +42,8 @@ public class DamascusProps {
     public static final String BASE_DAMASCUS_OBJ = "damascus";
 
     public static final String BASE_TEMPLATE_UTIL_OBJ = "templateUtil";
+    
+    public static final String BASE_CASE_UTIL_OBJ = "caseUtil";
 
     public static final String BASE_CURRENT_APPLICATION = "application";
 

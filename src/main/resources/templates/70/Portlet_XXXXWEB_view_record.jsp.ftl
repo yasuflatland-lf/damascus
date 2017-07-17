@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/view_record.jsp">
-<%@ include file="/init.jsp"%>
+<%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
     ${capFirstModel} ${uncapFirstModel} = (${capFirstModel}) request.getAttribute("${uncapFirstModel}");
     String redirect = ParamUtil.getString(request, "redirect");

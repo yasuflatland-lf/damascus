@@ -2,6 +2,7 @@
 <#assign uncapFirstModel = "${application.model?uncap_first}">
 <#assign lowercaseModel = "${application.model?lower_case}">
 <#assign uppercaseModel = "${application.model?upper_case}">
+<#assign snakecaseModel = "${caseUtil.camelCaseToSnakeCase(application.model)}">
 <#assign packagePath = "${application.packageName?replace(\".\", \"/\")}">
 <#assign packageSnake = "${application.packageName?replace(\".\", \"_\")}">
 
@@ -12,7 +13,7 @@
 <#assign relatedAssets = application.asset?exists && application.asset.relatedAssets>
 <#assign generateActivity = application.asset?exists && application.asset.generateActivity>
 
-<#assign entityWebResourcesPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources">
+<#assign entityWebResourcesPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/${snakecaseModel}">
 
 <#assign primaryKeyParam = "">
 <#list application.fields as field >

@@ -9,9 +9,9 @@ package ${application.packageName}.web.constants;
 * @author ${damascus_author}
 */
 public class ${capFirstModel}WebKeys {
-    public static final String VIEW_JSP = "/view.jsp";
-    public static final String VIEW_RECORD_JSP = "/view_record.jsp";
-    public static final String EDIT_JSP = "/edit.jsp";
+    public static final String VIEW_JSP = "/${snakecaseModel}/view.jsp";
+    public static final String VIEW_RECORD_JSP = "/${snakecaseModel}/view_record.jsp";
+    public static final String EDIT_JSP = "/${snakecaseModel}/edit.jsp";
 
     public static final String ${uppercaseModel}_ITEM_SELECTOR_HELPER =
         "${uppercaseModel}_ITEM_SELECTOR_HELPER";

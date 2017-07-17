@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/edit.jsp">
-<%@ include file="/init.jsp"%>
+<%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
 	PortletURL portletURL = PortletURLUtil.clone(renderResponse.createRenderURL(), liferayPortletResponse);
 	boolean fromAsset = ParamUtil.getBoolean(request,"fromAsset",false);

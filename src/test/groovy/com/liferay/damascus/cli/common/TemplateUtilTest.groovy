@@ -90,6 +90,7 @@ class TemplateUtilTest extends Specification {
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath)
         params.put(DamascusProps.BASE_DAMASCUS_OBJ, dmsb);
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
+        params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, dmsb.applications[0]);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, paramFilePath);
         params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),"TEST");
