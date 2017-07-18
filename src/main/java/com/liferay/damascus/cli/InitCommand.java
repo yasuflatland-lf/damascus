@@ -2,6 +2,7 @@ package com.liferay.damascus.cli;
 
 import com.beust.jcommander.Parameter;
 import com.google.common.collect.Maps;
+import com.liferay.damascus.cli.common.CaseUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
 import com.liferay.damascus.cli.common.TemplateUtil;
 import com.liferay.damascus.cli.validators.PackageNameValidator;
@@ -20,6 +21,7 @@ import java.util.Map;
  * All Service builder portlet configuration are described in the file.
  *
  * @author Yasuyuki Takeo
+ * @author Sébastien Le Marchand
  */
 @Slf4j
 @Data
@@ -75,8 +77,11 @@ public class InitCommand implements ICommand {
     	if(!targetDir.toString().endsWith(DamascusProps.DS)) {
     		targetDir.append(DamascusProps.DS);
     	}
-        return targetDir
-        		.append(getProjectName())
+        
+    	String projectDirectoryName = CaseUtil.getInstance().camelCaseToDashCase(getProjectName());
+        
+		return targetDir
+        		.append(projectDirectoryName)
         		.append(DamascusProps.DS)
         		.append(DamascusProps.BASE_JSON)
         		.toString();

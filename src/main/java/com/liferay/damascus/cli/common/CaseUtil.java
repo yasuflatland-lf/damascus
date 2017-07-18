@@ -1,5 +1,10 @@
 package com.liferay.damascus.cli.common;
 
+/**
+ * Case formats conversion utility
+ * 
+ * @author Sébastien Le Marchand
+ */
 public class CaseUtil {
 	
 	protected CaseUtil() {

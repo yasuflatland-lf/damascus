@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/build.gradle">
+<#assign createPath = "${webModulePath}/build.gradle">
 
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -59,6 +59,6 @@ dependencies {
     compile group: "org.osgi", name: "osgi.cmpn", version: "6.0.0"
     compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
 
-    compileOnly project(":${capFirstModel}-api")
-    compileOnly project(":${capFirstModel}-service")
+    compileOnly project(":${dashcaseProjectName}-api")
+    compileOnly project(":${dashcaseProjectName}-service")
 }

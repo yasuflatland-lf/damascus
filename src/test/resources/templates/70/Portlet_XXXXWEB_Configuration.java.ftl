@@ -1,10 +1,10 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}Configuration.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}Configuration.java">
 
-package ${application.packageName}.web.portlet.action;
+package ${packageName}.web.portlet.action;
 
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
 
 import aQute.bnd.annotation.metatype.Meta;
 

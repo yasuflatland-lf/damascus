@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/constants/${capFirstModel}WebKeys.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/constants/${capFirstModel}WebKeys.java">
 
-package ${application.packageName}.web.constants;
+package ${packageName}.web.constants;
 
 /**
 * @author Yasuyuki Takeo

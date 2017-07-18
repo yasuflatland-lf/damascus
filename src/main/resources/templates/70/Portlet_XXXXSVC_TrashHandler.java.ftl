@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/trash/${capFirstModel}TrashHandler.java">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/trash/${capFirstModel}TrashHandler.java">
 
-package ${application.packageName}.trash;
+package ${packageName}.trash;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
@@ -13,10 +13,10 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author ${damascus_author}
  */
 @Component(
-    property = {"model.class.name=${application.packageName}.model.${capFirstModel}"},
+    property = {"model.class.name=${packageName}.model.${capFirstModel}"},
     service = TrashHandler.class
 )
 public class ${capFirstModel}TrashHandler

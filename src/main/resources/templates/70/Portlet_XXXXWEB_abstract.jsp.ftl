@@ -2,14 +2,14 @@
 <#assign createPath = "${entityWebResourcesPath}/asset/abstract.jsp">
 
 <%@include file="../init.jsp" %>
-<%@ page import="${application.packageName}.model.${capFirstModel}" %>
+<%@ page import="${packageName}.model.${capFirstModel}" %>
 
 <%@ page import="com.liferay.portal.kernel.util.StringPool" %>
 <%@ page import="com.liferay.portal.kernel.util.HttpUtil" %>
 <%@ page import="com.liferay.portal.kernel.util.HtmlUtil" %>
 
 
-<jsp:useBean id="${uncapFirstModel}" type="${application.packageName}.model.${capFirstModel}" scope="request"/>
+<jsp:useBean id="${uncapFirstModel}" type="${packageName}.model.${capFirstModel}" scope="request"/>
 
 <portlet:defineObjects />
 

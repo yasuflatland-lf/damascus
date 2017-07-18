@@ -26,6 +26,7 @@ import java.util.jar.*;
  * Freemarker Template Utility
  *
  * @author Yasuyuki Takeo
+ * @author Sébastien Le Marchand
  */
 @Slf4j
 public class TemplateUtil {
@@ -264,11 +265,11 @@ public class TemplateUtil {
      * Get service.xml directory under *-service directory
      *
      * @param rootPath    the root directory of the project
-     * @param projectName project name
+     * @param dashcaseProjectName project name
      * @param modelName   model name
      * @return relative path to the service.xml from the root directory
      */
-    public String getServiceXmlPath(String rootPath, String projectName, String modelName) {
+    public String getServiceXmlPath(String rootPath, String dashcaseProjectName) {
         String DS        = DamascusProps.DS;
         String returnStr = rootPath;
 
@@ -276,7 +277,7 @@ public class TemplateUtil {
             returnStr = StringUtils.removeEndIgnoreCase(rootPath, DamascusProps.DS);
         }
 
-        return returnStr + DS + projectName + DS + modelName + DamascusProps.DIR_SERVICE_SUFFIX + DS + DamascusProps.SERVICE_XML;
+        return returnStr + DS + dashcaseProjectName + DS + dashcaseProjectName + DamascusProps.DIR_SERVICE_SUFFIX + DS + DamascusProps.SERVICE_XML;
     }
 
     /**

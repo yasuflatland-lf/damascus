@@ -51,7 +51,7 @@
 		<div class="lfr-icon-actions">
 			<c:if test="<%= ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.PERMISSIONS) %>">
 				<liferay-security:permissionsURL
-					modelResource="${application.packageName}"
+					modelResource="${packageName}"
 					modelResourceDescription="<%= HtmlUtil.escape(themeDisplay.getScopeGroupName()) %>"
 					resourcePrimKey="<%= String.valueOf(themeDisplay.getScopeGroupId()) %>"
 					var="modelPermissionsURL"
@@ -125,7 +125,7 @@
 			</liferay-ui:search-container-results>
 
 			<liferay-ui:search-container-row
-				className="${application.packageName}.model.${capFirstModel}"
+				className="${packageName}.model.${capFirstModel}"
 				escapedModel="<%= true %>" keyProperty="${primaryKeyParam}"
 				rowIdProperty="${primaryKeyParam}" modelVar="${uncapFirstModel}">
 

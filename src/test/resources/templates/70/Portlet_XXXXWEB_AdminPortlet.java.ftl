@@ -1,10 +1,10 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/${capFirstModel}AdminPortlet.java">
-package ${application.packageName}.web.portlet;
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}AdminPortlet.java">
+package ${packageName}.web.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
 
 import javax.portlet.Portlet;
 
@@ -38,7 +38,7 @@ import org.osgi.service.component.annotations.Component;
         "com.liferay.portlet.struts-path=${lowercaseModel}-admin",
         "com.liferay.portlet.use-default-template=true",
         "javax.portlet.display-name=${capFirstModel}-Admin Portlet",
-        "javax.portlet.init-param.mvc-action-command-package-prefix=${application.packageName}.web.portlet.action" + ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN,
+        "javax.portlet.init-param.mvc-action-command-package-prefix=${packageName}.web.portlet.action" + ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN,
         "javax.portlet.init-param.always-display-default-configuration-icons=true",
         "javax.portlet.expiration-cache=0",
         "javax.portlet.init-param.template-path=/",

@@ -1,12 +1,12 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/${capFirstModel}PortletLayoutFinder.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}PortletLayoutFinder.java">
 
-package ${application.packageName}.web.portlet;
+package ${packageName}.web.portlet;
 
 import com.liferay.portal.kernel.portlet.BasePortletLayoutFinder;
 import com.liferay.portal.kernel.portlet.PortletLayoutFinder;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -16,7 +16,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=${application.packageName}.model.${capFirstModel}"},
+	property = {"model.class.name=${packageName}.model.${capFirstModel}"},
 	service = PortletLayoutFinder.class
 )
 public class ${capFirstModel}PortletLayoutFinder extends BasePortletLayoutFinder {

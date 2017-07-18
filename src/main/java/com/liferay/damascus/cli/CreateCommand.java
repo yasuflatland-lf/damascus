@@ -22,6 +22,7 @@ import java.util.*;
  * Damascus will create service according to the base.json
  *
  * @author Yasuyuki Takeo
+ * @author Sébastien Le Marchand
  */
 @Slf4j
 @Data
@@ -102,13 +103,13 @@ public class CreateCommand implements ICommand {
      * So it gets nested in this tool. This method move those nested project directory
      * into the current directory.
      *
-     * @param modelName Model name
+     * @param projectName Project name
      * @throws IOException
      */
-    private void moveProjectsToCurrentDir(String modelName) throws IOException {
+    private void moveProjectsToCurrentDir(String projectName) throws IOException {
 
         //Generated Project files are nested. Move into current directory
-        File srcDir  = new File("." + DamascusProps.DS + modelName);
+        File srcDir  = new File("." + DamascusProps.DS + projectName);
         File distDir = new File("." + DamascusProps.DS);
 
         if (!srcDir.exists() || !srcDir.isDirectory()) {
@@ -130,39 +131,6 @@ public class CreateCommand implements ICommand {
         if (gradlew.exists()) {
             gradlew.setExecutable(true);
         }
-    }
-
-    /**
-     * Finalize Project directory
-     *
-     * At the end of scaffolding process, all model projects need to be placed
-     * in the same directory hierarchy.
-     *
-     * @param dmsb
-     * @throws IOException
-     * @throws ConfigurationException
-     * @throws URISyntaxException
-     * @throws TemplateException
-     */
-    public void finalizeProjectDir(DamascusBase dmsb)
-        throws IOException, ConfigurationException, URISyntaxException, TemplateException {
-
-        //Get root path to the templates
-        File resourceRoot = TemplateUtil
-            .getInstance()
-            .getResourceRootPath(dmsb.getLiferayVersion());
-
-        //Process all model directory into the current directory
-        for(Application app : dmsb.getApplications() ) {
-            moveProjectsToCurrentDir(app.getModel());
-        }
-
-        //Process settings.gradle to integrate all model projects.
-        generateScaffolding(
-            dmsb,
-            DamascusProps.PROJECT_TEMPLATE_PREFIX,
-            null,
-            null);
     }
 
     /**
@@ -193,39 +161,44 @@ public class CreateCommand implements ICommand {
                 .getInstance()
                 .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
 
+            String camelCaseProjectName = dmsb.getProjectName();
+            
+			String dashCaseProjectName = CaseUtil.getInstance().camelCaseToDashCase(camelCaseProjectName);
+            
+            //1. Generate skeleton of the project.
+            //2. Parse service.xml
+            //3. run gradle buildService
+            //4. generate corresponding files from templates
+            //5. run gradle buildService again.
+
+            // Get path to the service.xml
+            String serviceXmlPath = TemplateUtil.getInstance().getServiceXmlPath(
+                CREATE_TARGET_PATH,
+                dashCaseProjectName
+            );
+
+            System.out.println("Generating *-api, *-service, *-web skeletons for " + dashCaseProjectName);
+
+            // Generate skeletons of the project
+            generateProjectSkeleton(
+            	dashCaseProjectName,
+                dmsb.getPackageName(),
+                CREATE_TARGET_PATH
+            );
+
+            System.out.println("Parsing " + serviceXmlPath);
+
+            // Generate service.xml based on base.json configurations and overwrite existing service.xml
+            generateScaffolding(dmsb, DamascusProps.SERVICE_XML, serviceXmlPath, null);
+
+            System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
+
+            //run "gradle buildService" to generate the skeleton of services.
+            CommonUtil.runGradle(serviceXmlPath, "buildService");
+
+			
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
-                //1. Generate skeleton of the project.
-                //2. Parse service.xml
-                //3. run gradle buildService
-                //4. generate corresponding files from templates
-                //5. run gradle buildService again.
-
-                // Get path to the service.xml
-                String serviceXmlPath = TemplateUtil.getInstance().getServiceXmlPath(
-                    CREATE_TARGET_PATH,
-                    app.getModel(),
-                    app.getModel()
-                );
-
-                System.out.println("Generating *-api, *-service, *-web skeletons for Model " + app.getModel());
-
-                // Generate skeletons of the project
-                generateProjectSkeleton(
-                    app.getModel(),
-                    app.getPackageName(),
-                    CREATE_TARGET_PATH
-                );
-
-                System.out.println("Parsing " + serviceXmlPath);
-
-                // Generate service.xml based on base.json configurations and over write existing service.xml
-                generateScaffolding(dmsb, DamascusProps.SERVICE_XML, serviceXmlPath, app);
-
-                System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
-
-                //run "gradle buildService" to generate the skeleton of services.
-                CommonUtil.runGradle(serviceXmlPath, "buildService");
 
                 System.out.print("Parsing templates");
 
@@ -236,17 +209,17 @@ public class CreateCommand implements ICommand {
                 }
 
                 System.out.println(".");
-                System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
-
-                //run "gradle buildService" to regenerate with added templates
-                CommonUtil.runGradle(serviceXmlPath, "buildService");
-
             }
+            
+            System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
 
-            System.out.println("Moving all model projects into the same directory");
+            //run "gradle buildService" to regenerate with added templates
+            CommonUtil.runGradle(serviceXmlPath, "buildService");
 
-            //Finalize Project Directory
-            finalizeProjectDir(dmsb);
+            System.out.println("Moving all modules projects into the same directory");
+
+            //Finalize Project Directory: move modules directories into the current directory
+			moveProjectsToCurrentDir(dashCaseProjectName);
 
             System.out.println("Done.");
 

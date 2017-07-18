@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-api/src/main/java/${packagePath}/constants/${capFirstModel}PortletKeys.java">
+<#assign createPath = "${apiModulePath}/src/main/java/${packagePath}/constants/${capFirstModel}PortletKeys.java">
 
-package ${application.packageName}.constants;
+package ${packageName}.constants;
 
 /**
 * @author Yasuyuki Takeo
@@ -13,7 +13,7 @@ public static final String ${uppercaseModel} = "${packageSnake}_web_portlet_${ca
 
 public static final String ${uppercaseModel}_ADMIN = "${packageSnake}_web_portlet_${capFirstModel}AdminPortlet";
 
-public static final String ${uppercaseModel}_CONFIG = "${application.packageName}.web.portlet.action.${capFirstModel}Configuration";
+public static final String ${uppercaseModel}_CONFIG = "${packageName}.web.portlet.action.${capFirstModel}Configuration";
 
 public static final String ${uppercaseModel}_FIND_ENTRY = "/${lowercaseModel}/find_entry";
 }

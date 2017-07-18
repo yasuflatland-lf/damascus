@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/util/${capFirstModel}ViewHelper.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/util/${capFirstModel}ViewHelper.java">
 
-package ${application.packageName}.web.util;
+package ${packageName}.web.util;
 
 import com.google.common.collect.Lists;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
@@ -25,9 +25,9 @@ import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.web.portlet.action.${capFirstModel}Configuration;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.web.portlet.action.${capFirstModel}Configuration;
 
 import java.util.List;
 

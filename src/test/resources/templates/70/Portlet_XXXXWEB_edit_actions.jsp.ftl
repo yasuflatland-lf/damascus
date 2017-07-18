@@ -21,7 +21,7 @@
 
     <c:if test="<%= ${capFirstModel}PermissionChecker.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.PERMISSIONS) %>">
         <liferay-security:permissionsURL
-            modelResource="${application.packageName}.model.${capFirstModel}"
+            modelResource="${packageName}.model.${capFirstModel}"
             modelResourceDescription="${capFirstModel}"
             resourcePrimKey="<%=String.valueOf(primKey)%>"
             var="permissionsEntryURL" />

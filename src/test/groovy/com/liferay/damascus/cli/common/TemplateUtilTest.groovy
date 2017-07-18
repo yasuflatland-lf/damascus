@@ -65,7 +65,7 @@ class TemplateUtilTest extends Specification {
         false == f.isDirectory()
         true == (retrivedObj.getProjectName().equals(projectName))
         true == (retrivedObj.getLiferayVersion().equals(liferayVersion))
-        true == (retrivedObj.applications.get(0).getPackageName().equals(packageName))
+        true == (retrivedObj.getPackageName().equals(packageName))
         true == (retrivedObj.applications.get(0).asset.getAssetTitleFieldName().equals(StringUtils.lowerCase(projectName) + "TitleName"))
         true == (retrivedObj.applications.get(0).asset.getAssetSummaryFieldName().equals(StringUtils.lowerCase(projectName) + "SummaryName"))
         true == (retrivedObj.applications.get(0).asset.getFullContentFieldName().equals(StringUtils.lowerCase(projectName) + "fullContent"))

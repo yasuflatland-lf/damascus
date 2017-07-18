@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRenderer.java">
-package ${application.packageName}.web.asset;
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRenderer.java">
+package ${packageName}.web.asset;
 
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
@@ -16,9 +16,9 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
 
 import java.util.Locale;
 

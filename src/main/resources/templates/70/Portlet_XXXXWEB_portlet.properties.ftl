@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/portlet.properties">
+<#assign createPath = "${webModulePath}/src/main/resources/portlet.properties">
 
 include-and-override=portlet-ext.properties
 

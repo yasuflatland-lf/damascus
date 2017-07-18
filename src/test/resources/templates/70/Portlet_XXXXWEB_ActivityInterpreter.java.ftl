@@ -1,9 +1,9 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/social/${capFirstModel}ActivityInterpreter.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/social/${capFirstModel}ActivityInterpreter.java">
 <#assign skipTemplate = !generateActivity>
 
-package ${application.packageName}.web.social;
+package ${packageName}.web.social;
 
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -18,11 +18,11 @@ import com.liferay.social.kernel.model.BaseSocialActivityInterpreter;
 import com.liferay.social.kernel.model.SocialActivity;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.social.kernel.model.SocialActivityInterpreter;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
-import ${application.packageName}.social.${capFirstModel}ActivityKeys;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
+import ${packageName}.social.${capFirstModel}ActivityKeys;
 
 import java.text.Format;
 
@@ -140,7 +140,7 @@ public class ${capFirstModel}ActivityInterpreter extends BaseSocialActivityInter
     }
 
     @Reference(
-        target = "(bundle.symbolic.name=${application.packageName}.web)",
+        target = "(bundle.symbolic.name=${packageName}.web)",
         unbind = "-"
     )
     protected void setResourceBundleLoader(ResourceBundleLoader resourceBundleLoader) {

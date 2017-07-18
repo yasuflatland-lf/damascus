@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-api/src/main/java/${packagePath}/exception/${capFirstModel}ValidateException.java">
+<#assign createPath = "${apiModulePath}/src/main/java/${packagePath}/exception/${capFirstModel}ValidateException.java">
 
-package ${application.packageName}.exception;
+package ${packageName}.exception;
 
 import com.liferay.portal.kernel.exception.PortalException;
 

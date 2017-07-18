@@ -140,7 +140,7 @@ class CreateCommandTest extends Specification {
     def "Create Test from Main"() {
         when:
         Map params = Maps.newHashMap();
-        def workTempDirAPI = workTempDir + DS + projectName + DS + projectName + "-api";
+        def workTempDirAPI = workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api";
 
         //Set parameters
         params.put("projectName", projectName)
@@ -163,16 +163,16 @@ class CreateCommandTest extends Specification {
         Damascus.main(args)
 
         //Test files / directories are property generated
-        def projectNameCommon = workTempDir + DS + projectName + DS + projectName;
+        def projectNameCommon = workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName;
         def service_path = new File(projectNameCommon + "-service");
         def api_path = new File(projectNameCommon + "-api");
         def buildGradle = new File(workspaceRootDir + DS + workspaceName + DS + "build.gradle")
         def serviceXml = new File(projectNameCommon + "-service" + DS + "service.xml");
         def implFile = FileUtils.listFiles(service_path, new RegexFileFilter(".*LocalServiceImpl.java"), TrueFileFilter.INSTANCE)
-        def validatorFile = FileUtils.listFiles(new File(workTempDir + DS + projectName), new RegexFileFilter(".*Validator.java"), TrueFileFilter.INSTANCE)
+        def validatorFile = FileUtils.listFiles(new File(workTempDir + DS + expectedProjectDirName), new RegexFileFilter(".*Validator.java"), TrueFileFilter.INSTANCE)
         def portletKeysFile = FileUtils.listFiles(new File(workTempDirAPI), new RegexFileFilter(".*PortletKeys.java"), TrueFileFilter.INSTANCE)
 
-        def f = new File(workTempDir + DS + projectName)
+        def f = new File(workTempDir + DS + expectedProjectDirName)
 
         then:
         //*-service / *-api
@@ -187,8 +187,8 @@ class CreateCommandTest extends Specification {
         0 != portletKeysFile.size()
 
         where:
-        projectName | liferayVersion | packageName
-        "SampleSB"  | "70"           | "com.liferay.test"
+        projectName | liferayVersion | packageName        | expectedProjectDirName
+        "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
 
     }
 
@@ -219,10 +219,10 @@ class CreateCommandTest extends Specification {
         when:
         //Target path map of a project
         def pathMap = [
-            rootPath   : workTempDir + DS + projectName,
-            apiPath    : workTempDir + DS + projectName + DS + projectName + "-api",
-            servicePath: workTempDir + DS + projectName + DS + projectName + "-service",
-            webPath    : workTempDir + DS + projectName + DS + projectName + "-web"
+            rootPath   : workTempDir + DS + expectedProjectDirName,
+            apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
+            servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
+            webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
         ];
 
         //Spock can't setup block to run for one time for a method, so list up all tests as below.
@@ -254,7 +254,7 @@ class CreateCommandTest extends Specification {
         def targetFile25 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*Configuration.java"), TrueFileFilter.INSTANCE)
         def targetFile26 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*configuration.jsp"), TrueFileFilter.INSTANCE)
         def targetFile27 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*CrudMVCActionCommand.java"), TrueFileFilter.INSTANCE)
-        def targetFile28 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*CurdMVCRenderCommand.java"), TrueFileFilter.INSTANCE)
+        def targetFile28 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*CrudMVCRenderCommand.java"), TrueFileFilter.INSTANCE)
         def targetFile29 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*default.xml"), TrueFileFilter.INSTANCE)
         def targetFile30 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*edit.jsp"), TrueFileFilter.INSTANCE)
         def targetFile31 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*edit_actions.jsp"), TrueFileFilter.INSTANCE)
@@ -331,8 +331,8 @@ class CreateCommandTest extends Specification {
         1 == targetFile50.size();
 
         where:
-        projectName | liferayVersion | packageName
-        "SampleSB"  | "70"           | "com.liferay.test"
+        projectName | liferayVersion | packageName        | expectedProjectDirName
+        "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
     }
     
     def "Template creation tests with asset flags variations"() {
@@ -362,10 +362,10 @@ class CreateCommandTest extends Specification {
         when:
         //Target path map of a project
         def pathMap = [
-            rootPath   : workTempDir + DS + projectName,
-            apiPath    : workTempDir + DS + projectName + DS + projectName + "-api",
-            servicePath: workTempDir + DS + projectName + DS + projectName + "-service",
-            webPath    : workTempDir + DS + projectName + DS + projectName + "-web"
+            rootPath   : workTempDir + DS + expectedProjectDirName,
+            apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
+            servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
+            webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
         ];
 
 		def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
@@ -390,13 +390,13 @@ class CreateCommandTest extends Specification {
 		noFileContainsAnyTerm(prohibitedTermsTargetFiles, prohibitedTerms)
 		
         where:
-        projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms                | prohibitedInServiceImpl
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities']     | true
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories']     | false 
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments','discussion']      | true        
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                    | true  
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_tags_false.json"       | ['tags']                       | false 
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_related_false.json"    | ['asset-links']                | false 
+        projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms                | prohibitedInServiceImpl | expectedProjectDirName
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities']     | true                    | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories']     | false                   | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments','discussion']      | true                    | "sample-sb"   
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                    | true                    | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_tags_false.json"       | ['tags']                       | false                   | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_related_false.json"    | ['asset-links']                | false                   | "sample-sb"
     }
     
     void noFileContainsAnyTerm(files, terms) {

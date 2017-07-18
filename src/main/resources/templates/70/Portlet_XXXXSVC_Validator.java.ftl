@@ -1,13 +1,13 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/util/${capFirstModel}Validator.java">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/service/util/${capFirstModel}Validator.java">
 
-package ${application.packageName}.service.util;
+package ${packageName}.service.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.ModelValidator;
-import ${application.packageName}.exception.${capFirstModel}ValidateException;
-import ${application.packageName}.model.${capFirstModel};
+import ${packageName}.exception.${capFirstModel}ValidateException;
+import ${packageName}.model.${capFirstModel};
 
 import java.util.ArrayList;
 import java.util.Date;

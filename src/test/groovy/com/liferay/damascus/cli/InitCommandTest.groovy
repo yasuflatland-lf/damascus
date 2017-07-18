@@ -101,14 +101,14 @@ class InitCommandTest extends Specification {
         new JCommander(initCommand, args);
         def dms = Spy(Damascus)
         initCommand.run(dms, args)
-        def f = new File(workTempDir + DS + argv2 + DS + DamascusProps.BASE_JSON)
+        def f = new File(workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON)
 
         then:
         true == f.exists()
         //Other detailed test to confirm if the json is parsed correctly has been done in JsonUtilTest
 
         where:
-        argv1   | argv2  | argv3 | argv4         | argv5 | argv6
-        "-init" | "ToDo" | "-p"  | "com.liferay" | "-v"  | "70"
+        argv1   | argv2  | argv3 | argv4         | argv5 | argv6 | expectedProjectDirName
+        "-init" | "ToDo" | "-p"  | "com.liferay" | "-v"  | "70"  | "to-do"
     }
 }

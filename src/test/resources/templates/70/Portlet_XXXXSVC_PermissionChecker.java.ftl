@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/permission/${capFirstModel}PermissionChecker.java">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/service/permission/${capFirstModel}PermissionChecker.java">
 
-package ${application.packageName}.service.permission;
+package ${packageName}.service.permission;
 
 import com.liferay.exportimport.kernel.staging.permission.StagingPermissionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -14,8 +14,8 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.BaseModelPermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.workflow.permission.WorkflowPermissionUtil;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalServiceUtil;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalServiceUtil;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -24,7 +24,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
     immediate = true,
-    property = {"model.class.name=${application.packageName}.model.${capFirstModel}" }
+    property = {"model.class.name=${packageName}.model.${capFirstModel}" }
 )
 public class ${capFirstModel}PermissionChecker
     implements BaseModelPermissionChecker {

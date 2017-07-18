@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/permission/${capFirstModel}ResourcePermissionChecker.java">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/service/permission/${capFirstModel}ResourcePermissionChecker.java">
 
-package ${application.packageName}.service.permission;
+package ${packageName}.service.permission;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.PortletProvider;
@@ -11,8 +11,8 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.BaseResourcePermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.ResourcePermissionChecker;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.model.${capFirstModel};
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.model.${capFirstModel};
 
 import org.osgi.service.component.annotations.Component;
 
@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Component;
 public class ${capFirstModel}ResourcePermissionChecker
     extends BaseResourcePermissionChecker {
 
-    public static final String RESOURCE_NAME = "${application.packageName}";
+    public static final String RESOURCE_NAME = "${packageName}";
 
     public static void check(
         PermissionChecker permissionChecker, long groupId, String actionId)

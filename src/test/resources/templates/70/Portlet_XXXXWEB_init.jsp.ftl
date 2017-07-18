@@ -51,15 +51,15 @@
 <%@ page import="com.liferay.portal.kernel.util.PortalUtil"%>
 <%@ page import="com.liferay.portal.kernel.model.GroupConstants"%>
 
-<%@ page import="${application.packageName}.model.${capFirstModel}" %>
-<%@ page import="${application.packageName}.service.${capFirstModel}LocalServiceUtil"%>
-<%@ page import="${application.packageName}.web.portlet.action.${capFirstModel}Configuration" %>
-<%@ page import="${application.packageName}.service.permission.${capFirstModel}PermissionChecker" %>
-<%@ page import="${application.packageName}.service.permission.${capFirstModel}ResourcePermissionChecker" %>
-<%@ page import="${application.packageName}.web.constants.${capFirstModel}WebKeys" %>
-<%@ page import="${application.packageName}.web.upload.${capFirstModel}ItemSelectorHelper" %>
-<%@ page import="${application.packageName}.web.util.${capFirstModel}ViewHelper" %>
-<%@ page import="${application.packageName}.constants.${capFirstModel}PortletKeys" %>
+<%@ page import="${packageName}.model.${capFirstModel}" %>
+<%@ page import="${packageName}.service.${capFirstModel}LocalServiceUtil"%>
+<%@ page import="${packageName}.web.portlet.action.${capFirstModel}Configuration" %>
+<%@ page import="${packageName}.service.permission.${capFirstModel}PermissionChecker" %>
+<%@ page import="${packageName}.service.permission.${capFirstModel}ResourcePermissionChecker" %>
+<%@ page import="${packageName}.web.constants.${capFirstModel}WebKeys" %>
+<%@ page import="${packageName}.web.upload.${capFirstModel}ItemSelectorHelper" %>
+<%@ page import="${packageName}.web.util.${capFirstModel}ViewHelper" %>
+<%@ page import="${packageName}.constants.${capFirstModel}PortletKeys" %>
 
 <liferay-frontend:defineObjects/>
 <liferay-theme:defineObjects/>

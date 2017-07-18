@@ -1,11 +1,11 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/bnd.bnd">
-Bundle-Name: ${capFirstModel}-service
-Bundle-SymbolicName: ${application.packageName}.service
+<#assign createPath = "${serviceModulePath}/bnd.bnd">
+Bundle-Name: ${dashcaseProjectName}-service
+Bundle-SymbolicName: ${packageName}.service
 Bundle-Version: 1.0.0
 Export-Package:\
-${application.packageName}.service.permission,\
-${application.packageName}.service.util
+${packageName}.service.permission,\
+${packageName}.service.util
 Liferay-Require-SchemaVersion: 1.0.0
 Liferay-Service: true
 

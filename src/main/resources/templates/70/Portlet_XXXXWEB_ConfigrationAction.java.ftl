@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigrationAction.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigrationAction.java">
 
-package ${application.packageName}.web.portlet.action;
+package ${packageName}.web.portlet.action;
 
 import com.google.common.collect.Lists;
 import com.liferay.portal.kernel.log.Log;
@@ -12,7 +12,7 @@ import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
 
 import java.util.List;
 import java.util.Map;

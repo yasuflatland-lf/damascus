@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-api/build.gradle">
+<#assign createPath = "${apiModulePath}/build.gradle">
 
 dependencies {
     compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
