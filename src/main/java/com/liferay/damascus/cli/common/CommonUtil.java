@@ -216,6 +216,9 @@ public class CommonUtil {
         // Delete gradlew files of *-web directory to force to use gradlew files of parent directory instead.
         deleteGradlews(webPath);
         
+        // Delete default Java source files
+        deleteDefaultJavaSources(webPath);
+        
         // Delete unused default JSPs
         deleteDefaultJsps(webPath);
     }
@@ -232,10 +235,13 @@ public class CommonUtil {
         FileUtils.deleteQuietly(gradlewBatPath);
     }
     
+    static public void deleteDefaultJavaSources(String path) {
+        File javaPath = new File(path + "/src/main/java");
+        FileUtils.deleteQuietly(javaPath);
+    }
+    
     static public void deleteDefaultJsps(String path) {
-        File initJspPath = new File(path + "/src/main/resources/META-INF/resources/init.jsp");
-        File viewJspPath = new File(path + "/src/main/resources/META-INF/resources/view.jsp");
-        FileUtils.deleteQuietly(initJspPath);
-        FileUtils.deleteQuietly(viewJspPath);
+        File jspsPath = new File(path + "/src/main/resources/META-INF/resources");
+        FileUtils.deleteQuietly(jspsPath);
     }
 }
