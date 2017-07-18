@@ -1,6 +1,6 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CurdMVCRenderCommand.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCRenderCommand.java">
 
 package ${packageName}.web.portlet.action;
 
