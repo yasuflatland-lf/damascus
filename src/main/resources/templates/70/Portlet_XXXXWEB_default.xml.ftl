@@ -5,9 +5,8 @@
 
 <resource-action-mapping>
 	<#list damascus.applications as app >
-	<#list ['Web','Admin'] as portletType >	
     <portlet-resource>
-        <portlet-name>${packageSnake}_web_portlet_${app.model?cap_first}${PortletType}Portlet</portlet-name>
+        <portlet-name>${packageSnake}_web_portlet_${app.model?cap_first}WebPortlet</portlet-name>
         <permissions>
             <supports>
                 <action-key>ACCESS_IN_CONTROL_PANEL</action-key>
@@ -27,6 +26,5 @@
             </guest-unsupported>
         </permissions>
     </portlet-resource>
-    </#list>
     </#list>	
 </resource-action-mapping>

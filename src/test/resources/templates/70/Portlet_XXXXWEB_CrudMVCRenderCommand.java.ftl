@@ -1,6 +1,6 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCRenderCommand.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CurdMVCRenderCommand.java">
 
 package ${packageName}.web.portlet.action;
 
@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
     },
     service = MVCRenderCommand.class
 )
-public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
+public class ${capFirstModel}CurdMVCRenderCommand implements MVCRenderCommand {
 
     @Override
     public String render(RenderRequest request, RenderResponse response) throws PortletException {

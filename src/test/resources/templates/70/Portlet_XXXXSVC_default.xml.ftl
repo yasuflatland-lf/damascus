@@ -11,6 +11,7 @@
             <#list damascus.applications as app >
             <#assign capFirstModel = "${app.model?cap_first}">
             <portlet-name>${packageSnake}_web_portlet_${capFirstModel}WebPortlet</portlet-name>
+            <portlet-name>${packageSnake}_web_portlet_${capFirstModel}AdminPortlet</portlet-name>
             </#list>
         </portlet-ref>
         <root>true</root>
