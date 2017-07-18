@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
     },
     service = MVCRenderCommand.class
 )
-public class ${capFirstModel}CurdMVCRenderCommand implements MVCRenderCommand {
+public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
 
     @Override
     public String render(RenderRequest request, RenderResponse response) throws PortletException {
