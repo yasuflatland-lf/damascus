@@ -550,4 +550,9 @@ public class TemplateUtil {
 
         return buildNumber.toString();
     }
+    
+    public void clear() {
+    	_cfg = null;
+    	_typeParams = null;
+    }
 }

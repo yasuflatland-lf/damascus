@@ -25,6 +25,7 @@ class CreateCommandTest extends Specification {
     def setup() {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
+		TemplateUtil.getInstance().clear();
 
         //Create Workspace
         CommonUtil.createWorkspace(workspaceRootDir, workspaceName);

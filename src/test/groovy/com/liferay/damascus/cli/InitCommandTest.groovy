@@ -3,6 +3,7 @@ package com.liferay.damascus.cli
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.ParameterException
 import com.liferay.damascus.cli.common.DamascusProps
+import com.liferay.damascus.cli.common.TemplateUtil
 import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import spock.lang.Specification
@@ -16,6 +17,7 @@ class InitCommandTest extends Specification {
     def setup() {
         Spy(Damascus)
         FileUtils.deleteDirectory(new File(workTempDir));
+        TemplateUtil.getInstance().clear();
         TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
 
         initCommand = Spy(InitCommand)

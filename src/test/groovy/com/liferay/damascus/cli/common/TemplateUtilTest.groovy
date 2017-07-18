@@ -23,6 +23,7 @@ class TemplateUtilTest extends Specification {
     def setup() {
         FileUtils.deleteDirectory(new File(workTempDir));
         FileUtils.deleteDirectory(new File(targetTempDir));
+        TemplateUtil.getInstance().clear();
     }
 
     /**
