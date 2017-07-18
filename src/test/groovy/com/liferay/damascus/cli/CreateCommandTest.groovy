@@ -18,7 +18,7 @@ import spock.lang.Unroll
 class CreateCommandTest extends Specification {
     static def DS = DamascusProps.DS;
     static def workspaceRootDir = TestUtils.getTempPath() + "damascustest";
-    static def workspaceName = "";
+    static def workspaceName = "workspace"
     static def workTempDir = "";
     static def createCommand;
 
@@ -27,7 +27,6 @@ class CreateCommandTest extends Specification {
         FileUtils.deleteDirectory(new File(workspaceRootDir));
 
         //Create Workspace
-        workspaceName = "workspace-" + new Date().getTime();
         CommonUtil.createWorkspace(workspaceRootDir, workspaceName);
 
         //Execute all tests under modules
