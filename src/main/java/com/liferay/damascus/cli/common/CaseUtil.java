@@ -3,6 +3,15 @@ package com.liferay.damascus.cli.common;
 /**
  * Case formats conversion utility
  * 
+ * <p>
+ * Note: We don't use Guava CaseFormat because it has some limitations with uppercase characters sequences. 
+ * For example, converting from camel case to dash case the string "UnknownURL":
+ * <ul>
+ * 	<li>with Guava: "unknown-u-r-l"</li>
+ * 	<li>with the custom class: "unknown-url"</li>
+ * </ul>
+ * </p>
+ * 
  * @author Sébastien Le Marchand
  */
 public class CaseUtil {
