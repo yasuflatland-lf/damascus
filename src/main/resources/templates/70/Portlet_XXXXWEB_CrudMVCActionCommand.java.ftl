@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCActionCommand.java">
-package ${application.packageName}.web.portlet.action;
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCActionCommand.java">
+package ${packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -22,12 +22,12 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.exception.${capFirstModel}ValidateException;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
-import ${application.packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.exception.${capFirstModel}ValidateException;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
+import ${packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
 import com.liferay.trash.kernel.util.TrashUtil;
 
 import java.io.IOException;

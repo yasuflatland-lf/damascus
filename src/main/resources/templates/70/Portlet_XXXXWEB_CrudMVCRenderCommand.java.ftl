@@ -1,21 +1,21 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CurdMVCRenderCommand.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCRenderCommand.java">
 
-package ${application.packageName}.web.portlet.action;
+package ${packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.service.${capFirstModel}LocalServiceUtil;
-import ${application.packageName}.web.constants.${capFirstModel}WebKeys;
-import ${application.packageName}.web.upload.${capFirstModel}ItemSelectorHelper;
-import ${application.packageName}.web.util.${capFirstModel}ViewHelper;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.service.${capFirstModel}LocalServiceUtil;
+import ${packageName}.web.constants.${capFirstModel}WebKeys;
+import ${packageName}.web.upload.${capFirstModel}ItemSelectorHelper;
+import ${packageName}.web.util.${capFirstModel}ViewHelper;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
     },
     service = MVCRenderCommand.class
 )
-public class ${capFirstModel}CurdMVCRenderCommand implements MVCRenderCommand {
+public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
 
     @Override
     public String render(RenderRequest request, RenderResponse response) throws PortletException {

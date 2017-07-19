@@ -1,12 +1,12 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/${capFirstModel}WebPortlet.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}WebPortlet.java">
 
-package ${application.packageName}.web.portlet;
+package ${packageName}.web.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.web.portlet.action.${capFirstModel}Configuration;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.web.portlet.action.${capFirstModel}Configuration;
 
 import java.io.IOException;
 import java.util.Map;
@@ -42,7 +42,7 @@ import aQute.bnd.annotation.metatype.Configurable;
         "com.liferay.portlet.struts-path=${lowercaseModel}",
         "com.liferay.portlet.use-default-template=true",
         "javax.portlet.display-name=${capFirstModel}-web Portlet",
-        "javax.portlet.init-param.mvc-action-command-package-prefix=${application.packageName}.web.portlet.action" + ${capFirstModel}PortletKeys.${uppercaseModel},
+        "javax.portlet.init-param.mvc-action-command-package-prefix=${packageName}.web.portlet.action" + ${capFirstModel}PortletKeys.${uppercaseModel},
         "javax.portlet.init-param.always-display-default-configuration-icons=true",
         "javax.portlet.expiration-cache=0",
         "javax.portlet.init-param.template-path=/",

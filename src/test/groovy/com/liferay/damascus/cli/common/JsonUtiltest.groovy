@@ -34,7 +34,7 @@ class JsonUtilTest extends Specification {
         then:
         true == (retrivedObj.getProjectName().equals("\${damascus.projectName}"))
         true == (retrivedObj.getLiferayVersion().equals("\${damascus.liferayVersion}"))
-        true == (retrivedObj.applications.get(0).getPackageName().equals("\${damascus.packageName}"))
+        true == (retrivedObj.getPackageName().equals("\${damascus.packageName}"))
         true == (retrivedObj.applications.get(0).asset.getAssetTitleFieldName().equals("\${damascus.projectNameLower}TitleName"))
         true == (retrivedObj.applications.get(0).asset.getAssetSummaryFieldName().equals("\${damascus.projectNameLower}SummaryName"))
         true == (retrivedObj.applications.get(0).asset.getFullContentFieldName().equals("\${damascus.projectNameLower}fullContent"))
@@ -77,7 +77,7 @@ class JsonUtilTest extends Specification {
         null != serializedObj;
         true == (serializedObj.getProjectName().equals("\${damascus.projectName}"))
         true == (serializedObj.getLiferayVersion().equals("\${damascus.liferayVersion}"))
-        true == (serializedObj.applications.get(0).getPackageName().equals("\${damascus.packageName}"))
+        true == (serializedObj.getPackageName().equals("\${damascus.packageName}"))
         true == (serializedObj.applications.get(0).asset.getAssetTitleFieldName().equals("\${damascus.projectNameLower}TitleName"))
         true == (serializedObj.applications.get(0).asset.getAssetSummaryFieldName().equals("\${damascus.projectNameLower}SummaryName"))
         true == (serializedObj.applications.get(0).asset.getFullContentFieldName().equals("\${damascus.projectNameLower}fullContent"))

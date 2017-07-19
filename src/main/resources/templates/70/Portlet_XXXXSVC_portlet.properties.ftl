@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/resources/portlet.properties">
+<#assign createPath = "${serviceModulePath}/src/main/resources/portlet.properties">
 include-and-override=portlet-ext.properties
 
 # Input a list of comma delimited resource action configurations that will be

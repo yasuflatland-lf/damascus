@@ -211,10 +211,16 @@ public class CommonUtil {
             .template(DamascusProps.MVC_PORTLET_CMD)
             .build().create();
 
-        //Delete gradlew files of *-web directory to force to use gradlew files of parent directory instead.
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
+        
+        // Delete gradlew files of *-web directory to force to use gradlew files of parent directory instead.
         deleteGradlews(webPath);
-
+        
+        // Delete default Java source files
+        deleteDefaultJavaSources(webPath);
+        
+        // Delete unused default JSPs
+        deleteDefaultJsps(webPath);
     }
 
     /**
@@ -227,5 +233,15 @@ public class CommonUtil {
         File gradlewBatPath = new File(path + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
         FileUtils.deleteQuietly(gradlewPath);
         FileUtils.deleteQuietly(gradlewBatPath);
+    }
+    
+    static public void deleteDefaultJavaSources(String path) {
+        File javaPath = new File(path + "/src/main/java");
+        FileUtils.deleteQuietly(javaPath);
+    }
+    
+    static public void deleteDefaultJsps(String path) {
+        File jspsPath = new File(path + "/src/main/resources/META-INF/resources");
+        FileUtils.deleteQuietly(jspsPath);
     }
 }

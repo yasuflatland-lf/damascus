@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/search_results.jspf">
+<#assign createPath = "${entityWebResourcesPath}/search_results.jspf">
 
 <%@page import="javax.portlet.RenderRequest"%>
 <%

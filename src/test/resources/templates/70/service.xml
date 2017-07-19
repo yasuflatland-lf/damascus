@@ -1,17 +1,20 @@
+<#include "./valuables.ftl">
 <#assign createPath = "${createPath_val}/service.xml">
 <?xml version="1.0"?>
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
 
-<service-builder package-path="${application.packageName}">
-<namespace>${application.model}</namespace>
+<service-builder package-path="${packageName}">
+<namespace>${camelcaseProjectName?upper_case}</namespace>
 
-    <!--<entity data-source="sampleDataSource" local-service="true" name="${application.model}" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
-    <entity name="${application.model}" local-service="true" remote-service="false" uuid="${application.isSetAsset()?c}" trash-enabled="true">
+	 <#list damascus.applications as app >	
+
+    <!--<entity data-source="sampleDataSource" local-service="true" name="${app.model}" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
+    <entity name="${app.model}" local-service="true" remote-service="false" uuid="${app.isSetAsset()?c}" trash-enabled="true">
 
         <#-- ---------------- -->
         <#-- field loop start -->
         <#-- ---------------- -->
-        <#list application.fields as field >
+        <#list app.fields as field >
             <#if field.primary?? && field.primary == true >
         <!-- PK field -->
             </#if>
@@ -34,16 +37,16 @@
         <#-- ---------------- -->
         <#-- Asset Commons    -->
         <#-- ---------------- -->
-        <#if application.asset?? >
+        <#if app.asset?? >
         <!-- Asset related fields-->
         <column name="urlTitle" type="String" />
-        <column name="${application.asset.assetTitleFieldName}" type="String" />
-        <column name="${application.asset.assetSummaryFieldName}" type="String" />
+        <column name="${app.asset.assetTitleFieldName}" type="String" />
+        <column name="${app.asset.assetSummaryFieldName}" type="String" />
 
         <#-- ---------------- -->
         <#-- Workflow         -->
         <#-- ---------------- -->
-        <#if application.asset.workflow?? && true == application.asset.workflow >
+        <#if app.asset.workflow?? && true == app.asset.workflow >
         <!-- Workflow related fields -->
         <column name="status" type="int" />
         <column name="statusByUserId" type="long" />
@@ -85,13 +88,13 @@
         <#-- ---------------- -->
         <#-- Asset related    -->
         <#-- ---------------- -->
-        <#if application.asset?? >
+        <#if app.asset?? >
         <!-- Asset related Finders-->
-        <finder name="G_UT" return-type="${application.model}" unique="true">
+        <finder name="G_UT" return-type="${app.model}" unique="true">
             <finder-column name="groupId" />
             <finder-column name="urlTitle" />
         </finder>
-        <finder name="URLTitle" return-type="${application.model}" unique="true">
+        <finder name="URLTitle" return-type="${app.model}" unique="true">
             <finder-column name="urlTitle" />
         </finder>
         </#if>
@@ -114,7 +117,7 @@
         <#-- ---------------- -->
         <#-- Fields Finders   -->
         <#-- ---------------- -->
-        <#list application.fields as field >
+        <#list app.fields as field >
         <finder name="${field.name?cap_first}" return-type="Collection">
             <finder-column name="${field.name}" />
         </finder>
@@ -125,7 +128,7 @@
         <#-- ---------------- -->
         <#-- TODO: Relations need to be implimented -->
         <#if false >
-            <#list application.relations as relation >
+            <#list app.relations as relation >
         <!-- Finder Methods when Detail Files -->
         <finder name="${relation.detailFileClassName?cap_first}" return-type="Collection">
             <finder-column name="${relation.connectionFieldName}" />
@@ -138,7 +141,7 @@
         </#if>
         <#-- TODO: Validations need to be implimented -->
         <#if false >
-            <#list application.fields as field >
+            <#list app.fields as field >
                 <#list field.validations as validation >
         <!-- Finder Methods when Detail Files -->
         <finder name="${validation.fieldName?cap_first}" return-type="Collection">
@@ -157,9 +160,12 @@
         <reference entity="TrashEntry" package-path="com.liferay.portlet.trash" />
         <reference entity="TrashVersion" package-path="com.liferay.portlet.trash" />
     </entity>
+    </#list>
     <exceptions>
-        <exception>NoSuch${application.model}</exception>
-        <exception>${application.model?cap_first}ValidateException</exception>
+    	<#list damascus.applications as app >	
+        <exception>NoSuch${app.model}</exception>
+        <exception>${app.model?cap_first}ValidateException</exception>
+        </#list>
     </exceptions>
 
 </service-builder>

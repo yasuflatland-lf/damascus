@@ -4,6 +4,7 @@ package com.liferay.damascus.cli.common;
  * Properties class
  *
  * @author Yasuyuki Takeo
+ * @author Sébastien Le Marchand
  */
 public class DamascusProps {
     public static final String EOL = System.getProperty("line.separator");
@@ -34,14 +35,14 @@ public class DamascusProps {
 
     public static final String SERVICE_XML = "service.xml";
 
-    public static final String PROJECT_TEMPLATE_PREFIX = "Project_settings.gradle.ftl";
-
     /**
      * Base json parse parameters
      */
     public static final String BASE_DAMASCUS_OBJ = "damascus";
 
     public static final String BASE_TEMPLATE_UTIL_OBJ = "templateUtil";
+    
+    public static final String BASE_CASE_UTIL_OBJ = "caseUtil";
 
     public static final String BASE_CURRENT_APPLICATION = "application";
 

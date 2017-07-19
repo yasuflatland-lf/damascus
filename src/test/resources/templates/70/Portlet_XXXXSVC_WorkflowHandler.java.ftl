@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/workflow/${capFirstModel}WorkflowHandler.java">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/service/workflow/${capFirstModel}WorkflowHandler.java">
 
-package ${application.packageName}.service.workflow;
+package ${packageName}.service.workflow;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -11,8 +11,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.BaseWorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author ${damascus_author}
  */
 @Component(
-    property = {"model.class.name=${application.packageName}.model.${capFirstModel}"},
+    property = {"model.class.name=${packageName}.model.${capFirstModel}"},
     service = WorkflowHandler.class
 )
 public class ${capFirstModel}WorkflowHandler extends BaseWorkflowHandler<${capFirstModel}> {

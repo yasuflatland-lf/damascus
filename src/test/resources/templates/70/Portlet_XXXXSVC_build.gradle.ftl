@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/build.gradle">
+<#assign createPath = "${serviceModulePath}/build.gradle">
 apply plugin: "com.liferay.portal.tools.service.builder"
 
 //Need for Windows
@@ -36,11 +36,11 @@ dependencies {
 	compile group: "javax.portlet", name: "portlet-api", version: "2.0"
 	compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
 	compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
-	compile project(":${application.model}-api")
+	compile project(":${dashcaseProjectName}-api")
 }
 
 buildService {
-	apiDir = "../${application.model}-api/src/main/java"
+	apiDir = "../${dashcaseProjectName}-api/src/main/java"
 }
 
-group = "${application.packageName}"
+group = "${packageName}"

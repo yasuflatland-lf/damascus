@@ -14,6 +14,7 @@ import java.util.*;
  * which is based on each model(entity) of service.xml
  *
  * @author Yasuyuki Takeo
+ * @author Sébastien Le Marchand
  */
 @Data
 @AllArgsConstructor
@@ -21,9 +22,6 @@ import java.util.*;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Application {
-
-    @JsonProperty(required = true)
-    public String packageName;
 
     @JsonProperty(required = true)
     public String model;
