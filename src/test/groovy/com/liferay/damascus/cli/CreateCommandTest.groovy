@@ -251,7 +251,7 @@ class CreateCommandTest extends Specification {
         def targetFile21 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*AssetRendererFactory.java"), TrueFileFilter.INSTANCE)
         def targetFile22 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*bnd.bnd"), TrueFileFilter.INSTANCE)
         def targetFile23 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*build.gradle"), TrueFileFilter.INSTANCE)
-        def targetFile24 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ConfigrationAction.java"), TrueFileFilter.INSTANCE)
+        def targetFile24 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ConfigurationAction.java"), TrueFileFilter.INSTANCE)
         def targetFile25 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*Configuration.java"), TrueFileFilter.INSTANCE)
         def targetFile26 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*configuration.jsp"), TrueFileFilter.INSTANCE)
         def targetFile27 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*CrudMVCActionCommand.java"), TrueFileFilter.INSTANCE)

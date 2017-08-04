@@ -1,6 +1,6 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigrationAction.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigurationAction.java">
 
 package ${packageName}.web.portlet.action;
 
@@ -57,7 +57,7 @@ import aQute.bnd.annotation.metatype.Configurable;
         "javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel},
     }, service = ConfigurationAction.class
 )
-public class ${capFirstModel}ConfigrationAction
+public class ${capFirstModel}ConfigurationAction
     extends DefaultConfigurationAction {
 
     @Override
@@ -141,7 +141,7 @@ public class ${capFirstModel}ConfigrationAction
     }
 
     private static final Log _log = LogFactoryUtil
-        .getLog(${capFirstModel}ConfigrationAction.class);
+        .getLog(${capFirstModel}ConfigurationAction.class);
 
     private volatile ${capFirstModel}Configuration _${uncapFirstModel}Configuration;
 }
