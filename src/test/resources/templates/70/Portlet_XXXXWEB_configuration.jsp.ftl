@@ -28,11 +28,10 @@
                     <br />
                     <br />
                 </aui:fieldset>
-
-                <aui:button-row>
-                    <aui:button type="submit"></aui:button>
-                </aui:button-row>
             </aui:fieldset-group>
         </div>
     </div>
+    <aui:button-row>
+        <aui:button type="submit"></aui:button>
+    </aui:button-row>
 </aui:form>

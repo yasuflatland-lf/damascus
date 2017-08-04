@@ -61,6 +61,11 @@ public class ${capFirstModel}ConfigurationAction
     extends DefaultConfigurationAction {
 
     @Override
+    public String getJspPath(HttpServletRequest httpServletRequest) {
+        return "/${snakecaseModel}/configuration.jsp";
+    }
+
+    @Override
     public void processAction(
         PortletConfig portletConfig, ActionRequest actionRequest,
         ActionResponse actionResponse) throws Exception {

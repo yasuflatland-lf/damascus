@@ -266,7 +266,6 @@ public class TemplateUtil {
      *
      * @param rootPath    the root directory of the project
      * @param dashcaseProjectName project name
-     * @param modelName   model name
      * @return relative path to the service.xml from the root directory
      */
     public String getServiceXmlPath(String rootPath, String dashcaseProjectName) {
