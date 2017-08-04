@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRendererFactory.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRendererFactory.java">
 
-package ${application.packageName}.web.asset;
+package ${packageName}.web.asset;
 
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
@@ -20,11 +20,11 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
-import ${application.packageName}.service.permission.${capFirstModel}PermissionChecker;
-import ${application.packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
+import ${packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -162,7 +162,7 @@ public class ${capFirstModel}AssetRendererFactory extends BaseAssetRendererFacto
     }
 
     @Reference(
-        target = "(osgi.web.symbolicname=${application.packageName}.web)", unbind = "-"
+        target = "(osgi.web.symbolicname=${packageName}.web)", unbind = "-"
     )
     public void setServletContext(ServletContext servletContext) {
         _servletContext = servletContext;

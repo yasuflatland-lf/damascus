@@ -1,14 +1,14 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}FindEntryHelper.java">
-package ${application.packageName}.web.portlet.action;
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}FindEntryHelper.java">
+package ${packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.portlet.PortletLayoutFinder;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.struts.BaseFindActionHelper;
 import com.liferay.portal.struts.FindActionHelper;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.${capFirstModel}LocalService;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.${capFirstModel}LocalService;
 
 import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = "model.class.name=${application.packageName}.model.${capFirstModel}",
+	property = "model.class.name=${packageName}.model.${capFirstModel}",
 	service = FindActionHelper.class
 )
 public class ${capFirstModel}FindEntryHelper extends BaseFindActionHelper {
@@ -75,7 +75,7 @@ public class ${capFirstModel}FindEntryHelper extends BaseFindActionHelper {
 	}
 
 	@Reference(
-		target = "(model.class.name=${application.packageName}.model.${capFirstModel})",
+		target = "(model.class.name=${packageName}.model.${capFirstModel})",
 		unbind = "-"
 	)
 	protected void setPortletLayoutFinder(

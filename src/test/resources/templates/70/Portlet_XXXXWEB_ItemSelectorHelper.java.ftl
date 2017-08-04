@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/upload/${capFirstModel}ItemSelectorHelper.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/upload/${capFirstModel}ItemSelectorHelper.java">
 
-package ${application.packageName}.web.upload;
+package ${packageName}.web.upload;
 
 import com.liferay.item.selector.*;
 import com.liferay.item.selector.criteria.*;

@@ -1,7 +1,7 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/view.jsp">
+<#assign createPath = "${entityWebResourcesPath}/view.jsp">
 
-<%@ include file="/init.jsp"%>
+<%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
 	String iconChecked = "checked";
 	String iconUnchecked = "unchecked";
@@ -51,7 +51,7 @@
 		<div class="lfr-icon-actions">
 			<c:if test="<%= ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.PERMISSIONS) %>">
 				<liferay-security:permissionsURL
-					modelResource="${application.packageName}"
+					modelResource="${packageName}"
 					modelResourceDescription="<%= HtmlUtil.escape(themeDisplay.getScopeGroupName()) %>"
 					resourcePrimKey="<%= String.valueOf(themeDisplay.getScopeGroupId()) %>"
 					var="modelPermissionsURL"
@@ -121,11 +121,11 @@
 							"no-recodes-were-found")%>'>
 
 			<liferay-ui:search-container-results>
-				<%@ include file="/search_results.jspf"%>
+				<%@ include file="/${snakecaseModel}/search_results.jspf"%>
 			</liferay-ui:search-container-results>
 
 			<liferay-ui:search-container-row
-				className="${application.packageName}.model.${capFirstModel}"
+				className="${packageName}.model.${capFirstModel}"
 				escapedModel="<%= true %>" keyProperty="${primaryKeyParam}"
 				rowIdProperty="${primaryKeyParam}" modelVar="${uncapFirstModel}">
 
@@ -194,7 +194,7 @@
 			<#-- ---------------- -->
 
 				<liferay-ui:search-container-column-jsp align="right"
-					path="/edit_actions.jsp" />
+					path="/${snakecaseModel}/edit_actions.jsp" />
 
 			</liferay-ui:search-container-row>
 			<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />

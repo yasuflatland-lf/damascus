@@ -16,6 +16,7 @@ import java.util.List;
  * All JSON structures are included in this POJO.
  *
  * @author  Yasuyuki Takeo
+ * @author Sébastien Le Marchand
  */
 @Data
 @AllArgsConstructor
@@ -25,6 +26,9 @@ public class DamascusBase {
 
     @JsonProperty(required = true)
     public String projectName;
+    
+    @JsonProperty(required = true)
+    public String packageName;
 
     @JsonProperty(required = true)
     public String liferayVersion;

@@ -1,8 +1,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/java/${packagePath}/service/impl/${capFirstModel}LocalServiceImpl.java">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/service/impl/${capFirstModel}LocalServiceImpl.java">
 
-package ${application.packageName}.service.impl;
+package ${packageName}.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
@@ -43,12 +43,12 @@ import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 <#if generateActivity>
 import com.liferay.social.kernel.model.SocialActivityConstants;
 </#if>
-import ${application.packageName}.exception.${capFirstModel}ValidateException;
-import ${application.packageName}.model.${capFirstModel};
-import ${application.packageName}.service.base.${capFirstModel}LocalServiceBaseImpl;
-import ${application.packageName}.service.util.${capFirstModel}Validator;
+import ${packageName}.exception.${capFirstModel}ValidateException;
+import ${packageName}.model.${capFirstModel};
+import ${packageName}.service.base.${capFirstModel}LocalServiceBaseImpl;
+import ${packageName}.service.util.${capFirstModel}Validator;
 <#if generateActivity>
-import ${application.packageName}.social.${capFirstModel}ActivityKeys;
+import ${packageName}.social.${capFirstModel}ActivityKeys;
 </#if>
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.exception.TrashEntryException;

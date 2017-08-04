@@ -1,7 +1,7 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/resources/META-INF/resources/configuration.jsp">
+<#assign createPath = "${entityWebResourcesPath}/configuration.jsp">
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/${snakecaseModel}/init.jsp" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <liferay-portlet:actionURL portletConfiguration="<%= true %>"
@@ -28,11 +28,10 @@
                     <br />
                     <br />
                 </aui:fieldset>
-
-                <aui:button-row>
-                    <aui:button type="submit"></aui:button>
-                </aui:button-row>
             </aui:fieldset-group>
         </div>
     </div>
+    <aui:button-row>
+        <aui:button type="submit"></aui:button>
+    </aui:button-row>
 </aui:form>

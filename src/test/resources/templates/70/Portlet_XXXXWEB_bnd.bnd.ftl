@@ -1,12 +1,12 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/bnd.bnd">
+<#assign createPath = "${webModulePath}/bnd.bnd">
 
-Bundle-Name: ${capFirstModel}-web
-Bundle-SymbolicName: ${application.packageName}.web
+Bundle-Name: ${dashcaseProjectName}-web
+Bundle-SymbolicName: ${packageName}.web
 Bundle-Version: 1.0.0
 Export-Package:\
-	${application.packageName}.web.asset,\
-	${application.packageName}.web.social
+	${packageName}.web.asset,\
+	${packageName}.web.social
 Bundle-ClassPath:\
 	.,\
 	lib/guava.jar,\
@@ -24,7 +24,7 @@ Bundle-ClassPath:\
 	lib/commons-io.jar=commons-io-[0-9]*.jar,\
 	lib/commons-lang3.jar=commons-lang[0-9]*.jar
 
-Web-ContextPath: /${lowercaseModel}-web
+Web-ContextPath: /${dashcaseProjectName}-web
 
 -metatype: *
 -dsannotations-options: inherit

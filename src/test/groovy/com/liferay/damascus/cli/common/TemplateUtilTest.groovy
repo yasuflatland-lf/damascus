@@ -23,6 +23,7 @@ class TemplateUtilTest extends Specification {
     def setup() {
         FileUtils.deleteDirectory(new File(workTempDir));
         FileUtils.deleteDirectory(new File(targetTempDir));
+        TemplateUtil.getInstance().clear();
     }
 
     /**
@@ -65,7 +66,7 @@ class TemplateUtilTest extends Specification {
         false == f.isDirectory()
         true == (retrivedObj.getProjectName().equals(projectName))
         true == (retrivedObj.getLiferayVersion().equals(liferayVersion))
-        true == (retrivedObj.applications.get(0).getPackageName().equals(packageName))
+        true == (retrivedObj.getPackageName().equals(packageName))
         true == (retrivedObj.applications.get(0).asset.getAssetTitleFieldName().equals(StringUtils.lowerCase(projectName) + "TitleName"))
         true == (retrivedObj.applications.get(0).asset.getAssetSummaryFieldName().equals(StringUtils.lowerCase(projectName) + "SummaryName"))
         true == (retrivedObj.applications.get(0).asset.getFullContentFieldName().equals(StringUtils.lowerCase(projectName) + "fullContent"))
@@ -90,6 +91,7 @@ class TemplateUtilTest extends Specification {
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath)
         params.put(DamascusProps.BASE_DAMASCUS_OBJ, dmsb);
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
+        params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, dmsb.applications[0]);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, paramFilePath);
         params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),"TEST");

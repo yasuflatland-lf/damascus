@@ -1,13 +1,13 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-web/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}FindEntryAction.java">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}FindEntryAction.java">
 
-package ${application.packageName}.web.portlet.action;
+package ${packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.struts.BaseStrutsAction;
 import com.liferay.portal.kernel.struts.StrutsAction;
 import com.liferay.portal.struts.FindActionHelper;
-import ${application.packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.constants.${capFirstModel}PortletKeys;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +39,7 @@ public class ${capFirstModel}FindEntryAction extends BaseStrutsAction {
     }
 
     @Reference(
-        target = "(model.class.name=${application.packageName}.model.${capFirstModel})",
+        target = "(model.class.name=${packageName}.model.${capFirstModel})",
         unbind = "-"
     )
     protected void setFindActionHelper(FindActionHelper findActionHelper) {

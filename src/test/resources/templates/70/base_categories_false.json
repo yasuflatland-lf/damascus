@@ -1,9 +1,9 @@
 {
   "projectName": "${damascus.projectName}",
+  "packageName" : "${damascus.packageName}",
   "liferayVersion": "${damascus.liferayVersion}",
   "applications": [
     {
-      "packageName" : "${damascus.packageName}",
       "model"       : "${damascus.projectName}",
       "title"       : "${damascus.projectName} Test",
       "web"         : "true",

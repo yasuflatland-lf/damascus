@@ -1,10 +1,10 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${application.model}/${application.model}-service/src/main/resources/META-INF/portlet-model-hints.xml">
+<#assign createPath = "${serviceModulePath}/src/main/resources/META-INF/portlet-model-hints.xml">
 <?xml version="1.0"?>
 
 <model-hints>
 <#list damascus.applications as application>
-    <model name="${application.packageName}.model.${application.model}">
+    <model name="${packageName}.model.${application.model}">
         <field name="uuid" type="String" />
 
         <#-- ---------------- -->
