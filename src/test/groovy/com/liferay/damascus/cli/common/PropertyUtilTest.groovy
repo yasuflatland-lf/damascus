@@ -64,8 +64,8 @@ class PropertyUtilTest extends Specification {
     }
 
     //With PowerMockito, it doesn't accept parameters from "where:", so this is kind of workaround
-    //Also, Singlton is initilized only once. If you want to have multiple tests, need to test all at one place,
-    //whthin def setupSpec() (@BeforeClass for JUnit) and verify at each featrues.
+    //Also, Singleton is initialized only once. If you want to have multiple tests, need to test all at one place,
+    //within def setupSpec() (@BeforeClass for JUnit) and verify at each features.
     @Unroll("Property write Success test")
     @Test
     def "Property write Success test"() {

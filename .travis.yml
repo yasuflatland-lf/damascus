@@ -1,4 +1,10 @@
 language: java
 jdk: oraclejdk8
+env:
+- CI=true
+before_script:
+  - chmod +x gradlew
 script:
   - ./gradlew test --info
+after_success:
+- ./gradlew jacocoTestReport coveralls

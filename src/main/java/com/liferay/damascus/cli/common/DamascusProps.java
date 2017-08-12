@@ -29,10 +29,6 @@ public class DamascusProps {
 
     public static final String BASE_JSON = "base.json";
 
-    public static final String BASE_XML = "base.xml";
-
-    public static final String BASE_XSD = "damascus.xsd";
-
     public static final String SERVICE_XML = "service.xml";
 
     /**

@@ -24,16 +24,16 @@ public class ProjectTemplatesBuilder {
     private String contributorType;
     private File destinationDir;
     private boolean force;
-    private boolean gradle = true;
+    @Builder.Default private boolean gradle = true;
     private boolean help;
     private String hostBundleSymbolicName;
     private String hostBundleVersion;
     private boolean list;
-    private boolean maven = false;
+    @Builder.Default private boolean maven = false;
     private String name;
     private String packageName;
     private String service;
-    private String template = DamascusProps.MVC_PORTLET_CMD;
+    @Builder.Default private String template = DamascusProps.MVC_PORTLET_CMD;
 
     /**
      * Create scaffold

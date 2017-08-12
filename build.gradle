@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -25,6 +26,18 @@ repositories {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:latest.release'
+    }
+}
+
+apply plugin: 'com.github.kt3k.coveralls'
+
 jar {
     manifest {
         attributes(
@@ -41,24 +54,24 @@ jar {
 }
 
 dependencies {
-    compile 'com.beust:jcommander:1.64'
-    compile 'com.google.guava:guava:21.0'
+    compile 'com.beust:jcommander:1.72'
+    compile 'com.google.guava:guava:22.0'
     compile 'commons-io:commons-io:2.5'
-    compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'org.apache.commons:commons-lang3:3.6'
     compile 'org.apache.commons:commons-configuration2:2.1.1'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
 
-    compile 'org.freemarker:freemarker:2.3.25-incubating'
+    compile 'org.freemarker:freemarker:2.3.26-incubating'
     compile 'com.liferay:com.liferay.project.templates:latest.release'
-    compile 'org.slf4j:slf4j-api:1.7.24'
-    compile 'org.slf4j:slf4j-log4j12:1.7.24'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.8.7'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.7'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.7'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.7'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'org.slf4j:slf4j-log4j12:1.7.25'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.0'
     compile 'joda-time:joda-time:2.9.7'
-    compile 'org.projectlombok:lombok:1.16.14'
-    compile 'org.gradle:gradle-tooling-api:3.4.1'
+    compile 'org.projectlombok:lombok:1.16.18'
+    compile 'org.gradle:gradle-tooling-api:4.0.2'
     compile 'org.codehaus.groovy:groovy-all:latest.release'
 
     testCompile group: 'cglib', name: 'cglib-nodep', version:'latest.release'
@@ -66,15 +79,15 @@ dependencies {
 
     testCompile group: 'org.hamcrest', name: 'hamcrest-core', version:'latest.release'
     testCompile group: 'org.objenesis', name: 'objenesis', version:'latest.release'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
     testCompile group: 'org.powermock', name: 'powermock-core', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-classloading-xstream', version:'1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-module-junit4', version:'1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-module-junit4-common', version:'1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-module-junit4-rule', version:'1.6.6'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito-common', version: '1.6.6'
-    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude module: 'groovy-all'
     }
 }
@@ -82,3 +95,12 @@ dependencies {
 test {
     testLogging.showStandardStreams = true
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
