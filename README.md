@@ -1,7 +1,7 @@
 # Damascus
 
 [![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
-[![codecov](https://codecov.io/gh/yasuflatland-lf/damascus/branch/master/graph/badge.svg)](https://codecov.io/gh/yasuflatland-lf/damascus)
+[![Coverage Status](https://coveralls.io/repos/github/yasuflatland-lf/damascus/badge.svg)](https://coveralls.io/github/yasuflatland-lf/damascus)
 
 Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see https://github.com/yasuflatland-lf/damascus/wiki
 

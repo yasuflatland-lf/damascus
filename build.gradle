@@ -26,6 +26,18 @@ repositories {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:latest.release'
+    }
+}
+
+apply plugin: 'com.github.kt3k.coveralls'
+
 jar {
     manifest {
         attributes(
@@ -87,7 +99,7 @@ test {
 jacocoTestReport {
     reports {
         xml.enabled true
-        html.enabled false
+        html.enabled = true
     }
 }
 
