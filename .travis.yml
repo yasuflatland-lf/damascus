@@ -1,7 +1,8 @@
+dist: precise
 language: java
 jdk: oraclejdk8
 env:
-- CI=true
+  - CI=true
 before_script:
   - chmod +x gradlew
 script:
