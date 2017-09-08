@@ -51,7 +51,7 @@ Let's make a Todo app with damascus
 ### How to complie Damascus on your own?
 1. Clone this repository to your local. Please make sure you've already installed Gradle 3.0 or above and jpm.
 2. At the root directory, run ```gradle assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
-3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install it with ```jpm install ./damascus.jar```.
+3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install the your jar with ```jpm install ./damascus.jar```.
 
 ### IDE settings
 Damascus is including lombok library, so annotation library for lombok needs to be properly installed on IDEs. Here are how to apply lombok to Eclipse / IntelliJ

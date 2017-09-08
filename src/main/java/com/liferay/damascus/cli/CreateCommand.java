@@ -106,7 +106,7 @@ public class CreateCommand implements ICommand {
      * @param projectName Project name
      * @throws IOException
      */
-    private void moveProjectsToCurrentDir(String projectName) throws IOException {
+    private void finalizeProjects(String projectName) throws IOException {
 
         //Generated Project files are nested. Move into current directory
         File srcDir  = new File("." + DamascusProps.DS + projectName);
@@ -116,21 +116,27 @@ public class CreateCommand implements ICommand {
             return;
         }
 
-        //Set execute permission to gradlew and gradlew.bat
+        //Move project directory to the current directory
         FileUtils.copyDirectory(srcDir, distDir);
         FileUtils.deleteDirectory(srcDir);
 
-        File gradlew = new File("." + DamascusProps.DS + DamascusProps._GRADLEW_UNIX_FILE_NAME);
+        //Remove unused gradlew / gradlew.bat files
+        FileUtils.deleteQuietly(
+            new File("." + DamascusProps.DS + DamascusProps._GRADLEW_UNIX_FILE_NAME)
+        );
 
-        if (gradlew.exists()) {
-            gradlew.setExecutable(true);
-        }
+        FileUtils.deleteQuietly(
+            new File("." + DamascusProps.DS + DamascusProps._GRADLEW_WINDOWS_FILE_NAME)
+        );
 
-        File gradlewBat = new File("." + DamascusProps.DS + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
+        FileUtils.deleteQuietly(
+            new File("." + DamascusProps.DS + DamascusProps._GRADLE_SETTINGS_FILE_NAME)
+        );
 
-        if (gradlew.exists()) {
-            gradlew.setExecutable(true);
-        }
+        FileUtils.deleteQuietly(
+            new File("." + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME)
+        );
+
     }
 
     /**
@@ -219,7 +225,7 @@ public class CreateCommand implements ICommand {
             System.out.println("Moving all modules projects into the same directory");
 
             //Finalize Project Directory: move modules directories into the current directory
-			moveProjectsToCurrentDir(dashCaseProjectName);
+            finalizeProjects(dashCaseProjectName);
 
             System.out.println("Done.");
 
