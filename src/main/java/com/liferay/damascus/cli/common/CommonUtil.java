@@ -292,4 +292,12 @@ public class CommonUtil {
             FileUtils.writeStringToFile(file, converted, StandardCharsets.UTF_8);
         }
     }
+
+    static public List<String> invertPathToList(String path) throws IOException {
+        File pathTmp = getDirFromPath(new File(path));
+
+        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(DamascusProps.DS));
+        Collections.reverse(retList);
+        return retList;
+    }
 }

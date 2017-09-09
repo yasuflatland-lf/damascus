@@ -223,6 +223,8 @@ public class TemplateUtil {
 
         StringWriter sw  = new StringWriter();
         Environment  env = template.createProcessingEnvironment(params, sw);
+
+        // Process a template
         env.process();
 
         //Write processed template into the output file.

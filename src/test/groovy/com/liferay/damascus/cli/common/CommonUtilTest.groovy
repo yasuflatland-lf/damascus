@@ -297,7 +297,7 @@ class CommonUtilTest extends Specification {
                 }
             }
             dir('dir3') {
-                file('DarTest.java') {
+                file('DarTest-service.java') {
                     withWriter('UTF-8') { writer ->
                         writer.write 'test'
                     }
@@ -320,8 +320,8 @@ class CommonUtilTest extends Specification {
         file_names                   | result_num
         ["Bar.*"]                    | 2
         ["Bar.*", "Foo.*"]           | 3
-        [".*-service.java"]          | 1
-        [".*-service.*", ".*-api.*"] | 2
+        [".*-service.java"]          | 2
+        [".*-service.*", ".*-api.*"] | 3
     }
 
     @Unroll("replaceContents Test <#check_pattern> <#replace_patterns>")
@@ -391,7 +391,40 @@ class CommonUtilTest extends Specification {
         [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*":First-api".*/: "project(\":modules:First:First-api\")"]
         [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
         ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply plugin: \"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
-            "(\":modules:First:First-api\")",/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
+            "(\":modules:First:First-api\")", /project.*":First-service".*/ : "project(\":modules:First:First-service\")"]
+
+    }
+
+    @Unroll("invertPathToList Test <#path> <#result1> <#result2>")
+    def "invertPathToList Test"() {
+        when:
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
+        tf.dir('dummy') {
+            dir('temp') {
+                dir('sample-sb') {
+                    dir('sample-sb-api') {
+                        file('build.gradle') {
+                            withWriter('UTF-8') { writer ->
+                                writer.write 'test';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<String> result = CommonUtil.invertPathToList(targetDir + path)
+
+        then:
+        result[0] == result1
+        result[1] == result2
+
+        where:
+        path                                               | result1         | result2
+        "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | "sample-sb-api" | "sample-sb"
+        "/dummy/temp/sample-sb/sample-sb-api/"             | "sample-sb-api" | "sample-sb"
+        "/dummy/temp/sample-sb/sample-sb-api"              | "sample-sb-api" | "sample-sb"
 
     }
 }

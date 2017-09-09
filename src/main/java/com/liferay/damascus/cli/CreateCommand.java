@@ -5,7 +5,6 @@ import com.google.common.collect.*;
 import com.liferay.damascus.cli.common.*;
 import com.liferay.damascus.cli.exception.*;
 import com.liferay.damascus.cli.json.*;
-import com.liferay.damascus.cli.json.DamascusBase;
 import freemarker.template.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
@@ -15,6 +14,7 @@ import org.apache.commons.io.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Create Service
@@ -63,7 +63,7 @@ public class CreateCommand implements ICommand {
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
         String author = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_AUTHOR);
-        params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),author);
+        params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), author);
 
         //Parse template and output
         TemplateUtil.getInstance().process(CreateCommand.class, damascusBase.getLiferayVersion(), templateFileName, params, outputFilePath);
@@ -95,6 +95,10 @@ public class CreateCommand implements ICommand {
             destinationDir + DamascusProps.DS + projectName
         );
     }
+
+//    private Map<String, String> getProjectPathReplacement(String currentDirPath, List<String> patterns) {
+//        List<File> files = CommonUtil.getTargetFiles(currentDirPath, patterns);
+//    }
 
     /**
      * Move Project into current.
@@ -168,9 +172,9 @@ public class CreateCommand implements ICommand {
                 .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
 
             String camelCaseProjectName = dmsb.getProjectName();
-            
-			String dashCaseProjectName = CaseUtil.getInstance().camelCaseToDashCase(camelCaseProjectName);
-            
+
+            String dashCaseProjectName = CaseUtil.getInstance().camelCaseToDashCase(camelCaseProjectName);
+
             //1. Generate skeleton of the project.
             //2. Parse service.xml
             //3. run gradle buildService
@@ -187,7 +191,7 @@ public class CreateCommand implements ICommand {
 
             // Generate skeletons of the project
             generateProjectSkeleton(
-            	dashCaseProjectName,
+                dashCaseProjectName,
                 dmsb.getPackageName(),
                 CREATE_TARGET_PATH
             );
@@ -202,7 +206,7 @@ public class CreateCommand implements ICommand {
             //run "gradle buildService" to generate the skeleton of services.
             CommonUtil.runGradle(serviceXmlPath, "buildService");
 
-			
+
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
 
@@ -216,7 +220,7 @@ public class CreateCommand implements ICommand {
 
                 System.out.println(".");
             }
-            
+
             System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
 
             //run "gradle buildService" to regenerate with added templates
