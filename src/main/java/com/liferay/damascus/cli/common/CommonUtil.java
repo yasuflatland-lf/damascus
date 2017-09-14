@@ -1,6 +1,7 @@
 package com.liferay.damascus.cli.common;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.*;
 import com.google.common.io.*;
 import com.liferay.damascus.cli.*;
 import lombok.extern.slf4j.*;
@@ -237,7 +238,7 @@ public class CommonUtil {
      * @param path root path where src directory is located
      */
     static public void deleteDefaultJavaSources(String path) {
-        File javaPath = new File(path + "/src/main/java");
+        File javaPath = new File(path + DamascusProps._DEFAULT_GRADLE_JAVA_PATH);
         FileUtils.deleteQuietly(javaPath);
     }
 
@@ -247,7 +248,7 @@ public class CommonUtil {
      * @param path root path where default jsp files are located.
      */
     static public void deleteDefaultJsps(String path) {
-        File jspsPath = new File(path + "/src/main/resources/META-INF/resources");
+        File jspsPath = new File(path + DamascusProps._DEFAULT_GRADLE_JSP_PATH);
         FileUtils.deleteQuietly(jspsPath);
     }
 
@@ -293,11 +294,30 @@ public class CommonUtil {
         }
     }
 
+    /**
+     * Invert path to List
+     *
+     * @param path Path string (either file path or directory path is fine)
+     * @return Reverse order of each directory name in a list.
+     * @throws IOException
+     */
     static public List<String> invertPathToList(String path) throws IOException {
         File pathTmp = getDirFromPath(new File(path));
 
         List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(DamascusProps.DS));
-        Collections.reverse(retList);
-        return retList;
+        return Lists.reverse(retList);
+    }
+
+    /**
+     * Invert path to List with size
+     *
+     * @param path Path string (either file path or directory path is fine)
+     * @param size size of lists to return
+     * @return Reverse order of each directory name in a list.
+     * @throws IOException
+     */
+    static public List<String> invertPathWithSize(String path, int size) throws IOException {
+        List<String> paths = invertPathToList(path);
+        return Lists.partition(paths, size).get(0);
     }
 }

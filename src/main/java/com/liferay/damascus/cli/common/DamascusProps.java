@@ -143,4 +143,15 @@ public class DamascusProps {
     public static final String _GRADLE_SETTINGS_FILE_NAME = "settings.gradle";
 
     public static final String _BUILD_GRADLE_FILE_NAME = "build.gradle";
+
+    /**
+     * Default Path
+     */
+    public static final String _DEFAULT_GRADLE_JAVA_PATH = "/src/main/java";
+
+    public static final String _DEFAULT_GRADLE_JSP_PATH = "/src/main/resources/META-INF/resources";
+
+    public static final int _DEPTH_OF_MINIMAL_PROJECT_PATH = 3;
+
+
 }

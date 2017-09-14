@@ -1,12 +1,10 @@
 package com.liferay.damascus.cli;
 
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.ParametersDelegate;
-import com.liferay.damascus.cli.common.*;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import com.beust.jcommander.*;
+import lombok.*;
+import lombok.extern.slf4j.*;
 
-import java.io.*;
+import java.time.*;
 
 /**
  * Damascus Tool
@@ -19,7 +17,7 @@ import java.io.*;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20170908";
+    public final static String VERSION = "20170914";// + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();

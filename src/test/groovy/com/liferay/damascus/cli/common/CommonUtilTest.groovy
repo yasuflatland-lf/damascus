@@ -387,17 +387,16 @@ class CommonUtilTest extends Specification {
 
         where:
         check_pattern                                                          | replace_patterns
-        ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply plugin: \"com.liferay.portal.tools.service.builder\".*\\n": ""]
+        ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": ""]
         [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*":First-api".*/: "project(\":modules:First:First-api\")"]
         [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
-        ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply plugin: \"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
-            "(\":modules:First:First-api\")", /project.*":First-service".*/ : "project(\":modules:First:First-service\")"]
+        ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
+            "(\":modules:First:First-api\")", /project.*":First-service".*/                                                                          : "project(\":modules:First:First-service\")"]
 
     }
 
     @Unroll("invertPathToList Test <#path> <#result1> <#result2>")
     def "invertPathToList Test"() {
-        when:
         when:
         def targetDir = workTempDir + DS + 'tmpfolder';
         final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
@@ -425,6 +424,34 @@ class CommonUtilTest extends Specification {
         "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | "sample-sb-api" | "sample-sb"
         "/dummy/temp/sample-sb/sample-sb-api/"             | "sample-sb-api" | "sample-sb"
         "/dummy/temp/sample-sb/sample-sb-api"              | "sample-sb-api" | "sample-sb"
+    }
 
+    @Unroll("invertPathToList2 Test <#path> <#_size_> <#_returned_size_>")
+    def "invertPathToList2 Test"() {
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
+        tf.dir('dummy') {
+            dir('temp') {
+                dir('sample-sb') {
+                    dir('sample-sb-api') {
+                        file('build.gradle') {
+                            withWriter('UTF-8') { writer ->
+                                writer.write 'test';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<String> result = CommonUtil.invertPathWithSize(targetDir + path, _size_)
+
+        then:
+        _returned_size_ == result.size()
+
+        where:
+        path                                               | _size_ | _returned_size_
+        "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | 3      | 3
+        "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | 5      | 5
     }
 }

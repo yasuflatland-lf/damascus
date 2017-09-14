@@ -14,7 +14,6 @@ import org.apache.commons.io.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * Create Service
@@ -96,9 +95,44 @@ public class CreateCommand implements ICommand {
         );
     }
 
-//    private Map<String, String> getProjectPathReplacement(String currentDirPath, List<String> patterns) {
-//        List<File> files = CommonUtil.getTargetFiles(currentDirPath, patterns);
-//    }
+    /**
+     * Finalize Gradle Files
+     *
+     * @param rootPath Root path of project
+     * @throws IOException
+     * @throws DamascusProcessException
+     */
+    private void finalizeGradleFiles(String rootPath) throws IOException, DamascusProcessException {
+
+        //Fetch replacement target files
+        List<String> pathPatterns = new ArrayList<>(Arrays.asList(
+            "build.gradle"
+        ));
+        List<File> targetPaths = CommonUtil.getTargetFiles(rootPath, pathPatterns);
+
+        //Configure replace strings regex pattern
+        Map<String, String> patterns = new HashMap<String, String>() {
+            {
+                put("apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n", "");
+
+                for (File path : targetPaths) {
+                    List<String> pathList = CommonUtil.invertPathWithSize(
+                        path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
+
+                    if (pathList.size() < DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH) {
+                        throw new DamascusProcessException(
+                            "Path must be larger than " + DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH
+                                + " depth. Currently it's <" + path.getPath() + ">");
+                    }
+
+                    put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":",Lists.reverse(pathList)) + "\")");
+                }
+            }
+        };
+
+        // Replace contents
+        CommonUtil.replaceContents(targetPaths,patterns);
+    }
 
     /**
      * Move Project into current.
@@ -110,7 +144,7 @@ public class CreateCommand implements ICommand {
      * @param projectName Project name
      * @throws IOException
      */
-    private void finalizeProjects(String projectName) throws IOException {
+    private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
 
         //Generated Project files are nested. Move into current directory
         File srcDir  = new File("." + DamascusProps.DS + projectName);
@@ -125,22 +159,21 @@ public class CreateCommand implements ICommand {
         FileUtils.deleteDirectory(srcDir);
 
         //Remove unused gradlew / gradlew.bat files
-        FileUtils.deleteQuietly(
-            new File("." + DamascusProps.DS + DamascusProps._GRADLEW_UNIX_FILE_NAME)
-        );
+        List<String> deletePaths = new ArrayList<>(Arrays.asList(
+            DamascusProps._GRADLEW_UNIX_FILE_NAME,
+            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+            DamascusProps._GRADLE_SETTINGS_FILE_NAME,
+            DamascusProps._BUILD_GRADLE_FILE_NAME
+        ));
 
-        FileUtils.deleteQuietly(
-            new File("." + DamascusProps.DS + DamascusProps._GRADLEW_WINDOWS_FILE_NAME)
-        );
+        for (String path : deletePaths) {
+            FileUtils.deleteQuietly(
+                new File("." + DamascusProps.DS + path)
+            );
+        }
 
-        FileUtils.deleteQuietly(
-            new File("." + DamascusProps.DS + DamascusProps._GRADLE_SETTINGS_FILE_NAME)
-        );
-
-        FileUtils.deleteQuietly(
-            new File("." + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME)
-        );
-
+        //Finalize Gradle Files appropriately.
+        finalizeGradleFiles(DamascusProps.CURRENT_DIR);
     }
 
     /**
