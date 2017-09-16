@@ -140,6 +140,8 @@ public class DamascusProps {
 
     public static final String _GRADLEW_WINDOWS_FILE_NAME = "gradlew.bat";
 
+    public static final String _GRADLE_FOLDER_NAME = "gradle";
+
     public static final String _GRADLE_SETTINGS_FILE_NAME = "settings.gradle";
 
     public static final String _BUILD_GRADLE_FILE_NAME = "build.gradle";

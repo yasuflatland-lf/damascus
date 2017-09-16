@@ -106,7 +106,7 @@ public class CreateCommand implements ICommand {
 
         //Fetch replacement target files
         List<String> pathPatterns = new ArrayList<>(Arrays.asList(
-            "build.gradle"
+            DamascusProps._BUILD_GRADLE_FILE_NAME
         ));
         List<File> targetPaths = CommonUtil.getTargetFiles(rootPath, pathPatterns);
 
@@ -159,17 +159,17 @@ public class CreateCommand implements ICommand {
         FileUtils.deleteDirectory(srcDir);
 
         //Remove unused gradlew / gradlew.bat files
-        List<String> deletePaths = new ArrayList<>(Arrays.asList(
+        List<String> pathPatterns = new ArrayList<>(Arrays.asList(
             DamascusProps._GRADLEW_UNIX_FILE_NAME,
             DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
-            DamascusProps._GRADLE_SETTINGS_FILE_NAME,
-            DamascusProps._BUILD_GRADLE_FILE_NAME
+            DamascusProps._GRADLE_SETTINGS_FILE_NAME
         ));
+        List<File> deletePaths = CommonUtil.getTargetFiles(DamascusProps.CURRENT_DIR, pathPatterns);
+        deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME));
+        deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._GRADLE_FOLDER_NAME));
 
-        for (String path : deletePaths) {
-            FileUtils.deleteQuietly(
-                new File("." + DamascusProps.DS + path)
-            );
+        for (File file : deletePaths) {
+            FileUtils.deleteQuietly(file);
         }
 
         //Finalize Gradle Files appropriately.

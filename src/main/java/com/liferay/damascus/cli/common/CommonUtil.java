@@ -211,7 +211,7 @@ public class CommonUtil {
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
 
         // Delete gradlew files of *-web directory to force to use gradlew files of parent directory instead.
-        deleteGradlews(webPath);
+        deleteUnusedGradleAssets(webPath);
 
         // Delete default Java source files
         deleteDefaultJavaSources(webPath);
@@ -221,15 +221,19 @@ public class CommonUtil {
     }
 
     /**
-     * Delete gradlews
+     * Delete unused gradle assets
      *
-     * @param path root path where gradlew/gradlew.bat placed
+     * @param rootPath root path where gradlew/gradlew.bat and gradle folder placed
      */
-    static public void deleteGradlews(String path) {
-        File gradlewPath    = new File(path + DamascusProps._GRADLEW_UNIX_FILE_NAME);
-        File gradlewBatPath = new File(path + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
-        FileUtils.deleteQuietly(gradlewPath);
-        FileUtils.deleteQuietly(gradlewBatPath);
+    static public void deleteUnusedGradleAssets(String rootPath) {
+        List<String> paths = new ArrayList<>(Arrays.asList(
+            DamascusProps._GRADLEW_UNIX_FILE_NAME,
+            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+            DamascusProps._GRADLE_FOLDER_NAME
+        ));
+        for(String path : paths) {
+            FileUtils.deleteQuietly(new File(rootPath + path));
+        }
     }
 
     /**
@@ -255,6 +259,8 @@ public class CommonUtil {
     /**
      * Fetch files with filter
      *
+     * Only fetching files, omitting directories.
+     *
      * @param rootPath Root path where starts searching
      * @param patterns Search pattern regular expression list
      * @return a List of found file's File objects
@@ -266,6 +272,7 @@ public class CommonUtil {
             new RegexFileFilter("(" + result + ")"),
             TrueFileFilter.INSTANCE
         ).stream().collect(Collectors.toList());
+
     }
 
     /**
@@ -303,7 +310,6 @@ public class CommonUtil {
      */
     static public List<String> invertPathToList(String path) throws IOException {
         File pathTmp = getDirFromPath(new File(path));
-
         List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(DamascusProps.DS));
         return Lists.reverse(retList);
     }
