@@ -310,7 +310,8 @@ public class CommonUtil {
      */
     static public List<String> invertPathToList(String path) throws IOException {
         File pathTmp = getDirFromPath(new File(path));
-        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(DamascusProps.DS));
+        String separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
+        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
         return Lists.reverse(retList);
     }
 
