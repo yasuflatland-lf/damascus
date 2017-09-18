@@ -113,7 +113,7 @@ public class CreateCommand implements ICommand {
         //Configure replace strings regex pattern
         Map<String, String> patterns = new HashMap<String, String>() {
             {
-                put("apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n", "");
+                put("apply.*builder\".*\\n", "");
 
                 for (File path : targetPaths) {
                     List<String> pathList = CommonUtil.invertPathWithSize(

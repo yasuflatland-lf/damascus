@@ -17,7 +17,7 @@ import java.time.*;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20170914";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20170918";// + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();
