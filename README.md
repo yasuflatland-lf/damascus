@@ -53,6 +53,9 @@ Let's make a Todo app with damascus
 2. At the root directory, run ```gradle assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
 3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install the your jar with ```jpm install ./damascus.jar```.
 
+### Proxy settings
+Please see more detailed settings [here](https://github.com/yasuflatland-lf/damascus/wiki/4.-Proxy-settings)
+
 ### IDE settings
 Damascus is including lombok library, so annotation library for lombok needs to be properly installed on IDEs. Here are how to apply lombok to Eclipse / IntelliJ
 ##### Eclipse
