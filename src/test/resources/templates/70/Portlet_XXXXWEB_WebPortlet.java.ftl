@@ -63,6 +63,16 @@ public class ${capFirstModel}WebPortlet extends MVCPortlet {
         super.doView(renderRequest, renderResponse);
     }
 
+    @Override
+    protected void doDispatch(
+        RenderRequest renderRequest, RenderResponse renderResponse)
+        throws IOException, PortletException {
+
+        renderRequest.setAttribute(${capFirstModel}Configuration.class.getName(), _${uncapFirstModel}Configuration);
+
+        super.doDispatch(renderRequest, renderResponse);
+    }
+
     @Activate
     @Modified
     protected void activate(Map<Object, Object> properties) {
