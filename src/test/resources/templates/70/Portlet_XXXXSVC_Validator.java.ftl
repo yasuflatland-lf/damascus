@@ -36,7 +36,7 @@ implements ModelValidator<${capFirstModel}> {
     * @param field ${field.name}
     */
     protected void validate${field.name?cap_first}(${templateUtil?api.getTypeParameter(field.type?string)} field) {
-        //TODO : This validation needs to be implemented.
+        //TODO : This validation needs to be implemented. Add error message key into _errors when an error occurs.
         <#if field.primary?? && field.primary == false >
             <#if field.required == true >
                 <#if
