@@ -3,14 +3,17 @@ package com.liferay.damascus.cli.common
 import com.liferay.damascus.cli.CreateCommand
 import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.filefilter.RegexFileFilter
+import org.apache.commons.io.filefilter.TrueFileFilter
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.nio.file.InvalidPathException
+import java.util.stream.Collectors
 
 class CommonUtilTest extends Specification {
     static def DS = DamascusProps.DS;
-	static def SEP = "/";
+    static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
     static def template_path = DamascusProps.TEMPLATE_FOLDER_NAME;
 
@@ -121,10 +124,10 @@ class CommonUtilTest extends Specification {
         def expectedFile = new File(dir2);
 
         then:
-		expectedFile == resultFile
-		
+        expectedFile == resultFile
+
         where:
-        dir1                                        | dir2
+        dir1                     | dir2
         "foo" + DS + "dummy.txt" | workTempDir + DS + "foo" + DS
     }
 
@@ -260,5 +263,195 @@ class CommonUtilTest extends Specification {
         "Foo"     | _
         "Foo-web" | _
         "Bar_web" | _
+    }
+
+    void dummyWriter(file, dummy_text) {
+        file(dummy_text) {
+            file.withWriter('UTF-8') { writer ->
+                writer.write 'test'
+            }
+        }
+    }
+
+    @Unroll("getTargetFiles Test <#file_names> result num<#result_num>")
+    def "getTargetFiles Test"() {
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
+        tf.dir('Foo') {
+            dir('Bar') {
+                file('FooTest.java') {
+                    withWriter('UTF-8') { writer ->
+                        writer.write 'test'
+                    }
+                }
+                file('Bar-service.java') {
+                    withWriter('UTF-8') { writer ->
+                        writer.write 'test'
+                    }
+                }
+                file('Bar-api.java') {
+                    withWriter('UTF-8') { writer ->
+                        writer.write 'test'
+                    }
+                }
+            }
+            dir('dir3') {
+                file('DarTest-service.java') {
+                    withWriter('UTF-8') { writer ->
+                        writer.write 'test'
+                    }
+                }
+            }
+        }
+
+        List<String> tgt = new ArrayList<>();
+
+        file_names.each { target_path ->
+            tgt.push(target_path);
+        }
+
+        def result = CommonUtil.getTargetFiles(targetDir, tgt)
+
+        then:
+        result_num == result.size();
+
+        where:
+        file_names                   | result_num
+        ["Bar.*"]                    | 2
+        ["Bar.*", "Foo.*"]           | 3
+        [".*-service.java"]          | 2
+        [".*-service.*", ".*-api.*"] | 3
+    }
+
+    @Unroll("replaceContents Test <#check_pattern> <#replace_patterns>")
+    def "replaceContents Test"() {
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
+        tf.dir('Foo') {
+            dir('Foo-api') {
+                file('build.gradle') {
+                    withWriter('UTF-8') { writer ->
+                        writer.write 'apply plugin: "com.liferay.portal.tools.service.builder"\n' +
+                            '\n' +
+                            '//Need for Windows\n' +
+                            'def defaultEncoding = \'UTF-8\'\n' +
+                            '\n' +
+                            'dependencies {\n' +
+                            '    compile group: "javax.portlet", name: "portlet-api", version: "2.0"\n' +
+                            '    compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"\n' +
+                            '    compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"\n' +
+                            '    compile project(":First-api")\n' +
+                            '    compileOnly project(":First-api")\n' +
+                            '    compileOnly project(":First-service")    \n' +
+                            '}\n' +
+                            '\n' +
+                            'buildService {\n' +
+                            '    apiDir = "../First-api/src/main/java"\n' +
+                            '}\n' +
+                            '\n' +
+                            'group = "com.liferay.first"'
+                    }
+                }
+            }
+        }
+
+        //Get File list
+        List<File> files = FileUtils.listFiles(
+            new File(targetDir),
+            new RegexFileFilter(".*"),
+            TrueFileFilter.INSTANCE
+        ).stream().collect(Collectors.toList());
+
+        //Set replace patterns into a Map
+        Map<String, String> patterns = new HashMap<>();
+
+        replace_patterns.each { k, v ->
+            patterns.put(k, v)
+        }
+
+        //Test
+        CommonUtil.replaceContents(files, patterns)
+
+        then:
+        for (File file : files) {
+            check_pattern.each { k, v ->
+                if (k == "null") {
+                    assert null == file.text.find(v)
+                } else {
+                    assert k == file.text.find(v)
+                }
+            }
+        }
+
+        where:
+        check_pattern                                                          | replace_patterns
+        ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": ""]
+        [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*":First-api".*/: "project(\":modules:First:First-api\")"]
+        [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
+        ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
+            "(\":modules:First:First-api\")", /project.*":First-service".*/                                                                          : "project(\":modules:First:First-service\")"]
+
+    }
+
+    @Unroll("invertPathToList Test <#path> <#result1> <#result2>")
+    def "invertPathToList Test"() {
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
+        tf.dir('dummy') {
+            dir('temp') {
+                dir('sample-sb') {
+                    dir('sample-sb-api') {
+                        file('build.gradle') {
+                            withWriter('UTF-8') { writer ->
+                                writer.write 'test';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<String> result = CommonUtil.invertPathToList(targetDir + path)
+
+        then:
+        result[0] == result1
+        result[1] == result2
+
+        where:
+        path                                               | result1         | result2
+        "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | "sample-sb-api" | "sample-sb"
+        "/dummy/temp/sample-sb/sample-sb-api/"             | "sample-sb-api" | "sample-sb"
+        "/dummy/temp/sample-sb/sample-sb-api"              | "sample-sb-api" | "sample-sb"
+    }
+
+    @Unroll("invertPathToList2 Test <#path> <#_size_> <#_returned_size_>")
+    def "invertPathToList2 Test"() {
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
+        tf.dir('dummy') {
+            dir('temp') {
+                dir('sample-sb') {
+                    dir('sample-sb-api') {
+                        file('build.gradle') {
+                            withWriter('UTF-8') { writer ->
+                                writer.write 'test';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        List<String> result = CommonUtil.invertPathWithSize(targetDir + path, _size_)
+
+        then:
+        _returned_size_ == result.size()
+
+        where:
+        path                                               | _size_ | _returned_size_
+        "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | 3      | 3
+        "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | 5      | 5
     }
 }

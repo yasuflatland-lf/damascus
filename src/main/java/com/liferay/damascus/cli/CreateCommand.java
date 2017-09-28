@@ -5,7 +5,6 @@ import com.google.common.collect.*;
 import com.liferay.damascus.cli.common.*;
 import com.liferay.damascus.cli.exception.*;
 import com.liferay.damascus.cli.json.*;
-import com.liferay.damascus.cli.json.DamascusBase;
 import freemarker.template.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
@@ -63,7 +62,7 @@ public class CreateCommand implements ICommand {
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
         String author = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_AUTHOR);
-        params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),author);
+        params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), author);
 
         //Parse template and output
         TemplateUtil.getInstance().process(CreateCommand.class, damascusBase.getLiferayVersion(), templateFileName, params, outputFilePath);
@@ -97,6 +96,45 @@ public class CreateCommand implements ICommand {
     }
 
     /**
+     * Finalize Gradle Files
+     *
+     * @param rootPath Root path of project
+     * @throws IOException
+     * @throws DamascusProcessException
+     */
+    private void finalizeGradleFiles(String rootPath) throws IOException, DamascusProcessException {
+
+        //Fetch replacement target files
+        List<String> pathPatterns = new ArrayList<>(Arrays.asList(
+            DamascusProps._BUILD_GRADLE_FILE_NAME
+        ));
+        List<File> targetPaths = CommonUtil.getTargetFiles(rootPath, pathPatterns);
+
+        //Configure replace strings regex pattern
+        Map<String, String> patterns = new HashMap<String, String>() {
+            {
+                put("apply.*builder\".*\\n", "");
+
+                for (File path : targetPaths) {
+                    List<String> pathList = CommonUtil.invertPathWithSize(
+                        path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
+
+                    if (pathList.size() < DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH) {
+                        throw new DamascusProcessException(
+                            "Path must be larger than " + DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH
+                                + " depth. Currently it's <" + path.getPath() + ">");
+                    }
+
+                    put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":",Lists.reverse(pathList)) + "\")");
+                }
+            }
+        };
+
+        // Replace contents
+        CommonUtil.replaceContents(targetPaths,patterns);
+    }
+
+    /**
      * Move Project into current.
      * <p>
      * Liferay template library doesn't allow to overwrite project file,
@@ -106,7 +144,7 @@ public class CreateCommand implements ICommand {
      * @param projectName Project name
      * @throws IOException
      */
-    private void moveProjectsToCurrentDir(String projectName) throws IOException {
+    private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
 
         //Generated Project files are nested. Move into current directory
         File srcDir  = new File("." + DamascusProps.DS + projectName);
@@ -116,21 +154,26 @@ public class CreateCommand implements ICommand {
             return;
         }
 
-        //Set execute permission to gradlew and gradlew.bat
+        //Move project directory to the current directory
         FileUtils.copyDirectory(srcDir, distDir);
         FileUtils.deleteDirectory(srcDir);
 
-        File gradlew = new File("." + DamascusProps.DS + DamascusProps._GRADLEW_UNIX_FILE_NAME);
+        //Remove unused gradlew / gradlew.bat files
+        List<String> pathPatterns = new ArrayList<>(Arrays.asList(
+            DamascusProps._GRADLEW_UNIX_FILE_NAME,
+            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+            DamascusProps._GRADLE_SETTINGS_FILE_NAME
+        ));
+        List<File> deletePaths = CommonUtil.getTargetFiles(DamascusProps.CURRENT_DIR, pathPatterns);
+        deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME));
+        deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._GRADLE_FOLDER_NAME));
 
-        if (gradlew.exists()) {
-            gradlew.setExecutable(true);
+        for (File file : deletePaths) {
+            FileUtils.deleteQuietly(file);
         }
 
-        File gradlewBat = new File("." + DamascusProps.DS + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
-
-        if (gradlew.exists()) {
-            gradlew.setExecutable(true);
-        }
+        //Finalize Gradle Files appropriately.
+        finalizeGradleFiles(DamascusProps.CURRENT_DIR);
     }
 
     /**
@@ -162,9 +205,9 @@ public class CreateCommand implements ICommand {
                 .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
 
             String camelCaseProjectName = dmsb.getProjectName();
-            
-			String dashCaseProjectName = CaseUtil.getInstance().camelCaseToDashCase(camelCaseProjectName);
-            
+
+            String dashCaseProjectName = CaseUtil.getInstance().camelCaseToDashCase(camelCaseProjectName);
+
             //1. Generate skeleton of the project.
             //2. Parse service.xml
             //3. run gradle buildService
@@ -181,7 +224,7 @@ public class CreateCommand implements ICommand {
 
             // Generate skeletons of the project
             generateProjectSkeleton(
-            	dashCaseProjectName,
+                dashCaseProjectName,
                 dmsb.getPackageName(),
                 CREATE_TARGET_PATH
             );
@@ -196,7 +239,7 @@ public class CreateCommand implements ICommand {
             //run "gradle buildService" to generate the skeleton of services.
             CommonUtil.runGradle(serviceXmlPath, "buildService");
 
-			
+
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
 
@@ -210,7 +253,7 @@ public class CreateCommand implements ICommand {
 
                 System.out.println(".");
             }
-            
+
             System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
 
             //run "gradle buildService" to regenerate with added templates
@@ -219,7 +262,7 @@ public class CreateCommand implements ICommand {
             System.out.println("Moving all modules projects into the same directory");
 
             //Finalize Project Directory: move modules directories into the current directory
-			moveProjectsToCurrentDir(dashCaseProjectName);
+            finalizeProjects(dashCaseProjectName);
 
             System.out.println("Done.");
 

@@ -42,7 +42,7 @@ jar {
     manifest {
         attributes(
             "Bundle-SymbolicName": "com.liferay.damascus.cli",
-            "Bundle-Version": "1.0.0",
+            "Bundle-Version": "1.0.12",
             "Bundle-Description": "Liferay extension tool for scaffolding service builder portlet",
             "Main-Class": "com.liferay.damascus.cli.Damascus",
             "JPM-Command": "damascus"
@@ -56,29 +56,29 @@ jar {
 dependencies {
     compile 'com.beust:jcommander:1.64'
     compile 'com.google.guava:guava:22.0'
-    compile 'commons-io:commons-io:2.5'
-    compile 'org.apache.commons:commons-lang3:3.6'
-    compile 'org.apache.commons:commons-configuration2:2.1.1'
+    compile 'commons-io:commons-io:2.+'
+    compile 'org.apache.commons:commons-lang3:3.+'
+    compile 'org.apache.commons:commons-configuration2:2.1.+'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
 
     compile 'org.freemarker:freemarker:2.3.26-incubating'
-    compile 'com.liferay:com.liferay.project.templates:latest.release'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'org.slf4j:slf4j-log4j12:1.7.25'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.9.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.0'
-    compile 'joda-time:joda-time:2.9.7'
+    compile 'com.liferay:com.liferay.project.templates:latest.integration'
+    compile 'org.slf4j:slf4j-api:latest.integration'
+    compile 'org.slf4j:slf4j-log4j12:latest.integration'
+    compile 'com.fasterxml.jackson.core:jackson-core:latest.integration'
+    compile 'com.fasterxml.jackson.core:jackson-databind:latest.integration'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:latest.integration'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:latest.integration'
+    compile 'joda-time:joda-time:latest.integration'
     compile 'org.projectlombok:lombok:1.16.18'
-    compile 'org.gradle:gradle-tooling-api:4.0.2'
-    compile 'org.codehaus.groovy:groovy-all:latest.release'
+    compile 'org.gradle:gradle-tooling-api:4.0.+'
+    compile 'org.codehaus.groovy:groovy-all:2.4.+'
 
-    testCompile group: 'cglib', name: 'cglib-nodep', version:'latest.release'
+    testCompile group: 'cglib', name: 'cglib-nodep', version:'latest.integration'
     testCompile group: 'junit', name: 'junit', version:'4.12'
 
-    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version:'latest.release'
-    testCompile group: 'org.objenesis', name: 'objenesis', version:'latest.release'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version:'latest.integration'
+    testCompile group: 'org.objenesis', name: 'objenesis', version:'latest.integration'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
     testCompile group: 'org.powermock', name: 'powermock-core', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-classloading-xstream', version:'1.6.6'

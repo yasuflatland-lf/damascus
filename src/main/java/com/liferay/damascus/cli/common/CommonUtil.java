@@ -1,23 +1,20 @@
 package com.liferay.damascus.cli.common;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.InvalidPathException;
-import java.util.Collection;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.gradle.tooling.GradleConnector;
-import org.gradle.tooling.ProjectConnection;
-
 import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import com.liferay.damascus.cli.ProjectTemplatesBuilder;
+import com.google.common.collect.*;
+import com.google.common.io.*;
+import com.liferay.damascus.cli.*;
+import lombok.extern.slf4j.*;
+import org.apache.commons.io.*;
+import org.apache.commons.io.filefilter.*;
+import org.gradle.tooling.*;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.*;
+import java.net.*;
+import java.nio.charset.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * Utility Class
@@ -43,15 +40,15 @@ public class CommonUtil {
      * @throws IllegalArgumentException if the resource is not found
      */
     static public URL getResource(Class<?> classContext, String path) {
-      String convertedPath = path.replace(DamascusProps.DS, DamascusProps.SEP);
-      return Resources.getResource(classContext, convertedPath);
+        String convertedPath = path.replace(DamascusProps.DS, DamascusProps.SEP);
+        return Resources.getResource(classContext, convertedPath);
     }
-    
+
     /**
      * Load Resource file
      *
      * @param classContext Class context of where this method is called.
-     * @param path Path to the resource file in a jar.
+     * @param path         Path to the resource file in a jar.
      * @return Path to the resource
      * @throws IOException
      */
@@ -160,10 +157,10 @@ public class CommonUtil {
      */
     static public void createWorkspace(String destinationDir, String name) throws Exception {
         ProjectTemplatesBuilder.builder()
-            .destinationDir(new File(destinationDir))
-            .name(name)
-            .template(DamascusProps.WORKSPACE_CMD)
-            .build().create();
+                               .destinationDir(new File(destinationDir))
+                               .name(name)
+                               .template(DamascusProps.WORKSPACE_CMD)
+                               .build().create();
     }
 
     /**
@@ -176,11 +173,11 @@ public class CommonUtil {
      */
     static public void createServiceBuilderProject(String name, String packageName, String destinationDir) throws Exception {
         ProjectTemplatesBuilder.builder()
-            .destinationDir(new File(destinationDir))
-            .name(name)
-            .packageName(packageName)
-            .template(DamascusProps.SERVICE_BUILDER_CMD)
-            .build().create();
+                               .destinationDir(new File(destinationDir))
+                               .name(name)
+                               .packageName(packageName)
+                               .template(DamascusProps.SERVICE_BUILDER_CMD)
+                               .build().create();
     }
 
     /**
@@ -205,43 +202,129 @@ public class CommonUtil {
         }
 
         ProjectTemplatesBuilder.builder()
-            .destinationDir(new File(destinationDir))
-            .name(projectName)
-            .packageName(packageNameForWeb)
-            .template(DamascusProps.MVC_PORTLET_CMD)
-            .build().create();
+                               .destinationDir(new File(destinationDir))
+                               .name(projectName)
+                               .packageName(packageNameForWeb)
+                               .template(DamascusProps.MVC_PORTLET_CMD)
+                               .build().create();
 
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
-        
+
         // Delete gradlew files of *-web directory to force to use gradlew files of parent directory instead.
-        deleteGradlews(webPath);
-        
+        deleteUnusedGradleAssets(webPath);
+
         // Delete default Java source files
         deleteDefaultJavaSources(webPath);
-        
+
         // Delete unused default JSPs
         deleteDefaultJsps(webPath);
     }
 
     /**
-     * Delete gradlews
+     * Delete unused gradle assets
      *
-     * @param path root path where gradlew/gradlew.bat placed
+     * @param rootPath root path where gradlew/gradlew.bat and gradle folder placed
      */
-    static public void deleteGradlews(String path) {
-        File gradlewPath = new File(path + DamascusProps._GRADLEW_UNIX_FILE_NAME);
-        File gradlewBatPath = new File(path + DamascusProps._GRADLEW_WINDOWS_FILE_NAME);
-        FileUtils.deleteQuietly(gradlewPath);
-        FileUtils.deleteQuietly(gradlewBatPath);
+    static public void deleteUnusedGradleAssets(String rootPath) {
+        List<String> paths = new ArrayList<>(Arrays.asList(
+            DamascusProps._GRADLEW_UNIX_FILE_NAME,
+            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+            DamascusProps._GRADLE_FOLDER_NAME
+        ));
+        for(String path : paths) {
+            FileUtils.deleteQuietly(new File(rootPath + path));
+        }
     }
-    
+
+    /**
+     * Delete unused default java sources
+     *
+     * @param path root path where src directory is located
+     */
     static public void deleteDefaultJavaSources(String path) {
-        File javaPath = new File(path + "/src/main/java");
+        File javaPath = new File(path + DamascusProps._DEFAULT_GRADLE_JAVA_PATH);
         FileUtils.deleteQuietly(javaPath);
     }
-    
+
+    /**
+     * Delete unused default jsp files
+     *
+     * @param path root path where default jsp files are located.
+     */
     static public void deleteDefaultJsps(String path) {
-        File jspsPath = new File(path + "/src/main/resources/META-INF/resources");
+        File jspsPath = new File(path + DamascusProps._DEFAULT_GRADLE_JSP_PATH);
         FileUtils.deleteQuietly(jspsPath);
+    }
+
+    /**
+     * Fetch files with filter
+     *
+     * Only fetching files, omitting directories.
+     *
+     * @param rootPath Root path where starts searching
+     * @param patterns Search pattern regular expression list
+     * @return a List of found file's File objects
+     */
+    static public List<File> getTargetFiles(String rootPath, List<String> patterns) {
+        String result = String.join("|", patterns);
+        return FileUtils.listFiles(
+            new File(rootPath),
+            new RegexFileFilter("(" + result + ")"),
+            TrueFileFilter.INSTANCE
+        ).stream().collect(Collectors.toList());
+
+    }
+
+    /**
+     * Replace Contents at once
+     *
+     * @param files Files to be processed
+     * @param patterns Replacement patterns in a map
+     * @throws IOException
+     */
+    static public void replaceContents(List<File> files, Map<String, String> patterns) throws IOException {
+        for (File file : files) {
+
+            String fileContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+
+            //Convert contents
+            String converted =
+                patterns.entrySet()
+                        .stream()
+                        .reduce(
+                            fileContents,
+                            (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
+                            (s1, s2) -> null
+                        );
+
+            FileUtils.writeStringToFile(file, converted, StandardCharsets.UTF_8);
+        }
+    }
+
+    /**
+     * Invert path to List
+     *
+     * @param path Path string (either file path or directory path is fine)
+     * @return Reverse order of each directory name in a list.
+     * @throws IOException
+     */
+    static public List<String> invertPathToList(String path) throws IOException {
+        File pathTmp = getDirFromPath(new File(path));
+        String separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
+        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
+        return Lists.reverse(retList);
+    }
+
+    /**
+     * Invert path to List with size
+     *
+     * @param path Path string (either file path or directory path is fine)
+     * @param size size of lists to return
+     * @return Reverse order of each directory name in a list.
+     * @throws IOException
+     */
+    static public List<String> invertPathWithSize(String path, int size) throws IOException {
+        List<String> paths = invertPathToList(path);
+        return Lists.partition(paths, size).get(0);
     }
 }

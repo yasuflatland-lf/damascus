@@ -245,7 +245,6 @@
 
 <aui:script>
     function <portlet:namespace />dlBrowse (title, inputField) {
-       	event.preventDefault();
        	var itemSrc = $('#'+inputField);
 		AUI().use(
 			'liferay-item-selector-dialog',
