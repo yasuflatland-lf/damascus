@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
 [![Coverage Status](https://coveralls.io/repos/github/yasuflatland-lf/damascus/badge.svg?branch=master)](https://coveralls.io/github/yasuflatland-lf/damascus?branch=master)
+[![Build status](https://ci.appveyor.com/api/projects/status/r2bk6piebddjry3n?svg=true)](https://ci.appveyor.com/project/yasuflatland-lf/damascus)
 
 Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see https://github.com/yasuflatland-lf/damascus/wiki
 
@@ -70,18 +71,17 @@ Damascus is including lombok library, so annotation library for lombok needs to 
 ### Bug reports
 In terms of bugs, please post Github issues or send me a PR. To send me PR, please follow the process below.
 1. Fix bugs at your local
-2. Remove ```${user}/.damascus``` folder. 
+2. Remove ```${user}/.damascus``` folder.
 3. Run test locally with this command ```gradle clean test``` and confirm your fix pass all tests.
-4. Send PR to /development repository. I'll create a fix brunch accordingly. 
+4. Send PR to /development repository. I'll create a fix brunch accordingly.
 
 ### Enhancement requests
 Contribution is always welcome! In terms of an Enhancement request, please follow the process below. If you wonder it's a complex feature, please create an issue first and let's discuss. In terms of simple enhancement, please follow steps below.
 
-1. After implemented your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes and in a test class, each test should be written each method basis. 
+1. After implemented your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes and in a test class, each test should be written each method basis.
 2. Run test locally with ```gradle clean test``` until your code pass all tests
-3. Send a PR to /development branch. According to the status of Travis CI, I may create a feature branch and request you to make it pass the test on Travis CI environment.
-4. After all tests pass on Travis CI, will marge into development branch and relase into master at some points according to the impact of the code. 
+3. Send a PR to /development branch. According to the status of Travis CI / Appveyor, I may create a feature branch and request you to make it pass the test on Travis CI / Appveyor environment.
+4. After all tests pass on Travis CI / Appveyor, will marge into development branch and relase into master at some points according to the impact of the code.
 
 ### What does Damascus stand for?
 Damascus is named after "Damascus blade", which is a strong / sharp blade made out from Damascus steel and forged with a lost technology. Liferay has it's official development tool,"Blade", so I gave this name in hope of reinforcement or extension of Blade tool.
-
