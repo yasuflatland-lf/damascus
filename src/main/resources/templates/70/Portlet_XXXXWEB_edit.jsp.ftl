@@ -173,7 +173,7 @@
 				}
 			%>
             <aui:button cssClass="btn-lg" type="submit" primary="<%= false %>"
-				onClick="<%=renderResponse.getNamespace() +\"saveEditors()\"%>"
+				onClick='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEditors();" %>'
 				value="<%=publishButtonLabel%>" />
 			<%
 				if (!fromAsset) {
