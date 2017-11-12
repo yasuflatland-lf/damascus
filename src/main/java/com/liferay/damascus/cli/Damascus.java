@@ -3,8 +3,7 @@ package com.liferay.damascus.cli;
 import com.beust.jcommander.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
-
-import java.time.*;
+import org.joda.time.LocalDateTime;
 
 /**
  * Damascus Tool
@@ -17,7 +16,7 @@ import java.time.*;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20171104";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20171107" + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();
@@ -54,7 +53,7 @@ public class Damascus {
      */
     public void run(Damascus damascus, String... args) {
         try {
-            new JCommander(damascus, args);
+            new JCommander(damascus).parse(args);
 
             if (helpCommand.isRunnable()) {
                 helpCommand.run(damascus, args);

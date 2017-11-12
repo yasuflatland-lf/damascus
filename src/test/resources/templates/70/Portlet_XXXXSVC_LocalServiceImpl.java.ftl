@@ -55,6 +55,7 @@ import com.liferay.trash.kernel.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -1031,7 +1032,17 @@ public class ${capFirstModel}LocalServiceImpl
             Hour += 12;
         }
 
-        LocalDateTime ldt = LocalDateTime.of(Year, Month, Day, Hour, Minute, 0);
+        LocalDateTime ldt;
+        try {
+            ldt = LocalDateTime.of(Year, Month, Day, Hour, Minute, 0);
+
+        } catch (Throwable e) {
+            
+            e.printStackTrace();
+            Date in = new Date();
+            Instant instant = in.toInstant();
+            return Date.from(instant);
+        }
         return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }
 
