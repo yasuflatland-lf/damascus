@@ -1038,7 +1038,7 @@ public class ${capFirstModel}LocalServiceImpl
         try {
             ldt = LocalDateTime.of(Year, Month, Day, Hour, Minute, 0);
 
-        } catch (Throwable e) {
+        } catch (Exception e) {
             
             _log.error("Unnable get date data. Initialize with current date", e);
             Date in = new Date();
@@ -1121,7 +1121,7 @@ public class ${capFirstModel}LocalServiceImpl
             entry.setCompanyId(themeDisplay.getCompanyId());
             entry.setGroupId(themeDisplay.getScopeGroupId());
             entry.setUserId(themeDisplay.getUserId());
-        } catch (Throwable e) {
+        } catch (Exception e) {
             _log.error("Errors occur while populating the model",e);
             List<String> error = new ArrayList<>();
             error.add("value-convert-error");

@@ -85,7 +85,7 @@ public class ${capFirstModel}CrudMVCActionCommand
                 "mvcRenderCommandName",
                 "/${lowercaseModel}/crud");
             hideDefaultSuccessMessage(request);
-        } catch (Throwable t) {
+        } catch (Exception t) {
 
             _log.error(t, t);
             SessionErrors.add(request, PortalException.class);
