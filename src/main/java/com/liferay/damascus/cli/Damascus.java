@@ -16,7 +16,7 @@ import org.joda.time.LocalDateTime;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20171107" + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20171107";// + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();

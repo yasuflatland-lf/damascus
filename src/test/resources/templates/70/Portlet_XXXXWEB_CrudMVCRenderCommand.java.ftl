@@ -15,7 +15,6 @@ import ${packageName}.service.${capFirstModel}LocalService;
 import ${packageName}.service.${capFirstModel}LocalServiceUtil;
 import ${packageName}.web.constants.${capFirstModel}WebKeys;
 import ${packageName}.web.upload.${capFirstModel}ItemSelectorHelper;
-import ${packageName}.web.util.${capFirstModel}ViewHelper;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -86,19 +85,10 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
         return renderJSP;
     }
 
-    @Reference(unbind = "-")
-    protected void set${capFirstModel}LocalService(
-        ${capFirstModel}LocalService ${lowercaseModel}localservice) {
-        _${uncapFirstModel}LocalService = ${lowercaseModel}localservice;
-    }
-
-    @Reference(unbind = "-")
-    public void setItemSelectorHelper(
-        ${capFirstModel}ItemSelectorHelper ${uncapFirstModel}ItemSelectorHelper) {
-        _${uncapFirstModel}ItemSelectorHelper = ${uncapFirstModel}ItemSelectorHelper;
-    }
-
+    @Reference
     private ${capFirstModel}LocalService _${uncapFirstModel}LocalService;
+
+    @Reference
     private ${capFirstModel}ItemSelectorHelper _${uncapFirstModel}ItemSelectorHelper;
 
 }

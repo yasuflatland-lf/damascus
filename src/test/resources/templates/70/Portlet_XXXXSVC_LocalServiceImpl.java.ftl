@@ -14,6 +14,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
@@ -1038,7 +1040,7 @@ public class ${capFirstModel}LocalServiceImpl
 
         } catch (Throwable e) {
             
-            e.printStackTrace();
+            _log.error("Unnable get date data. Initialize with current date", e);
             Date in = new Date();
             Instant instant = in.toInstant();
             return Date.from(instant);
@@ -1074,37 +1076,37 @@ public class ${capFirstModel}LocalServiceImpl
             <#list application.fields as field >
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
                     <#if field.primary?? && field.primary == true >
-        entry.set${field.name?cap_first}(primaryKey);
+            entry.set${field.name?cap_first}(primaryKey);
                     <#else>
-        entry.set${field.name?cap_first}(ParamUtil.getLong(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getLong(request, "${field.name}"));
                     </#if>
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Varchar" >
-        entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Date" >
-        entry.set${field.name?cap_first}(getDateTimeFromRequest(request, "${field.name}"));
+            entry.set${field.name?cap_first}(getDateTimeFromRequest(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.DateTime" >
-        entry.set${field.name?cap_first}(getDateTimeFromRequest(request, "${field.name}"));
+            entry.set${field.name?cap_first}(getDateTimeFromRequest(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Boolean" >
-        entry.set${field.name?cap_first}(ParamUtil.getBoolean(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getBoolean(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" >
-        entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Double" >
-        entry.set${field.name?cap_first}(ParamUtil.getDouble(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getDouble(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Integer" >
-        entry.set${field.name?cap_first}(ParamUtil.getInteger(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getInteger(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.RichText" >
-        entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
                 </#if>
                 <#if field.type?string == "com.liferay.damascus.cli.json.fields.Text" >
-        entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
+            entry.set${field.name?cap_first}(ParamUtil.getString(request, "${field.name}"));
                 </#if>
             </#list>
             <#-- ---------------- -->
@@ -1120,6 +1122,7 @@ public class ${capFirstModel}LocalServiceImpl
             entry.setGroupId(themeDisplay.getScopeGroupId());
             entry.setUserId(themeDisplay.getUserId());
         } catch (Throwable e) {
+            _log.error("Errors occur while populating the model",e);
             List<String> error = new ArrayList<>();
             error.add("value-convert-error");
             throw new ${capFirstModel}ValidateException(error);
@@ -1197,5 +1200,7 @@ public class ${capFirstModel}LocalServiceImpl
     }
 
     private static Pattern _friendlyURLPattern = Pattern.compile("[^a-z0-9_-]");
+
+    private static Log _log = LogFactoryUtil.getLog(${capFirstModel}LocalServiceImpl.class);
 
 }

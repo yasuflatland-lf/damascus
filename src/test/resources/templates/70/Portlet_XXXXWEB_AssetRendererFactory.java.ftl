@@ -132,7 +132,7 @@ public class ${capFirstModel}AssetRendererFactory extends BaseAssetRendererFacto
             liferayPortletURL.setWindowState(windowState);
         }
         catch (WindowStateException wse) {
-            _log.error("Windos state is not valid. Skip.");
+            _log.error("Windos state is not valid. Skip.", wse);
         }
 
         return liferayPortletURL;
