@@ -1,24 +1,24 @@
 package com.liferay.damascus.cli.common
 
 import com.beust.jcommander.internal.Maps
-import com.google.common.io.Resources
 import com.liferay.damascus.cli.json.DamascusBase
 import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.filefilter.IOFileFilter
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.Validate
-import org.joda.time.DateTime
+import org.powermock.api.mockito.PowerMockito
+import org.powermock.reflect.Whitebox
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static org.mockito.Matchers.anyString
+
 class TemplateUtilTest extends Specification {
     static def DS = DamascusProps.DS;
-	static def SEP = "/";
+    static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
     static def targetTempDir = TestUtils.getTempPath() + "target" + DS + DamascusProps.TEMPLATE_FOLDER_NAME;
-    static def CDIR = DamascusProps.TARGET_TEMPLATE_PREFIX;
+    static def CDIR = DamascusProps.TARGET_TEMPLATE_PREFIX
 
     def setup() {
         FileUtils.deleteDirectory(new File(workTempDir));
@@ -94,7 +94,7 @@ class TemplateUtilTest extends Specification {
         params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, dmsb.applications[0]);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, paramFilePath);
-        params.put(DamascusProps.PROP_AUTHOR.replace(".","_"),"TEST");
+        params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), "TEST");
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(TemplateUtilTest.class, DamascusProps.VERSION_70, targetFile, params, paramFilePath)
@@ -204,7 +204,7 @@ class TemplateUtilTest extends Specification {
         def outputDir = targetTempDir + DS + DamascusProps.TEMPLATE_FOLDER_NAME
         TemplateUtil.getInstance().copyTemplatesToCache(TemplateUtilTest.class, resourceDir, outputDir)
 
-        File f = new File(outputDir + DS + DamascusProps.VERSION_70 + DS + DamascusProps.BASE_JSON )
+        File f = new File(outputDir + DS + DamascusProps.VERSION_70 + DS + DamascusProps.BASE_JSON)
 
         then:
         true == f.exists()
@@ -216,21 +216,22 @@ class TemplateUtilTest extends Specification {
         def resourceDir = DS + DamascusProps.TEMPLATE_FOLDER_NAME;
         def outputDir = targetTempDir;
         URL url = CommonUtil.getResource(TemplateUtilTest.class, resourceDir);
-        def cf = FileUtils.listFiles(new File(url.toURI()),new WildcardFileFilter("*"),new WildcardFileFilter("*"))
+        def cf = FileUtils.listFiles(new File(url.toURI()), new WildcardFileFilter("*"), new WildcardFileFilter("*"))
         List<String> fl = new ArrayList<String>()
-        cf.collect { 
-			def pathc = it.toURI().toString().substring(it.toURI().toString().lastIndexOf(SEP + DamascusProps.TEMPLATE_FOLDER_NAME))
-			fl.add(pathc.replace(SEP+SEP, SEP)) 
-		}
+        cf.collect {
+            def pathc = it.toURI().toString().substring(it.toURI().toString().lastIndexOf(SEP + DamascusProps.TEMPLATE_FOLDER_NAME))
+            fl.add(pathc.replace(SEP + SEP, SEP))
+        }
 
         TemplateUtil.getInstance().copyTemplatesToCache(
-            TemplateUtilTest.class,
-            fl,
-            outputDir)
+                TemplateUtilTest.class,
+                fl,
+                outputDir)
 
-        File f = new File(outputDir + DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + DamascusProps.VERSION_70 + DS + DamascusProps.BASE_JSON )
+        File f = new File(outputDir + DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + DamascusProps.VERSION_70 + DS + DamascusProps.BASE_JSON)
 
         then:
         true == f.exists()
     }
+
 }

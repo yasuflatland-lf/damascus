@@ -1,11 +1,7 @@
 package com.liferay.damascus.cli
 
 import com.beust.jcommander.internal.Maps
-import com.liferay.damascus.cli.common.CommonUtil
-import com.liferay.damascus.cli.common.DamascusProps
-import com.liferay.damascus.cli.common.JsonUtil
-import com.liferay.damascus.cli.common.TemplateUtil
-import com.liferay.damascus.cli.common.TemplateUtilTest
+import com.liferay.damascus.cli.common.*
 import com.liferay.damascus.cli.json.DamascusBase
 import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
@@ -25,7 +21,7 @@ class CreateCommandTest extends Specification {
     def setup() {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
-		TemplateUtil.getInstance().clear();
+        TemplateUtil.getInstance().clear();
 
         //Create Workspace
         CommonUtil.createWorkspace(workspaceRootDir, workspaceName);
@@ -52,7 +48,12 @@ class CreateCommandTest extends Specification {
         damascus.put('damascus', params);
 
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, workTempDir + DS + DamascusProps.BASE_JSON)
+        TemplateUtil.getInstance().process(
+                TemplateUtilTest.class,
+                liferayVersion,
+                DamascusProps.BASE_JSON,
+                damascus,
+                workTempDir + DS + DamascusProps.BASE_JSON)
 
         //Load base.json into object
         DamascusBase retrievedObj = JsonUtil.getObject(workTempDir + DS + DamascusProps.BASE_JSON, DamascusBase.class)
@@ -62,10 +63,10 @@ class CreateCommandTest extends Specification {
 
         //Generate Service XML
         createCommand.generateScaffolding(
-            retrievedObj,
-            DamascusProps.SERVICE_XML,
-            outputFile,
-            retrievedObj.applications[0])
+                retrievedObj,
+                DamascusProps.SERVICE_XML,
+                outputFile,
+                retrievedObj.applications[0])
 
         def f = new File(outputFile)
 
@@ -104,9 +105,9 @@ class CreateCommandTest extends Specification {
 
         //Generate project skeleton
         createCommand.generateProjectSkeleton(
-            projectName,
-            packageName,
-            workTempDir)
+                projectName,
+                packageName,
+                workTempDir)
 
         //Setup output files
         def outputFile = workTempDir + DS + projectName
@@ -151,13 +152,16 @@ class CreateCommandTest extends Specification {
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
+        // Once clear _cfg to initialize with an actual test target template directory
+        TemplateUtil._cfg = null;
+
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(
-            TemplateUtilTest.class,
-            liferayVersion,
-            DamascusProps.BASE_JSON,
-            damascus,
-            workTempDir + DS + DamascusProps.BASE_JSON)
+                TemplateUtilTest.class,
+                liferayVersion,
+                DamascusProps.BASE_JSON,
+                damascus,
+                workTempDir + DS + DamascusProps.BASE_JSON)
 
         //Run damascus -create
         String[] args = ["-create"]
@@ -193,6 +197,74 @@ class CreateCommandTest extends Specification {
 
     }
 
+    def getPathMap(expectedProjectDirName) {
+        return [
+                rootPath   : workTempDir + DS + expectedProjectDirName,
+                apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
+                servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
+                webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
+        ];
+    }
+
+    def getCheckLoop(expectedProjectDirName) {
+        def pathMap = getPathMap(expectedProjectDirName)
+
+        return [
+                [path: pathMap["apiPath"], target: ".*ActivityKeys.java", amount: 1],
+                [path: pathMap["apiPath"], target: ".*bnd.bnd", amount: 1],
+                [path: pathMap["apiPath"], target: ".*build.gradle", amount: 1],
+                [path: pathMap["apiPath"], target: ".*PortletKeys.java", amount: 1],
+                [path: pathMap["apiPath"], target: ".*ValidateException.java", amount: 1],
+                [path: pathMap["servicePath"], target: ".*bnd.bnd", amount: 1],
+                [path: pathMap["servicePath"], target: ".*build.gradle", amount: 1],
+                [path: pathMap["servicePath"], target: ".*default.xml", amount: 1],
+                [path: pathMap["servicePath"], target: ".*Indexer.java", amount: 1],
+                [path: pathMap["servicePath"], target: ".*LocalServiceImpl.java", amount: 1],
+                [path: pathMap["servicePath"], target: ".*PermissionChecker.java", amount: 2],
+                [path: pathMap["servicePath"], target: ".*portlet.properties", amount: 1],
+                [path: pathMap["servicePath"], target: ".*portlet-model-hints.xml", amount: 1],
+                [path: pathMap["servicePath"], target: ".*ResourcePermissionChecker.java", amount: 1],
+                [path: pathMap["servicePath"], target: ".*TrashHandler.java", amount: 1],
+                [path: pathMap["servicePath"], target: ".*Validator.java", amount: 1],
+                [path: pathMap["servicePath"], target: ".*WorkflowHandler.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*abstract.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*ActivityInterpreter.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*AssetRenderer.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*AssetRendererFactory.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*bnd.bnd", amount: 1],
+                [path: pathMap["webPath"], target: ".*build.gradle", amount: 1],
+                [path: pathMap["webPath"], target: ".*ConfigurationAction.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*Configuration.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*configuration.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*CrudMVCActionCommand.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*CrudMVCRenderCommand.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*default.xml", amount: 1],
+                [path: pathMap["webPath"], target: ".*edit.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*edit_actions.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*full_content.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*init.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*ItemSelectorHelper.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*portlet.properties", amount: 1],
+                [path: pathMap["webPath"], target: ".*search_results.jspf", amount: 1],
+                [path: pathMap["webPath"], target: ".*view.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*ViewHelper.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*ViewMVCRenderCommand.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*view_record.jsp", amount: 1],
+                [path: pathMap["webPath"], target: ".*WebKeys.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*WebPortlet.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*portlet.properties", amount: 1],
+                [path: pathMap["webPath"], target: ".*FindEntryAction.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*FindEntryHelper.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*PortletLayoutFinder.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*AdminPortlet.java", amount: 1],
+                [path: pathMap["webPath"], target: ".*PanelApp.java", amount: 1],
+                [path: pathMap["rootPath"], target: ".*build.gradle", amount: 4],
+                [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 1]
+        ];
+
+    }
+
+    @Unroll("Template creation tests")
     def "Template creation tests"() {
         setup:
         Map params = Maps.newHashMap();
@@ -207,11 +279,11 @@ class CreateCommandTest extends Specification {
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(
-            TemplateUtilTest.class,
-            liferayVersion,
-            DamascusProps.BASE_JSON,
-            damascus,
-            workTempDir + DS + DamascusProps.BASE_JSON)
+                TemplateUtilTest.class,
+                liferayVersion,
+                DamascusProps.BASE_JSON,
+                damascus,
+                workTempDir + DS + DamascusProps.BASE_JSON)
 
         //Run damascus -create
         String[] args = ["-create"]
@@ -219,123 +291,90 @@ class CreateCommandTest extends Specification {
 
         when:
         //Target path map of a project
-        def pathMap = [
-            rootPath   : workTempDir + DS + expectedProjectDirName,
-            apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
-            servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
-            webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
-        ];
+        def pathMap = getPathMap(expectedProjectDirName)
 
-        //Spock can't setup block to run for one time for a method, so list up all tests as below.
-
-        def targetFile1 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*ActivityKeys.java"), TrueFileFilter.INSTANCE)
-        def targetFile2 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*bnd.bnd"), TrueFileFilter.INSTANCE)
-        def targetFile3 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*build.gradle"), TrueFileFilter.INSTANCE)
-        def targetFile4 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*PortletKeys.java"), TrueFileFilter.INSTANCE)
-        def targetFile5 = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*ValidateException.java"), TrueFileFilter.INSTANCE)
-        def targetFile6 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*bnd.bnd"), TrueFileFilter.INSTANCE)
-        def targetFile7 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*build.gradle"), TrueFileFilter.INSTANCE)
-        def targetFile8 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*default.xml"), TrueFileFilter.INSTANCE)
-        def targetFile9 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*Indexer.java"), TrueFileFilter.INSTANCE)
-        def targetFile10 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*LocalServiceImpl.java"), TrueFileFilter.INSTANCE)
-        def targetFile11 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*PermissionChecker.java"), TrueFileFilter.INSTANCE)
-        def targetFile12 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*portlet.properties"), TrueFileFilter.INSTANCE)
-        def targetFile13 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*portlet-model-hints.xml"), TrueFileFilter.INSTANCE)
-        def targetFile14 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*ResourcePermissionChecker.java"), TrueFileFilter.INSTANCE)
-        def targetFile15 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*TrashHandler.java"), TrueFileFilter.INSTANCE)
-        def targetFile16 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*Validator.java"), TrueFileFilter.INSTANCE)
-        def targetFile17 = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*WorkflowHandler.java"), TrueFileFilter.INSTANCE)
-        def targetFile18 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*abstract.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile19 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ActivityInterpreter.java"), TrueFileFilter.INSTANCE)
-        def targetFile20 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*AssetRenderer.java"), TrueFileFilter.INSTANCE)
-        def targetFile21 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*AssetRendererFactory.java"), TrueFileFilter.INSTANCE)
-        def targetFile22 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*bnd.bnd"), TrueFileFilter.INSTANCE)
-        def targetFile23 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*build.gradle"), TrueFileFilter.INSTANCE)
-        def targetFile24 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ConfigurationAction.java"), TrueFileFilter.INSTANCE)
-        def targetFile25 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*Configuration.java"), TrueFileFilter.INSTANCE)
-        def targetFile26 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*configuration.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile27 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*CrudMVCActionCommand.java"), TrueFileFilter.INSTANCE)
-        def targetFile28 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*CrudMVCRenderCommand.java"), TrueFileFilter.INSTANCE)
-        def targetFile29 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*default.xml"), TrueFileFilter.INSTANCE)
-        def targetFile30 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*edit.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile31 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*edit_actions.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile32 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*full_content.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile33 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*init.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile34 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ItemSelectorHelper.java"), TrueFileFilter.INSTANCE)
-        def targetFile35 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*portlet.properties"), TrueFileFilter.INSTANCE)
-        def targetFile36 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*search_results.jspf"), TrueFileFilter.INSTANCE)
-        def targetFile37 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*view.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile38 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ViewHelper.java"), TrueFileFilter.INSTANCE)
-        def targetFile39 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*ViewMVCRenderCommand.java"), TrueFileFilter.INSTANCE)
-        def targetFile40 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*view_record.jsp"), TrueFileFilter.INSTANCE)
-        def targetFile41 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*WebKeys.java"), TrueFileFilter.INSTANCE)
-        def targetFile42 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*WebPortlet.java"), TrueFileFilter.INSTANCE)
-        def targetFile43 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*portlet.properties"), TrueFileFilter.INSTANCE)
-        def targetFile44 = FileUtils.listFiles(new File(pathMap["rootPath"]), new RegexFileFilter(".*build.gradle"), TrueFileFilter.INSTANCE)
-        def targetFile45 = FileUtils.listFiles(new File(pathMap["rootPath"]), new RegexFileFilter(".*settings.gradle"), TrueFileFilter.INSTANCE)
-        def targetFile46 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*FindEntryAction.java"), TrueFileFilter.INSTANCE)
-        def targetFile47 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*FindEntryHelper.java"), TrueFileFilter.INSTANCE)
-        def targetFile48 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*PortletLayoutFinder.java"), TrueFileFilter.INSTANCE)
-        def targetFile49 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*AdminPortlet.java"), TrueFileFilter.INSTANCE)
-        def targetFile50 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*PanelApp.java"), TrueFileFilter.INSTANCE)
+        def checkLoop = getCheckLoop(expectedProjectDirName);
 
         then:
-        1 == targetFile1.size();
-        1 == targetFile2.size();
-        1 == targetFile3.size();
-        1 == targetFile4.size();
-        1 == targetFile5.size();
-        1 == targetFile6.size();
-        1 == targetFile7.size();
-        1 == targetFile8.size();
-        1 == targetFile9.size();
-        1 == targetFile10.size();
-        2 == targetFile11.size();
-        1 == targetFile12.size();
-        1 == targetFile13.size();
-        1 == targetFile14.size();
-        1 == targetFile15.size();
-        1 == targetFile16.size();
-        1 == targetFile17.size();
-        1 == targetFile18.size();
-        1 == targetFile19.size();
-        1 == targetFile20.size();
-        1 == targetFile21.size();
-        1 == targetFile22.size();
-        1 == targetFile23.size();
-        1 == targetFile24.size();
-        1 == targetFile25.size();
-        1 == targetFile26.size();
-        1 == targetFile27.size();
-        1 == targetFile28.size();
-        1 == targetFile29.size();
-        1 == targetFile30.size();
-        1 == targetFile31.size();
-        1 == targetFile32.size();
-        1 == targetFile33.size();
-        1 == targetFile34.size();
-        1 == targetFile35.size();
-        1 == targetFile36.size();
-        1 == targetFile37.size();
-        1 == targetFile38.size();
-        1 == targetFile39.size();
-        1 == targetFile40.size();
-        1 == targetFile41.size();
-        1 == targetFile42.size();
-        1 == targetFile43.size();
-        4 == targetFile44.size();
-        1 == targetFile45.size();
-        1 == targetFile46.size();
-        1 == targetFile47.size();
-        1 == targetFile48.size();
-        1 == targetFile49.size();
-        1 == targetFile50.size();
+        checkLoop.each { trow ->
+            def targetFile1 = FileUtils.listFiles(new File(trow.path), new RegexFileFilter(trow.target), TrueFileFilter.INSTANCE)
+            assert trow.amount == targetFile1.size()
+        }
 
         where:
         projectName | liferayVersion | packageName        | expectedProjectDirName
         "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
     }
-    
+
+
+    @Unroll("Run Damascus with a different template")
+    def "Run Damascus with a different template"() {
+        setup:
+        Map params = Maps.newHashMap();
+
+        //Set parameters
+        params.put("projectName", projectName)
+        params.put("liferayVersion", liferayVersion)
+        params.put("packageName", packageName)
+        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        Map damascus = Maps.newHashMap();
+        damascus.put('damascus', params);
+
+        //Output base.json with parameters and create the default templates
+        TemplateUtil.getInstance().process(
+                TemplateUtilTest.class,
+                DamascusProps.VERSION_70,
+                DamascusProps.BASE_JSON,
+                damascus,
+                workTempDir + DS + DamascusProps.BASE_JSON)
+
+        File org = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + DamascusProps.VERSION_70);
+        File dist = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
+        FileUtils.copyDirectory(org, dist)
+
+        // Delete base.json and the default template so that following method can create a new one
+        // and see if Damascus actually can point a new template.
+        FileUtils.deleteQuietly(new File(workTempDir + DS + DamascusProps.BASE_JSON))
+        FileUtils.deleteQuietly(org)
+
+        when:
+        // Once clear _cfg to initialize with an actual test target template directory
+        TemplateUtil._cfg = null;
+
+        //Output base.json with parameters and create the default templates
+        TemplateUtil.getInstance().process(
+                TemplateUtilTest.class,
+                liferayVersion,
+                DamascusProps.BASE_JSON,
+                damascus,
+                workTempDir + DS + DamascusProps.BASE_JSON)
+
+        //Run damascus -create
+        String[] args = ["-create"]
+        Damascus.main(args)
+
+        then:
+        //Target path map of a project
+        def pathMap = getPathMap(expectedProjectDirName)
+
+        def checkLoop = getCheckLoop(expectedProjectDirName)
+
+        checkLoop.each { trow ->
+            def targetFile1 = FileUtils.listFiles(new File(trow.path), new RegexFileFilter(trow.target), TrueFileFilter.INSTANCE)
+            assert trow.amount == targetFile1.size()
+        }
+
+        cleanup:
+        FileUtils.copyDirectory(dist, org)
+        FileUtils.deleteQuietly(dist)
+
+        where:
+        projectName | liferayVersion | packageName        | expectedProjectDirName
+        "SampleSB"  | "mytemp"       | "com.liferay.test" | "sample-sb"
+
+    }
+
+    @Unroll("Template creation tests with asset flags variations <#baseFilename> <#prohibitedTerms> <#prohibitedInServiceImpl>")
     def "Template creation tests with asset flags variations"() {
         setup:
         Map params = Maps.newHashMap();
@@ -348,63 +387,63 @@ class CreateCommandTest extends Specification {
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
+        when:
+        FileUtils.deleteQuietly(new File(DamascusProps.CACHE_DIR_PATH))
+
+        // Once clear _cfg to initialize with an actual test target template directory
+        TemplateUtil._cfg = null;
+
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(
-            TemplateUtilTest.class,
-            liferayVersion,
-            baseFilename,
-            damascus,
-            workTempDir + DS + DamascusProps.BASE_JSON)
+                TemplateUtilTest.class,
+                liferayVersion,
+                baseFilename,
+                damascus,
+                workTempDir + DS + DamascusProps.BASE_JSON)
 
         //Run damascus -create
         String[] args = ["-create"]
         Damascus.main(args)
 
-        when:
-        //Target path map of a project
-        def pathMap = [
-            rootPath   : workTempDir + DS + expectedProjectDirName,
-            apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
-            servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
-            webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
-        ];
-
-		def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
-		def serviceTargetFiles = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
-		def webJavaTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
-		def webJspTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*\\.jsp.*"), TrueFileFilter.INSTANCE)
-		
-		def prohibitedTermsTargetFiles = new ArrayList(webJspTargetFiles)
-		
-		if(prohibitedInServiceImpl) {
-			prohibitedTermsTargetFiles.addAll(
-				serviceTargetFiles.findAll { it.name.endsWith('LocalServiceImpl.java') })
-		}
-		
         then:
-        
-		apiTargetFiles.size() > 1
-		serviceTargetFiles.size() > 1
-		webJavaTargetFiles.size() > 1
-		webJspTargetFiles.size() > 1
-		
-		noFileContainsAnyTerm(prohibitedTermsTargetFiles, prohibitedTerms)
-		
+        //Target path map of a project
+        def pathMap = getPathMap(expectedProjectDirName)
+
+        def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
+        def serviceTargetFiles = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
+        def webJavaTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
+        def webJspTargetFiles = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*\\.jsp.*"), TrueFileFilter.INSTANCE)
+
+        def prohibitedTermsTargetFiles = new ArrayList(webJspTargetFiles)
+
+        if (prohibitedInServiceImpl) {
+            prohibitedTermsTargetFiles.addAll(
+                    serviceTargetFiles.findAll { it.name.endsWith('LocalServiceImpl.java') })
+        }
+
+        apiTargetFiles.size() > 1
+        serviceTargetFiles.size() > 1
+        webJavaTargetFiles.size() > 1
+        webJspTargetFiles.size() > 1
+
+        noFileContainsAnyTerm(prohibitedTermsTargetFiles, prohibitedTerms)
+
         where:
-        projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms                | prohibitedInServiceImpl | expectedProjectDirName
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities']     | true                    | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories']     | false                   | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments','discussion']      | true                    | "sample-sb"   
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                    | true                    | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_tags_false.json"       | ['tags']                       | false                   | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_related_false.json"    | ['asset-links']                | false                   | "sample-sb"
+        projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms            | prohibitedInServiceImpl | expectedProjectDirName
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities'] | true                    | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories'] | false                   | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments', 'discussion'] | true                    | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                | true                    | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_tags_false.json"       | ['tags']                   | false                   | "sample-sb"
+        "SampleSB"  | "70"           | "com.liferay.test" | "base_related_false.json"    | ['asset-links']            | false                   | "sample-sb"
     }
-    
+
     void noFileContainsAnyTerm(files, terms) {
-	  files.each { file -> 
-			terms.each { term ->
-				assert !file.text.contains(term)
-			} 
-		};
-	}
+        files.each { file ->
+            terms.each { term ->
+                assert !file.text.contains(term)
+            }
+        };
+    }
+
 }
