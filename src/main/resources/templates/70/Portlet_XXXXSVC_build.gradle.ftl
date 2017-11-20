@@ -1,5 +1,10 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${serviceModulePath}/build.gradle">
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
 apply plugin: "com.liferay.portal.tools.service.builder"
 
 //Need for Windows

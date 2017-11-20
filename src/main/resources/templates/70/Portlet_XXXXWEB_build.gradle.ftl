@@ -1,6 +1,5 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/build.gradle">
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'

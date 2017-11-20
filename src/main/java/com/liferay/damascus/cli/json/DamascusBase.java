@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * JSON structure POJO : DamascusBase
@@ -32,6 +33,8 @@ public class DamascusBase {
 
     @JsonProperty(required = true)
     public String liferayVersion;
+
+    public Map<String, String> customValue;
 
     @JsonProperty(required = true)
     public List<Application> applications = null;

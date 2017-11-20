@@ -1,5 +1,9 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${apiModulePath}/build.gradle">
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 dependencies {
     compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"

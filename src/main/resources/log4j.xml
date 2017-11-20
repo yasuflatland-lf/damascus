@@ -2,18 +2,23 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" >
 
-    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+    <appender name="stdout_appender" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="conversionPattern" value="%d  %p  %c %L - %m%n"/>
         </layout>
     </appender>
-	<!-- categories -->
-	<category name="org.apache.commons">
-	    <priority value="ERROR" />
-	</category>
+    <!-- categories -->
+    <!--
+    <category name="com.liferay.damascus.cli.common">
+        <priority value="DEBUG" />
+    </category>
+    -->
+    <category name="org.apache.commons">
+        <priority value="ERROR" />
+    </category>
     <root>
-    	<level value="ERROR" />
-        <appender-ref ref="stdout"/>
+        <level value="ERROR" />
+        <appender-ref ref="stdout_appender"/>
     </root>
 </log4j:configuration>

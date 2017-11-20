@@ -181,11 +181,8 @@ public class ${capFirstModel}Indexer
 
                         indexableActionableDynamicQuery.addDocuments(document);
                     } catch (PortalException pe) {
-                        if (_log.isWarnEnabled()) {
-                            _log.warn("Unable to index entry "
-                                          + entry.getPrimaryKey(),
-                                      pe);
-                        }
+                        _log.error("Unable to index entry "
+                                        + entry.getPrimaryKey(), pe);
                     }
                 }
 
@@ -201,7 +198,6 @@ public class ${capFirstModel}Indexer
     @Reference
     protected IndexWriterHelper _indexWriterHelper;
 
-    private static final Log _log = LogFactoryUtil
-        .getLog(${capFirstModel}Indexer.class);
+    private static final Log _log = LogFactoryUtil.getLog(${capFirstModel}Indexer.class);
 
 }

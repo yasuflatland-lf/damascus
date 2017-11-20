@@ -85,7 +85,9 @@ public class TemplateUtil {
                     _cfg = new Configuration(Configuration.VERSION_2_3_25);
 
                     // Resource root path and initialize Freemarker configuration with the path
-                    _cfg.setDirectoryForTemplateLoading(getResourceRootPath(version));
+                    File resourceRootPath = getResourceRootPath(version);
+                    _cfg.setDirectoryForTemplateLoading(resourceRootPath);
+                    log.debug("resourceRootPath : " + resourceRootPath.toString() );
 
                     _cfg.setDefaultEncoding("UTF-8");
                     _cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
@@ -114,16 +116,18 @@ public class TemplateUtil {
         //Fetch root path for resources from .damascus first.
         //Damascus uses resource in this jar if no configuration is found in .damascus.
         String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        String defaultTemplatePath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
 
-        log.debug("getResourceRootPath : rootPath : " + rootPath);
+        log.debug("getResourceRootPath : rootPath            : " + rootPath);
+        log.debug("getResourceRootPath : defaultTemplatePath : " + defaultTemplatePath);
 
         if (rootPath.equals("")) {
-            rootPath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
-            PropertyUtil.getInstance().setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, rootPath).save();
-            System.out.println(DamascusProps.PROP_RESOURCE_ROOT_PATH + " is initilized with <" + rootPath + ">");
+
+            PropertyUtil.getInstance().setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, defaultTemplatePath).save();
+            System.out.println(DamascusProps.PROP_RESOURCE_ROOT_PATH + " is initilized with <" + defaultTemplatePath + ">");
         }
 
-        return new File(rootPath);
+        return new File(defaultTemplatePath);
     }
 
     /**
@@ -157,7 +161,11 @@ public class TemplateUtil {
      * @return Output filename
      */
     public String getOutputFilename(String templateFileName) {
-        return StringUtils.substringBetween(templateFileName, DamascusProps.TARGET_TEMPLATE_PREFIX, DamascusProps.TARGET_TEMPLATE_SUFFIX);
+        return StringUtils.substringBetween(
+            templateFileName,
+            DamascusProps.TARGET_TEMPLATE_PREFIX,
+            DamascusProps.TARGET_TEMPLATE_SUFFIX
+        );
     }
 
     /**
@@ -456,10 +464,12 @@ public class TemplateUtil {
     public void cacheTemplates(Class<?> clazz, String templateRootPath, String distinationRoot, String version)
         throws URISyntaxException, IOException, ConfigurationException {
 
-        log.debug("templateRootPath<" + templateRootPath + ">");
-        log.debug("distinationRoot <" + distinationRoot + ">");
-        log.debug("version         <" + version + ">");
-        log.debug("isInsideJar     <" + String.valueOf(isInsideJar(clazz)) + ">");
+        if(log.isDebugEnabled()) {
+            log.debug("templateRootPath<" + templateRootPath + ">");
+            log.debug("distinationRoot <" + distinationRoot + ">");
+            log.debug("version         <" + version + ">");
+            log.debug("isInsideJar     <" + String.valueOf(isInsideJar(clazz)) + ">");
+        }
 
         File   distFile = new File(distinationRoot);
         String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
@@ -469,18 +479,23 @@ public class TemplateUtil {
         String buildNumber      = getBuildNumber(clazz, insideJar);
         String cacheBuildNumber = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_BUILD_NUMBER);
 
-        if (distFile.exists() && !rootPath.equals("")
-            && buildNumber.equals(cacheBuildNumber)) {
+        if (distFile.exists() &&
+            !rootPath.equals("") &&
+            buildNumber.equals(cacheBuildNumber)) {
+
             log.debug("Template folder is already up-to-date. Skip initializing templates.");
             return;
         }
 
         if (insideJar) {
+            log.debug("PRODUCTION environment template initialization");
 
             //Production environment
             List<String> files = getTemplateFileLists(templateRootPath);
             copyTemplatesToCache(clazz, files, distinationRoot);
         } else {
+
+            log.debug("TEST environment template initialization");
 
             //Test environment (non-zipped environment)
             //The way of processing directory is different from contents in a jar
@@ -493,6 +508,9 @@ public class TemplateUtil {
                         ? DamascusProps.TEMPLATE_FOLDER_NAME
                         : DamascusProps.DS + DamascusProps.TEMPLATE_FOLDER_NAME);
             }
+
+            log.debug("templateRootPath : " + templateRootPath);
+            log.debug("modifiedDistRoot : " + modifiedDistRoot);
             copyTemplatesToCache(clazz, templateRootPath, modifiedDistRoot);
         }
 
@@ -515,7 +533,7 @@ public class TemplateUtil {
 
         PropertyUtil.getInstance().save();
 
-        System.out.println("Initialized Templates.");
+        System.out.println("Templates have been initialized.");
 
     }
 
@@ -551,7 +569,10 @@ public class TemplateUtil {
 
         return buildNumber.toString();
     }
-    
+
+    /**
+     * Clear Template instances
+     */
     public void clear() {
     	_cfg = null;
     	_typeParams = null;
