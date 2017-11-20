@@ -153,7 +153,7 @@ class CreateCommandTest extends Specification {
         damascus.put('damascus', params);
 
         // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil._cfg = null;
+        TemplateUtil.getInstance().clear()
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(
@@ -197,17 +197,8 @@ class CreateCommandTest extends Specification {
 
     }
 
-    def getPathMap(expectedProjectDirName) {
-        return [
-                rootPath   : workTempDir + DS + expectedProjectDirName,
-                apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
-                servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
-                webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
-        ];
-    }
-
     def getCheckLoop(expectedProjectDirName) {
-        def pathMap = getPathMap(expectedProjectDirName)
+        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
         return [
                 [path: pathMap["apiPath"], target: ".*ActivityKeys.java", amount: 1],
@@ -291,7 +282,7 @@ class CreateCommandTest extends Specification {
 
         when:
         //Target path map of a project
-        def pathMap = getPathMap(expectedProjectDirName)
+        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
         def checkLoop = getCheckLoop(expectedProjectDirName);
 
@@ -339,7 +330,7 @@ class CreateCommandTest extends Specification {
 
         when:
         // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil._cfg = null;
+        TemplateUtil.getInstance().clear()
 
         //Output base.json with parameters and create the default templates
         TemplateUtil.getInstance().process(
@@ -355,7 +346,7 @@ class CreateCommandTest extends Specification {
 
         then:
         //Target path map of a project
-        def pathMap = getPathMap(expectedProjectDirName)
+        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
         def checkLoop = getCheckLoop(expectedProjectDirName)
 
@@ -391,7 +382,7 @@ class CreateCommandTest extends Specification {
         FileUtils.deleteQuietly(new File(DamascusProps.CACHE_DIR_PATH))
 
         // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil._cfg = null;
+        TemplateUtil.getInstance().clear()
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(
@@ -407,7 +398,7 @@ class CreateCommandTest extends Specification {
 
         then:
         //Target path map of a project
-        def pathMap = getPathMap(expectedProjectDirName)
+        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
         def apiTargetFiles = FileUtils.listFiles(new File(pathMap["apiPath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)
         def serviceTargetFiles = FileUtils.listFiles(new File(pathMap["servicePath"]), new RegexFileFilter(".*\\.java"), TrueFileFilter.INSTANCE)

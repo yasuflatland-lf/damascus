@@ -1,24 +1,27 @@
 package com.liferay.damascus.cli.json
 
-import com.beust.jcommander.ParameterException
 import com.beust.jcommander.internal.Lists
+import com.beust.jcommander.internal.Maps
 import com.liferay.damascus.cli.CreateCommand
 import com.liferay.damascus.cli.Damascus
 import com.liferay.damascus.cli.common.CommonUtil
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.common.JsonUtil
 import com.liferay.damascus.cli.common.TemplateUtil
+import com.liferay.damascus.cli.common.TemplateUtilTest
 import com.liferay.damascus.cli.test.tools.TestUtils
-import groovy.json.JsonSlurper
+import freemarker.core.Configurable
+import freemarker.template.Configuration
+import freemarker.template.TemplateExceptionHandler
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
+import org.apache.commons.lang3.StringUtils
 import spock.lang.Specification
 import spock.lang.Unroll
+import groovy.json.*
 
-import java.security.InvalidParameterException
-
-class ApplicationTest extends Specification {
+class DamascusBaseTest extends Specification {
     static def DS = DamascusProps.DS;
     static def workspaceRootDir = TestUtils.getTempPath() + "damascustest";
     static def workspaceName = "workspace"
@@ -40,65 +43,6 @@ class ApplicationTest extends Specification {
         createCommand = new CreateCommand();
     }
 
-    @Unroll("Applications has hasPrimary Success test var1<#var1> var2<#var2> var3<#var3> ")
-    def "Application has hasPrimary Success test"() {
-        when:
-        def app = new Application()
-        app.fields = Lists.newArrayList()
-        def field1 = new com.liferay.damascus.cli.json.fields.Long();
-        field1.setPrimary(var1);
-        def field2 = new com.liferay.damascus.cli.json.fields.Double();
-        field2.setPrimary(var2);
-        def field3 = new com.liferay.damascus.cli.json.fields.Text();
-        field3.setPrimary(var3);
-
-        app.setTitle("This test") // for test
-        app.fields.add(field1)
-        app.fields.add(field2)
-        app.fields.add(field3)
-
-        def retVal = app.hasPrimary()
-
-        then:
-        true == app.hasPrimary()
-
-        where:
-        var1  | var2  | var3
-        true  | false | false
-        false | true  | false
-        false | false | true
-    }
-
-    @Unroll("Applications has hasPrimary Fail test var1<#var1> var2<#var2> var3<#var3>")
-    def "Application has hasPrimary Fail test"() {
-        when:
-        def app = new Application()
-        app.fields = Lists.newArrayList()
-        def field1 = new com.liferay.damascus.cli.json.fields.Long();
-        field1.setPrimary(var1);
-        def field2 = new com.liferay.damascus.cli.json.fields.Double();
-        field2.setPrimary(var2);
-        def field3 = new com.liferay.damascus.cli.json.fields.Text();
-        field3.setPrimary(var3);
-
-        app.setTitle("This test") // for test
-        app.fields.add(field1)
-        app.fields.add(field2)
-        app.fields.add(field3)
-
-        app.hasPrimary()
-
-        then:
-        thrown(InvalidParameterException)
-
-        where:
-        var1  | var2  | var3
-        true  | true  | false
-        false | true  | true
-        true  | true  | true
-        false | false | false
-    }
-
     @Unroll("Smoke Test for customValue <#key1>:<#value1> | <#key2><#value2>")
     def "Smoke Test for customValue"() {
         when:
@@ -108,17 +52,17 @@ class ApplicationTest extends Specification {
         def packageName = "com.liferay.test.foo.bar"
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath)
 
-        dmsb.applications[0].customValue = new HashMap<>();
-        dmsb.applications[0].customValue.put(key1, value1)
-        dmsb.applications[0].customValue.put(key2, value2)
+        dmsb.customValue = new HashMap<>();
+        dmsb.customValue.put(key1, value1)
+        dmsb.customValue.put(key2, value2)
         JsonUtil.writer(paramFilePath, dmsb);
 
         def baseJsonContents = new File(paramFilePath).text;
         def parsedJson = new JsonSlurper().parseText(baseJsonContents)
 
         then:
-        value1 == parsedJson.applications[0].get("customValue").get(key1)
-        value2 == parsedJson.applications[0].get("customValue").get(key2)
+        value1 == parsedJson.get("customValue").get(key1)
+        value2 == parsedJson.get("customValue").get(key2)
 
         cleanup:
         FileUtils.deleteQuietly(new File(paramFilePath))
@@ -126,6 +70,7 @@ class ApplicationTest extends Specification {
         where:
         key1      | value1     | key2   | value2
         "keytest" | "valutest" | "key2" | "value2"
+
     }
 
     @Unroll("Smoke Test for customValue value convert <#key1>:<#value1> | <#key2><#value2>")
@@ -145,9 +90,9 @@ class ApplicationTest extends Specification {
 
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath, false)
 
-        dmsb.applications[0].customValue = new HashMap<>();
-        dmsb.applications[0].customValue.put(key1, value1)
-        dmsb.applications[0].customValue.put(key2, value2)
+        dmsb.customValue = new HashMap<>();
+        dmsb.customValue.put(key1, value1)
+        dmsb.customValue.put(key2, value2)
         JsonUtil.writer(paramFilePath, dmsb);
 
         //
@@ -163,9 +108,9 @@ class ApplicationTest extends Specification {
                         <#include "./valuables.ftl">
                         <#assign createPath = "${entityWebResourcesPath}/testfile.jsp">
                         
-                        <#if application.customValue?exists>
-                        <h2>${application.customValue["key1"]}</h2>
-                        <h2>${application.customValue["key2"]}</h2>
+                        <#if damascus.customValue?exists>
+                        <h2>${damascus.customValue["key1"]}</h2>
+                        <h2>${damascus.customValue["key2"]}</h2>
                         </#if>
 '''.stripIndent()
                 }
@@ -196,5 +141,4 @@ class ApplicationTest extends Specification {
         key1   | value1   | key2   | value2
         "key1" | "FOOFOO" | "key2" | "BARBAR"
     }
-
 }

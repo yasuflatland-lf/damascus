@@ -63,7 +63,7 @@ class TestUtils {
      * @param output_file_path
      * @return
      */
-    static public def createBaseJsonMock(projectName,liferayVersion,packageName,output_file_path) {
+    static public def createBaseJsonMock(projectName,liferayVersion,packageName,output_file_path, outputDelete = true) {
         Map params = Maps.newHashMap();
 
         params.put("projectName", projectName)
@@ -79,8 +79,10 @@ class TestUtils {
         //Load into object
         def retrivedObj = JsonUtil.getObject(output_file_path, DamascusBase.class)
 
-        //Delete temporally file
-        Files.deleteIfExists(Paths.get(output_file_path));
+        if(outputDelete) {
+            //Delete temporally file
+            Files.deleteIfExists(Paths.get(output_file_path));
+        }
 
         return retrivedObj
     }
@@ -99,5 +101,23 @@ class TestUtils {
             retStr = retStr + DamascusProps.DS;
         }
         return retStr;
+    }
+
+    /**
+     *
+     * @param expectedProjectDirName
+     * @return
+     */
+    static public def getPathMap(expectedProjectDirName) {
+        def DS = DamascusProps.DS;
+        def workspaceRootDir = TestUtils.getTempPath() + "damascustest";
+        def workspaceName = "workspace"
+        def workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
+        return [
+                rootPath   : workTempDir + DS + expectedProjectDirName,
+                apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
+                servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
+                webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
+        ];
     }
 }

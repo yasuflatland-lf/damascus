@@ -42,6 +42,8 @@ public class Application {
 
     public List<Relation> relations = null;
 
+    public Map<String, String> customValue;
+
     /**
      * Has an asset configured?
      *
