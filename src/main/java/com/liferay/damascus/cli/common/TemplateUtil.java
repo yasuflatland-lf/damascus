@@ -246,11 +246,9 @@ public class TemplateUtil {
             if (null == filePath) {
 
                 //filePath is required if outputFilePath is null.
-                StringBuffer sb = new StringBuffer();
-                sb.append("Reqired values are missing in the target template. <" + templateFileName + ">" + DamascusProps.EOL);
-                sb.append("File Path : <" + ((null == filePath) ? "NULL" : filePath) + ">" + DamascusProps.EOL);
+				String errorMessage = "Required values are missing in the target template <" + templateFileName + ">" + DamascusProps.EOL;
 
-                throw new InvalidParameterException(sb.toString());
+                throw new InvalidParameterException(errorMessage);
             }
 
             targetFilePath = filePath.toString();
@@ -259,7 +257,7 @@ public class TemplateUtil {
         TemplateBooleanModel skipTemplate = (TemplateBooleanModel)env.getVariable(DamascusProps.TEMPKEY_SKIP_TEMPLATE);
         
         if(skipTemplate != null && skipTemplate.getAsBoolean()) {
-        	 
+			
         	log.debug("TemplateUtil#process skip file path <" + targetFilePath + ">");
         	
         	return;
