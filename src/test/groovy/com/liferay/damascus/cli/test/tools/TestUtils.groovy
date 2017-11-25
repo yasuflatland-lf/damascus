@@ -64,14 +64,16 @@ class TestUtils {
      * @return
      */
     static public def createBaseJsonMock(projectName,liferayVersion,packageName,output_file_path, outputDelete = true) {
-        Map params = Maps.newHashMap();
+        Map params = Maps.newHashMap()
 
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
-        Map damascus = Maps.newHashMap();
-        damascus.put('damascus', params);
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
+        Map damascus = Maps.newHashMap()
+        damascus.put('damascus', params)
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, output_file_path)

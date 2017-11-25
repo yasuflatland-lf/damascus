@@ -77,9 +77,9 @@ public class InitCommand implements ICommand {
     	if(!targetDir.toString().endsWith(DamascusProps.DS)) {
     		targetDir.append(DamascusProps.DS);
     	}
-        
+
     	String projectDirectoryName = CaseUtil.getInstance().camelCaseToDashCase(getProjectName());
-        
+
 		return targetDir
         		.append(projectDirectoryName)
         		.append(DamascusProps.DS)
@@ -99,7 +99,11 @@ public class InitCommand implements ICommand {
         params.put(DamascusProps.BASE_PROJECT_NAME, getProjectName());
         params.put(DamascusProps.BASE_LIFERAY_VERSION, getLiferayVersion());
         params.put(DamascusProps.BASE_PACKAGE_NAME, getPackageName());
-        params.put(DamascusProps.BASE_PROJECT_NAME_LOWER, StringUtils.lowerCase(getProjectName()));
+
+        String entityName = getProjectName().replace("-", "");
+        params.put(DamascusProps.BASE_ENTITY_NAME, entityName);
+        params.put(DamascusProps.BASE_ENTITY_NAME_LOWER, StringUtils.lowerCase(entityName));
+
         Map damascus = com.beust.jcommander.internal.Maps.newHashMap();
         damascus.put(DamascusProps.BASE_DAMASCUS_OBJ, params);
 

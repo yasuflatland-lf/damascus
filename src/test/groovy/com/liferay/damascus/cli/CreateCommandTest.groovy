@@ -43,7 +43,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -148,7 +150,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -264,7 +268,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -307,7 +313,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -374,7 +382,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 

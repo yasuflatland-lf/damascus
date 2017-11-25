@@ -48,7 +48,9 @@ public class DamascusProps {
 
     public static final String BASE_PACKAGE_NAME = "packageName";
 
-    public static final String BASE_PROJECT_NAME_LOWER = "projectNameLower";
+    public static final String BASE_ENTITY_NAME = "entityName";
+
+    public static final String BASE_ENTITY_NAME_LOWER = "entityNameLower";
 
     /**
      * Property file configuration
