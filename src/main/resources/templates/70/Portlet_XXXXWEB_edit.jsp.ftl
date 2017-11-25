@@ -131,25 +131,31 @@
 		<%
 			}
 		%>
-</#if>		
-<#if categories >		
-		<aui:input name="categories" type="assetCategories" />
-</#if>		
-<#if tags >	
-		<aui:input name="tags" type="assetTags" />
-</#if>		
+</#if>
+<#if categories || tags >
+		<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
+			<#if categories >
+				<aui:input name="categories" type="assetCategories" />
+			</#if>
+
+			<#if tags >
+				<aui:input name="tags" type="assetTags" />
+			</#if>
+		</aui:fieldset>
+</#if>
 
 <#if relatedAssets >
-		<liferay-ui:panel defaultState="closed" extended="<%=false%>"
-			id="${uncapFirstModel}EntryAssetLinksPanel" persistState="<%=true%>"
+		<liferay-ui:panel defaultState="closed" extended="<%= false %>"
+			id="${uncapFirstModel}EntryAssetLinksPanel" persistState="<%= true %>"
 			title="related-assets">
-			<aui:fieldset>
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
 				<liferay-ui:input-asset-links
-					className="<%=${capFirstModel}.class.getName()%>"
-					classPK="<%=${uncapFirstModel}.getPrimaryKey()%>" />
+					className="<%= ${capFirstModel}.class.getName() %>"
+					classPK="<%= ${uncapFirstModel}.getPrimaryKey() %>" />
+				/>
 			</aui:fieldset>
 		</liferay-ui:panel>
-</#if>		
+</#if>
 
 		<%
 		//This tag is only necessary in Asset publisher
