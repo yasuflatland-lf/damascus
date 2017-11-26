@@ -15,8 +15,7 @@
 </portlet:actionURL>
 
 <div class="container-fluid-1280">
-	<aui:form name="${lowercaseModel}Edit" action="<%=${lowercaseModel}EditURL%>"
-		method="post">
+	<aui:form name="${lowercaseModel}Edit" action="<%=${lowercaseModel}EditURL%>" method="post">
 		<aui:model-context bean="<%=${uncapFirstModel}%>" model="<%=${capFirstModel}.class%>" />
 		<aui:input name="<%=Constants.CMD%>" type="hidden" value="<%=CMD%>" />
         <aui:input type="hidden" name="fromAsset" value="<%=fromAsset%>" />
@@ -145,16 +144,12 @@
 </#if>
 
 <#if relatedAssets >
-		<liferay-ui:panel defaultState="closed" extended="<%= false %>"
-			id="${uncapFirstModel}EntryAssetLinksPanel" persistState="<%= true %>"
-			title="related-assets">
-			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
-				<liferay-ui:input-asset-links
-					className="<%= ${capFirstModel}.class.getName() %>"
-					classPK="<%= ${uncapFirstModel}.getPrimaryKey() %>" />
-				/>
-			</aui:fieldset>
-		</liferay-ui:panel>
+		<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
+			<liferay-ui:input-asset-links
+				className="<%= ${capFirstModel}.class.getName() %>"
+				classPK="<%= ${uncapFirstModel}.getPrimaryKey() %>"
+			/>
+		</aui:fieldset>
 </#if>
 
 		<%
