@@ -132,7 +132,8 @@
 		%>
 </#if>
 <#if categories || tags >
-		<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
+		<aui:fieldset-group markupView="lexicon">
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
 			<#if categories >
 				<aui:input name="categories" type="assetCategories" />
 			</#if>
@@ -140,16 +141,19 @@
 			<#if tags >
 				<aui:input name="tags" type="assetTags" />
 			</#if>
-		</aui:fieldset>
+			</aui:fieldset>
+		</aui:fieldset-group>
 </#if>
 
 <#if relatedAssets >
-		<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
-			<liferay-ui:input-asset-links
-				className="<%= ${capFirstModel}.class.getName() %>"
-				classPK="<%= ${uncapFirstModel}.getPrimaryKey() %>"
-			/>
-		</aui:fieldset>
+		<aui:fieldset-group markupView="lexicon">
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
+				<liferay-ui:input-asset-links
+					className="<%= ${capFirstModel}.class.getName() %>"
+					classPK="<%= ${uncapFirstModel}.getPrimaryKey() %>"
+				/>
+			</aui:fieldset>
+		</aui:fieldset-group>
 </#if>
 
 		<%
