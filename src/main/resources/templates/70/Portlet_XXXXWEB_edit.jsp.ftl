@@ -234,6 +234,9 @@
 	}
 </aui:script>
 
+
+<#list application.fields as field >
+    <#if field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" >
 <%
 	${capFirstModel}ItemSelectorHelper ${uncapFirstModel}ItemSelectorHelper = (${capFirstModel}ItemSelectorHelper) request
 		.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_ITEM_SELECTOR_HELPER);
@@ -274,3 +277,5 @@
 		);
     }
 </aui:script>
+    </#if>
+</#list>
