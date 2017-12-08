@@ -39,13 +39,14 @@ class InitCommandTest extends Specification {
         "-init" | "Foo"     | "Foo"
         "-init" | "Bar"     | "Bar"
         "-init" | "BarFoo"  | "BarFoo"
+        "-init" | "Bar-Foo" | "Bar-Foo"
     }
 
     @Unroll("Smoke test for -init Error Pattern(#argv1 #argv2)")
     def "Smoke test for Init Command Error Pattern"() {
         when:
         String[] args = [argv1, argv2]
-        new JCommander(initCommand, args);
+        new JCommander(initCommand, args)
 
         then:
         thrown(ParameterException.class)
@@ -55,7 +56,6 @@ class InitCommandTest extends Specification {
         "-init" | "foo@"
         "-init" | "foo^"
         "-init" | "^foo"
-        "-init" | "foo-Bar"
         "-init" | "foo%"
         "-init" | "fooあ"
         "-init" | "foo_Bar"
@@ -67,7 +67,7 @@ class InitCommandTest extends Specification {
     def "Package name test for Success Pattern"() {
         when:
         String[] args = [argv1, argv2]
-        new JCommander(initCommand, args);
+        new JCommander(initCommand, args)
 
         then:
         null != initCommand.getPackageName()
@@ -84,7 +84,7 @@ class InitCommandTest extends Specification {
     def "Package name test for Error Pattern"() {
         when:
         String[] args = [argv1, argv2]
-        new JCommander(initCommand, args);
+        new JCommander(initCommand, args)
 
         then:
         thrown(ParameterException.class)
@@ -100,13 +100,13 @@ class InitCommandTest extends Specification {
     def "Init run from main method test"() {
         when:
         String[] args = [argv1, argv2, argv3, argv4, argv5, argv6]
-        new JCommander(initCommand, args);
+        new JCommander(initCommand, args)
         def dms = Spy(Damascus)
         initCommand.run(dms, args)
         def f = new File(workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON)
 
         then:
-        true == f.exists()
+        f.exists()
         //Other detailed test to confirm if the json is parsed correctly has been done in JsonUtilTest
 
         where:

@@ -1,11 +1,11 @@
-<#assign void><#-- Just to prevent unexpected whitespace or lien breaks -->
+<#assign void><#-- Just to prevent unexpected whitespace or line breaks -->
 
 <#assign packageName = "${damascus.packageName}">
 <#assign packagePath = "${packageName?replace(\".\", \"/\")}">
 <#assign packageSnake = "${packageName?replace(\".\", \"_\")}">
 
-<#assign camelcaseProjectName = "${damascus.projectName}">
-<#assign dashcaseProjectName = "${caseUtil.camelCaseToDashCase(camelcaseProjectName)}"> 
+<#assign camelcaseProjectName = "${damascus.projectName?replace(\"-\", \"\")}">
+<#assign dashcaseProjectName = "${caseUtil.camelCaseToDashCase(camelcaseProjectName)}">
 <#assign projectPath = "${createPath_val}/${dashcaseProjectName}">
 <#assign apiModulePath = "${projectPath}/${dashcaseProjectName}-api">
 <#assign serviceModulePath = "${projectPath}/${dashcaseProjectName}-service">

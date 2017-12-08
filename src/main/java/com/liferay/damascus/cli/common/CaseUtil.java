@@ -51,12 +51,12 @@ public class CaseUtil {
 	
 		for (int i = 0; i < input.length; i++) {
 			char c = input[i];
-			if (Character.isLowerCase(c)) {
+			if (Character.isLowerCase(c) || isSpecialCharacter(c)) {
 				output.append(c);
 			} else {
 				if (i > 0) {
-					if (Character.isLowerCase(input[i - 1]) 
-							|| (i < (input.length - 1) && Character.isLowerCase(input[i + 1]))) {
+					if ((previousCharIsLowerCase(input, i) || nextCharIsLowerCase(input, i))
+							&& (!isSpecialCharacter(input[i - 1]) && !isSpecialCharacter(input[i + 1]))) {
 						output.append(separator);
 					}
 				}
@@ -67,6 +67,21 @@ public class CaseUtil {
 		String result = output.toString();
 		
 		return result;
+	}
+
+	private boolean previousCharIsLowerCase(char[] input, int i) {
+
+		return Character.isLowerCase(input[i - 1]);
+	}
+
+	private boolean nextCharIsLowerCase(char[] input, int i) {
+
+		return i < (input.length - 1) && Character.isLowerCase(input[i + 1]);
+	}
+
+	private boolean isSpecialCharacter(char c) {
+
+		return !Character.isLetterOrDigit(c);
 	}
 
 }
