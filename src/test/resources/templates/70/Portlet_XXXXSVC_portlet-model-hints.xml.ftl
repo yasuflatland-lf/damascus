@@ -27,7 +27,7 @@
             </#if>
             <#if field.type?string == "com.liferay.damascus.cli.json.fields.DateTime" >
         <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}">
-            <hint name="show-time">false</hint>
+            <hint name="show-time">true</hint>
             <hint name="year-range-delta">80</hint>
         </field>
             </#if>

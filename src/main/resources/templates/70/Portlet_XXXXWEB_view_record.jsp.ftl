@@ -1,5 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/view_record.jsp">
+<#assign skipTemplate = !generateWeb>
 <%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
     ${capFirstModel} ${uncapFirstModel} = (${capFirstModel}) request.getAttribute("${uncapFirstModel}");

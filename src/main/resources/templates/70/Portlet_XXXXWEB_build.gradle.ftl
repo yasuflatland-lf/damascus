@@ -1,5 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/build.gradle">
+<#assign skipTemplate = !generateWeb>
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'

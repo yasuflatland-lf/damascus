@@ -61,6 +61,7 @@ class TestUtils {
      * @param liferayVersion
      * @param packageName
      * @param output_file_path
+     * @param outputDelete
      * @return
      */
     static public def createBaseJsonMock(projectName,liferayVersion,packageName,output_file_path, outputDelete = true) {

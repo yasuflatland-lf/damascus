@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/constants/${capFirstModel}WebKeys.java">
-
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.constants;
 
 /**

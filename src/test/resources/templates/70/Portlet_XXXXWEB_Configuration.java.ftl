@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}Configuration.java">
-
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.portlet.action;
 
 import ${packageName}.constants.${capFirstModel}PortletKeys;

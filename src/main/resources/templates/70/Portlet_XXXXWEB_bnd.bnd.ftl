@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/bnd.bnd">
-
+<#assign skipTemplate = !generateWeb>
 Bundle-Name: ${dashcaseProjectName}-web
 Bundle-SymbolicName: ${packageName}.web
 Bundle-Version: 1.0.0

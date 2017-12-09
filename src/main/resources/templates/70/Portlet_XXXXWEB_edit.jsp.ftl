@@ -1,5 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/edit.jsp">
+<#assign skipTemplate = !generateWeb>
 <%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
 	PortletURL portletURL = PortletURLUtil.clone(renderResponse.createRenderURL(), liferayPortletResponse);

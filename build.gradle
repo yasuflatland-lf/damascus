@@ -56,8 +56,8 @@ jar {
 dependencies {
     compile 'com.beust:jcommander:1.72'
     compile 'com.google.guava:guava:22.0'
-    compile 'commons-io:commons-io:2.+'
-    compile 'org.apache.commons:commons-lang3:3.+'
+    compile 'commons-io:commons-io:2.6'
+    compile 'org.apache.commons:commons-lang3:3.7'
     compile 'org.apache.commons:commons-configuration2:2.1.+'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
 

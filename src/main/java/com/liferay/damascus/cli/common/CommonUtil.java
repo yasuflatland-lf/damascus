@@ -30,6 +30,7 @@ public class CommonUtil {
      * @return true if this tool is on Windows system
      */
     static public boolean isWindows() {
+
         return (DamascusProps.OS.indexOf("win") >= 0);
     }
 
@@ -139,8 +140,6 @@ public class CommonUtil {
                     .forProjectDirectory(filePath)
                     .connect();
             connection.newBuild().forTasks(task).run();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (null != connection) {
                 connection.close();
@@ -231,7 +230,7 @@ public class CommonUtil {
             DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
             DamascusProps._GRADLE_FOLDER_NAME
         ));
-        for(String path : paths) {
+        for (String path : paths) {
             FileUtils.deleteQuietly(new File(rootPath + path));
         }
     }
@@ -258,7 +257,7 @@ public class CommonUtil {
 
     /**
      * Fetch files with filter
-     *
+     * <p>
      * Only fetching files, omitting directories.
      *
      * @param rootPath Root path where starts searching
@@ -278,7 +277,7 @@ public class CommonUtil {
     /**
      * Replace Contents at once
      *
-     * @param files Files to be processed
+     * @param files    Files to be processed
      * @param patterns Replacement patterns in a map
      * @throws IOException
      */
@@ -309,9 +308,9 @@ public class CommonUtil {
      * @throws IOException
      */
     static public List<String> invertPathToList(String path) throws IOException {
-        File pathTmp = getDirFromPath(new File(path));
-        String separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
-        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
+        File         pathTmp   = getDirFromPath(new File(path));
+        String       separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
+        List<String> retList   = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
         return Lists.reverse(retList);
     }
 

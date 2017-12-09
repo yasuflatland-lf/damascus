@@ -1,18 +1,22 @@
 package com.liferay.damascus.cli;
 
-import com.beust.jcommander.*;
-import com.google.common.collect.*;
+import com.beust.jcommander.Parameter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.liferay.damascus.cli.common.*;
-import com.liferay.damascus.cli.exception.*;
-import com.liferay.damascus.cli.json.*;
-import freemarker.template.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
-import org.apache.commons.configuration2.ex.*;
-import org.apache.commons.io.*;
+import com.liferay.damascus.cli.exception.DamascusProcessException;
+import com.liferay.damascus.cli.json.Application;
+import com.liferay.damascus.cli.json.DamascusBase;
+import freemarker.template.TemplateException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 
 /**
@@ -65,7 +69,12 @@ public class CreateCommand implements ICommand {
         params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), author);
 
         //Parse template and output
-        TemplateUtil.getInstance().process(CreateCommand.class, damascusBase.getLiferayVersion(), templateFileName, params, outputFilePath);
+        TemplateUtil.getInstance().process(
+            CreateCommand.class,
+            damascusBase.getLiferayVersion(),
+            templateFileName,
+            params,
+            outputFilePath);
     }
 
     /**
@@ -76,9 +85,10 @@ public class CreateCommand implements ICommand {
      * @param projectName    Project Name
      * @param packageName    Package Name
      * @param destinationDir Destination dir where the project is created.
+     * @param webEnable      when it's true, *-web will be created.
      * @throws Exception
      */
-    private void generateProjectSkeleton(String projectName, String packageName, String destinationDir) throws Exception {
+    private void generateProjectSkeleton(String projectName, String packageName, String destinationDir, boolean webEnable) throws Exception {
 
         //Generate Service (*-service, *-api) skelton
         CommonUtil.createServiceBuilderProject(
@@ -87,12 +97,14 @@ public class CreateCommand implements ICommand {
             destinationDir
         );
 
-        //Generate Web project (*-web)
-        CommonUtil.createMVCPortletProject(
-            projectName,
-            packageName,
-            destinationDir + DamascusProps.DS + projectName
-        );
+        if (true == webEnable) {
+            //Generate Web project (*-web)
+            CommonUtil.createMVCPortletProject(
+                projectName,
+                packageName,
+                destinationDir + DamascusProps.DS + projectName
+            );
+        }
     }
 
     /**
@@ -125,13 +137,13 @@ public class CreateCommand implements ICommand {
                                 + " depth. Currently it's <" + path.getPath() + ">");
                     }
 
-                    put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":",Lists.reverse(pathList)) + "\")");
+                    put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
                 }
             }
         };
 
         // Replace contents
-        CommonUtil.replaceContents(targetPaths,patterns);
+        CommonUtil.replaceContents(targetPaths, patterns);
     }
 
     /**
@@ -147,7 +159,7 @@ public class CreateCommand implements ICommand {
     private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
 
         //Generated Project files are nested. Move into current directory
-        File srcDir  = new File("." + DamascusProps.DS + projectName);
+        File srcDir = new File("." + DamascusProps.DS + projectName);
         File distDir = new File("." + DamascusProps.DS);
 
         if (!srcDir.exists() || !srcDir.isDirectory()) {
@@ -194,12 +206,12 @@ public class CreateCommand implements ICommand {
                 DamascusBase.class
             );
 
-            //Get root path to the templates
+            // Get root path to the templates
             File resourceRoot = TemplateUtil
                 .getInstance()
                 .getResourceRootPath(dmsb.getLiferayVersion());
 
-            //Fetch all template file paths
+            // Fetch all template file paths
             Collection<File> templatePaths = TemplateUtil
                 .getInstance()
                 .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
@@ -220,13 +232,20 @@ public class CreateCommand implements ICommand {
                 dashCaseProjectName
             );
 
-            System.out.println("Generating *-api, *-service, *-web skeletons for " + dashCaseProjectName);
+            StringBuilder sb = new StringBuilder();
+            sb.append("Generating *-api, *-service");
+            if(dmsb.isWebExist()) {
+                sb.append(", *-web");
+            }
+            sb.append(" skeletons for " + dashCaseProjectName);
+            System.out.println(sb.toString());
 
             // Generate skeletons of the project
             generateProjectSkeleton(
                 dashCaseProjectName,
                 dmsb.getPackageName(),
-                CREATE_TARGET_PATH
+                CREATE_TARGET_PATH,
+                dmsb.isWebExist()
             );
 
             System.out.println("Parsing " + serviceXmlPath);
@@ -236,16 +255,15 @@ public class CreateCommand implements ICommand {
 
             System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
 
-            //run "gradle buildService" to generate the skeleton of services.
+            // Run "gradle buildService" to generate the skeleton of services.
             CommonUtil.runGradle(serviceXmlPath, "buildService");
-
 
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
 
                 System.out.print("Parsing templates");
 
-                //Process all templates
+                // Process all templates
                 for (File template : templatePaths) {
                     System.out.print(".");
                     generateScaffolding(dmsb, template.getName(), null, app);
@@ -256,12 +274,12 @@ public class CreateCommand implements ICommand {
 
             System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
 
-            //run "gradle buildService" to regenerate with added templates
+            // Run "gradle buildService" to regenerate with added templates
             CommonUtil.runGradle(serviceXmlPath, "buildService");
 
             System.out.println("Moving all modules projects into the same directory");
 
-            //Finalize Project Directory: move modules directories into the current directory
+            // Finalize Project Directory: move modules directories into the current directory
             finalizeProjects(dashCaseProjectName);
 
             System.out.println("Done.");

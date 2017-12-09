@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/util/${capFirstModel}ViewHelper.java">
-
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.util;
 
 import com.google.common.collect.Lists;

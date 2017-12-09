@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/edit_actions.jsp">
-
+<#assign skipTemplate = !generateWeb>
 <%@include file="/${snakecaseModel}/init.jsp"%>
 
 <%

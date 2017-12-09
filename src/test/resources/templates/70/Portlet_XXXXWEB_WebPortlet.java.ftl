@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}WebPortlet.java">
-
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;

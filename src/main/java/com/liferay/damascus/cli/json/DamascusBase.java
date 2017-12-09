@@ -1,8 +1,6 @@
 package com.liferay.damascus.cli.json;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,11 +9,11 @@ import java.util.Map;
 
 /**
  * JSON structure POJO : DamascusBase
- *
+ * <p>
  * This is the top level structure of JSON.
  * All JSON structures are included in this POJO.
  *
- * @author  Yasuyuki Takeo
+ * @author Yasuyuki Takeo
  * @author Sébastien Le Marchand
  */
 @Data
@@ -26,7 +24,7 @@ public class DamascusBase {
 
     @JsonProperty(required = true)
     public String projectName;
-    
+
     @JsonProperty(required = true)
     public String packageName;
 
@@ -37,4 +35,18 @@ public class DamascusBase {
 
     @JsonProperty(required = true)
     public List<Application> applications = null;
+
+    /**
+     * Check Web generation status
+     *
+     * @return true if any application set web to true or false
+     */
+    @JsonIgnore
+    public boolean isWebExist() {
+        if (null == applications) {
+            return false;
+        }
+
+        return applications.stream().anyMatch(a -> a.isWeb() == true);
+    }
 }

@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/search_results.jspf">
-
+<#assign skipTemplate = !generateWeb>
 <%@page import="javax.portlet.RenderRequest"%>
 <%
     searchContainer.setOrderByCol(orderByCol);

@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/social/${capFirstModel}ActivityInterpreter.java">
-<#assign skipTemplate = !generateActivity>
+<#assign skipTemplate = !generateActivity || !generateWeb>
 
 package ${packageName}.web.social;
 

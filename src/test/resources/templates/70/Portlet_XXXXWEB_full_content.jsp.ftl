@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/asset/full_content.jsp">
-
+<#assign skipTemplate = !generateWeb>
 <%@include file="../init.jsp" %>
 <%@ page import="${packageName}.model.${capFirstModel}" %>
 

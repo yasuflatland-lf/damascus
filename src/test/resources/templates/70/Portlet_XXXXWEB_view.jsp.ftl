@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/view.jsp">
-
+<#assign skipTemplate = !generateWeb>
 <%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
 	String iconChecked = "checked";

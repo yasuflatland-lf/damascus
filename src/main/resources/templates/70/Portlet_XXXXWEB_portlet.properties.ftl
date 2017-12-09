@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/resources/portlet.properties">
-
+<#assign skipTemplate = !generateWeb>
 include-and-override=portlet-ext.properties
 
 language.bundle=content.Language

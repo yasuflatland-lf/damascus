@@ -24,6 +24,8 @@
 <#assign tags = application.asset?exists && application.asset.tags>
 <#assign relatedAssets = application.asset?exists && application.asset.relatedAssets>
 <#assign generateActivity = application.asset?exists && application.asset.generateActivity>
+<#assign generateWeb = application.web?exists && application.web>
+<#assign anyGeneratedWeb = damascus.isWebExist()>
 
 <#assign entityWebResourcesPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}">
 
