@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.StringBuilderWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +64,9 @@ public class CreateCommand implements ICommand {
         params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
-        String author = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_AUTHOR);
+
+        PropertyContext propertyContext = PropertyContextFactory.createPropertyContext();
+        String          author          = propertyContext.getString(DamascusProps.PROP_AUTHOR);
         params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), author);
 
         //Parse template and output
@@ -159,7 +160,7 @@ public class CreateCommand implements ICommand {
     private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
 
         //Generated Project files are nested. Move into current directory
-        File srcDir = new File("." + DamascusProps.DS + projectName);
+        File srcDir  = new File("." + DamascusProps.DS + projectName);
         File distDir = new File("." + DamascusProps.DS);
 
         if (!srcDir.exists() || !srcDir.isDirectory()) {
@@ -218,7 +219,7 @@ public class CreateCommand implements ICommand {
 
             String camelCaseProjectName = dmsb.getProjectName();
 
-            String dashCaseProjectName = CaseUtil.getInstance().camelCaseToDashCase(camelCaseProjectName);
+            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(camelCaseProjectName);
 
             //1. Generate skeleton of the project.
             //2. Parse service.xml
@@ -234,7 +235,7 @@ public class CreateCommand implements ICommand {
 
             StringBuilder sb = new StringBuilder();
             sb.append("Generating *-api, *-service");
-            if(dmsb.isWebExist()) {
+            if (dmsb.isWebExist()) {
                 sb.append(", *-web");
             }
             sb.append(" skeletons for " + dashCaseProjectName);

@@ -415,6 +415,9 @@ class CreateCommandTest extends Specification {
     @Unroll("Do not generate web test <#projectName> version <#liferayVersion> Package <#packageName> expectedProjectDirName <#expectedProjectDirName>")
     def "Do not generate web test"() {
         when:
+        // Once clear _cfg to initialize with an actual test target template directory
+        TemplateUtil.getInstance().clear()
+
         def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
         def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
         dmsb.applications.get(0).web = false

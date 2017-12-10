@@ -18,22 +18,16 @@ import org.powermock.modules.junit4.PowerMockRunner
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.tuple.Pair;
-
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(PropertyUtil.class)
-class PropertyUtilTest extends Specification {
+@PrepareForTest(PropertyContextFactory.class)
+class PropertyContextFactoryTest extends Specification {
     static def DS = DamascusProps.DS;
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
     static def tempPropFile = "test.property";
     static public String PROP_FILE_PATH = workTempDir + tempPropFile;
 
     /**
-     * Create dummy propertiy file
+     * Create dummy properties file
      *
      * @param path
      * @param properties
@@ -82,11 +76,13 @@ class PropertyUtilTest extends Specification {
         //Create a test property file
         createProperties(PROP_FILE_PATH, params);
 
-        PowerMockito.spy(PropertyUtil.class);
-        PowerMockito.doReturn(PROP_FILE_PATH).when(PropertyUtil.class, "getPropertyFilePath");
-        def result1 = PropertyUtil.getInstance().getProperty(key1)
-        def result2 = PropertyUtil.getInstance().getProperty(key2)
-        def result3 = PropertyUtil.getInstance().getProperty("doesnt.exist.key")
+        PowerMockito.spy(PropertyContextFactory.class);
+        PowerMockito.doReturn(PROP_FILE_PATH).when(PropertyContextFactory.class, "getPropertyFilePath");
+        PropertyContext pc = PropertyContextFactory.createPropertyContext();
+
+        def result1 = pc.getString(key1)
+        def result2 = pc.getString(key2)
+        def result3 = pc.getString("doesnt.exist.key")
 
         then:
         true == result1.equals(val1)

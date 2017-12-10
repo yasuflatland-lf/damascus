@@ -1,26 +1,28 @@
 package com.liferay.damascus.cli.common;
 
-import com.google.common.collect.*;
-import com.google.common.io.*;
+import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
 import com.liferay.damascus.cli.Damascus;
-
-import freemarker.core.*;
+import freemarker.core.Configurable;
+import freemarker.core.Environment;
 import freemarker.template.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
-import org.apache.commons.configuration2.ex.*;
-import org.apache.commons.io.*;
-import org.apache.commons.io.filefilter.*;
-import org.apache.commons.lang3.*;
-import org.joda.time.*;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.security.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.jar.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Freemarker Template Utility
@@ -34,6 +36,8 @@ public class TemplateUtil {
     private static Configuration _cfg = null;
 
     private static Map<String, String> _typeParams = null;
+
+    private static PropertyContext _propertyContext = null;
 
     /**
      * Constructor
@@ -55,6 +59,25 @@ public class TemplateUtil {
     }
 
     /**
+     * Get Property Contest
+     *
+     * @return PropertyContext
+     * @throws IOException
+     * @throws ConfigurationException
+     */
+    protected PropertyContext getPropertyContext()
+        throws IOException, ConfigurationException {
+
+        if (null != _propertyContext) {
+            return _propertyContext;
+        }
+
+        _propertyContext = PropertyContextFactory.createPropertyContext();
+
+        return _propertyContext;
+    }
+
+    /**
      * Get Configuration for template.
      *
      * @param classContext class context where it's called. Set a class where this method is called
@@ -64,40 +87,37 @@ public class TemplateUtil {
      * @throws URISyntaxException     When the directory where templates couldn't be created
      * @throws ConfigurationException settings.properties file manipulation error
      */
-    private Configuration getConfiguration(Class<?> classContext, String version)
+    protected Configuration getConfiguration(Class<?> classContext, String version)
         throws IOException, URISyntaxException, TemplateException, ConfigurationException {
-        //Lazy loading
-        if (_cfg == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (this) {
-                if (_cfg == null) {
 
-                    // Caching templates under the cache directory.
-                    cacheTemplates(
-                        classContext,
-                        DamascusProps.TEMPLATE_FOLDER_NAME,
-                        DamascusProps.CACHE_DIR_PATH + DamascusProps.DS,
-                        version
-                    );
-
-                    // You should do this ONLY ONCE in the whole application lifecycle:
-                    // Create and adjust the configuration singleton
-                    _cfg = new Configuration(Configuration.VERSION_2_3_25);
-
-                    // Resource root path and initialize Freemarker configuration with the path
-                    File resourceRootPath = getResourceRootPath(version);
-                    _cfg.setDirectoryForTemplateLoading(resourceRootPath);
-                    log.debug("resourceRootPath : " + resourceRootPath.toString() );
-
-                    _cfg.setDefaultEncoding("UTF-8");
-                    _cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-                    _cfg.setLogTemplateExceptions(false);
-
-                    //This is required to enable call user custom methods in a template.
-                    _cfg.setSetting(Configurable.API_BUILTIN_ENABLED_KEY_CAMEL_CASE, "true");
-                }
-            }
+        if (_cfg != null) {
+            return _cfg;
         }
+
+        // Caching templates under the cache directory.
+        cacheTemplates(
+            classContext,
+            DamascusProps.TEMPLATE_FOLDER_NAME,
+            DamascusProps.CACHE_DIR_PATH + DamascusProps.DS,
+            version
+        );
+
+        // You should do this ONLY ONCE in the whole application lifecycle:
+        // Create and adjust the configuration singleton
+        _cfg = new Configuration(Configuration.VERSION_2_3_25);
+
+        // Resource root path and initialize Freemarker configuration with the path
+        File resourceRootPath = getResourceRootPath(version);
+        _cfg.setDirectoryForTemplateLoading(resourceRootPath);
+        log.debug("resourceRootPath : " + resourceRootPath.toString());
+
+        _cfg.setDefaultEncoding("UTF-8");
+        _cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        _cfg.setLogTemplateExceptions(false);
+
+        //This is required to enable call user custom methods in a template.
+        _cfg.setSetting(Configurable.API_BUILTIN_ENABLED_KEY_CAMEL_CASE, "true");
+
         return _cfg;
     }
 
@@ -113,9 +133,11 @@ public class TemplateUtil {
      */
     public File getResourceRootPath(String version) throws IOException, ConfigurationException {
 
+        PropertyContext propertyContext = getPropertyContext();
+
         //Fetch root path for resources from .damascus first.
         //Damascus uses resource in this jar if no configuration is found in .damascus.
-        String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        String rootPath            = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
         String defaultTemplatePath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
 
         log.debug("getResourceRootPath : rootPath            : " + rootPath);
@@ -123,7 +145,9 @@ public class TemplateUtil {
 
         if (rootPath.equals("")) {
 
-            PropertyUtil.getInstance().setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, defaultTemplatePath).save();
+            propertyContext.setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, defaultTemplatePath);
+            propertyContext.save();
+
             System.out.println(DamascusProps.PROP_RESOURCE_ROOT_PATH + " is initilized with <" + defaultTemplatePath + ">");
         }
 
@@ -253,10 +277,10 @@ public class TemplateUtil {
 
             targetFilePath = filePath.toString();
         }
-        
-        TemplateBooleanModel skipTemplate = (TemplateBooleanModel)env.getVariable(DamascusProps.TEMPKEY_SKIP_TEMPLATE);
-        
-        if(skipTemplate != null && skipTemplate.getAsBoolean()) {
+
+        TemplateBooleanModel skipTemplate = (TemplateBooleanModel) env.getVariable(DamascusProps.TEMPKEY_SKIP_TEMPLATE);
+
+        if (skipTemplate != null && skipTemplate.getAsBoolean()) {
 
             log.debug("TemplateUtil#process skip file path <" + targetFilePath + ">");
 
@@ -272,7 +296,7 @@ public class TemplateUtil {
     /**
      * Get service.xml directory under *-service directory
      *
-     * @param rootPath    the root directory of the project
+     * @param rootPath            the root directory of the project
      * @param dashcaseProjectName project name
      * @return relative path to the service.xml from the root directory
      */
@@ -440,7 +464,7 @@ public class TemplateUtil {
             }
 
             log.debug("copy file : " + url.toURI().toString());
-            
+
             String      contents = Resources.toString(url, StandardCharsets.UTF_8);
             InputStream is       = new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
             FileUtils.copyInputStreamToFile(is, new File(distinationRoot + file));
@@ -462,20 +486,21 @@ public class TemplateUtil {
     public void cacheTemplates(Class<?> clazz, String templateRootPath, String distinationRoot, String version)
         throws URISyntaxException, IOException, ConfigurationException {
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("templateRootPath<" + templateRootPath + ">");
             log.debug("distinationRoot <" + distinationRoot + ">");
             log.debug("version         <" + version + ">");
             log.debug("isInsideJar     <" + String.valueOf(isInsideJar(clazz)) + ">");
         }
 
-        File   distFile = new File(distinationRoot);
-        String rootPath = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        File            distFile        = new File(distinationRoot);
+        PropertyContext propertyContext = getPropertyContext();
+        String          rootPath        = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
 
         boolean insideJar = isInsideJar(clazz);
 
         String buildNumber      = getBuildNumber(clazz, insideJar);
-        String cacheBuildNumber = PropertyUtil.getInstance().getProperty(DamascusProps.PROP_BUILD_NUMBER);
+        String cacheBuildNumber = propertyContext.getString(DamascusProps.PROP_BUILD_NUMBER);
 
         if (distFile.exists() &&
             !rootPath.equals("") &&
@@ -518,18 +543,18 @@ public class TemplateUtil {
             + DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS + version;
 
         //Store the path into cache
-        PropertyUtil.getInstance().setProperty(
+        propertyContext.setProperty(
             DamascusProps.PROP_RESOURCE_ROOT_PATH,
             targetPath
         );
 
         //Store the build number into cache
-        PropertyUtil.getInstance().setProperty(
+        propertyContext.setProperty(
             DamascusProps.PROP_BUILD_NUMBER,
             buildNumber
         );
 
-        PropertyUtil.getInstance().save();
+        propertyContext.save();
 
         System.out.println("Templates have been initialized.");
 
@@ -574,5 +599,6 @@ public class TemplateUtil {
     public void clear() {
         _cfg = null;
         _typeParams = null;
+        _propertyContext = null;
     }
 }
