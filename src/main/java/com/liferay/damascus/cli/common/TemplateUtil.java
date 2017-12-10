@@ -599,5 +599,6 @@ public class TemplateUtil {
     public void clear() {
         _cfg = null;
         _typeParams = null;
+        _propertyContext = null;
     }
 }
