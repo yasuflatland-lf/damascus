@@ -59,6 +59,25 @@ public class TemplateUtil {
     }
 
     /**
+     * Get Property Contest
+     *
+     * @return PropertyContext
+     * @throws IOException
+     * @throws ConfigurationException
+     */
+    protected PropertyContext getPropertyContext()
+        throws IOException, ConfigurationException {
+
+        if (null != _propertyContext) {
+            return _propertyContext;
+        }
+
+        _propertyContext = PropertyContextFactory.createPropertyContext();
+
+        return _propertyContext;
+    }
+
+    /**
      * Get Configuration for template.
      *
      * @param classContext class context where it's called. Set a class where this method is called
@@ -68,42 +87,37 @@ public class TemplateUtil {
      * @throws URISyntaxException     When the directory where templates couldn't be created
      * @throws ConfigurationException settings.properties file manipulation error
      */
-    private Configuration getConfiguration(Class<?> classContext, String version)
+    protected Configuration getConfiguration(Class<?> classContext, String version)
         throws IOException, URISyntaxException, TemplateException, ConfigurationException {
-        //Lazy loading
-        if (_cfg == null) {
-            // Thread Safe. Might be costly operation in some case
-            synchronized (this) {
-                if (_cfg == null) {
 
-                    _propertyContext = PropertyContextFactory.createProperty();
-
-                    // Caching templates under the cache directory.
-                    cacheTemplates(
-                        classContext,
-                        DamascusProps.TEMPLATE_FOLDER_NAME,
-                        DamascusProps.CACHE_DIR_PATH + DamascusProps.DS,
-                        version
-                    );
-
-                    // You should do this ONLY ONCE in the whole application lifecycle:
-                    // Create and adjust the configuration singleton
-                    _cfg = new Configuration(Configuration.VERSION_2_3_25);
-
-                    // Resource root path and initialize Freemarker configuration with the path
-                    File resourceRootPath = getResourceRootPath(version);
-                    _cfg.setDirectoryForTemplateLoading(resourceRootPath);
-                    log.debug("resourceRootPath : " + resourceRootPath.toString());
-
-                    _cfg.setDefaultEncoding("UTF-8");
-                    _cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-                    _cfg.setLogTemplateExceptions(false);
-
-                    //This is required to enable call user custom methods in a template.
-                    _cfg.setSetting(Configurable.API_BUILTIN_ENABLED_KEY_CAMEL_CASE, "true");
-                }
-            }
+        if (_cfg != null) {
+            return _cfg;
         }
+
+        // Caching templates under the cache directory.
+        cacheTemplates(
+            classContext,
+            DamascusProps.TEMPLATE_FOLDER_NAME,
+            DamascusProps.CACHE_DIR_PATH + DamascusProps.DS,
+            version
+        );
+
+        // You should do this ONLY ONCE in the whole application lifecycle:
+        // Create and adjust the configuration singleton
+        _cfg = new Configuration(Configuration.VERSION_2_3_25);
+
+        // Resource root path and initialize Freemarker configuration with the path
+        File resourceRootPath = getResourceRootPath(version);
+        _cfg.setDirectoryForTemplateLoading(resourceRootPath);
+        log.debug("resourceRootPath : " + resourceRootPath.toString());
+
+        _cfg.setDefaultEncoding("UTF-8");
+        _cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        _cfg.setLogTemplateExceptions(false);
+
+        //This is required to enable call user custom methods in a template.
+        _cfg.setSetting(Configurable.API_BUILTIN_ENABLED_KEY_CAMEL_CASE, "true");
+
         return _cfg;
     }
 
@@ -119,9 +133,11 @@ public class TemplateUtil {
      */
     public File getResourceRootPath(String version) throws IOException, ConfigurationException {
 
+        PropertyContext propertyContext = getPropertyContext();
+
         //Fetch root path for resources from .damascus first.
         //Damascus uses resource in this jar if no configuration is found in .damascus.
-        String rootPath            = _propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        String rootPath            = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
         String defaultTemplatePath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
 
         log.debug("getResourceRootPath : rootPath            : " + rootPath);
@@ -129,8 +145,9 @@ public class TemplateUtil {
 
         if (rootPath.equals("")) {
 
-            _propertyContext.setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, defaultTemplatePath);
-            _propertyContext.save();
+            propertyContext.setProperty(DamascusProps.PROP_RESOURCE_ROOT_PATH, defaultTemplatePath);
+            propertyContext.save();
+
             System.out.println(DamascusProps.PROP_RESOURCE_ROOT_PATH + " is initilized with <" + defaultTemplatePath + ">");
         }
 
@@ -476,13 +493,14 @@ public class TemplateUtil {
             log.debug("isInsideJar     <" + String.valueOf(isInsideJar(clazz)) + ">");
         }
 
-        File   distFile = new File(distinationRoot);
-        String rootPath = _propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        File            distFile        = new File(distinationRoot);
+        PropertyContext propertyContext = getPropertyContext();
+        String          rootPath        = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
 
         boolean insideJar = isInsideJar(clazz);
 
         String buildNumber      = getBuildNumber(clazz, insideJar);
-        String cacheBuildNumber = _propertyContext.getString(DamascusProps.PROP_BUILD_NUMBER);
+        String cacheBuildNumber = propertyContext.getString(DamascusProps.PROP_BUILD_NUMBER);
 
         if (distFile.exists() &&
             !rootPath.equals("") &&
@@ -525,18 +543,18 @@ public class TemplateUtil {
             + DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS + version;
 
         //Store the path into cache
-        _propertyContext.setProperty(
+        propertyContext.setProperty(
             DamascusProps.PROP_RESOURCE_ROOT_PATH,
             targetPath
         );
 
         //Store the build number into cache
-        _propertyContext.setProperty(
+        propertyContext.setProperty(
             DamascusProps.PROP_BUILD_NUMBER,
             buildNumber
         );
 
-        _propertyContext.save();
+        propertyContext.save();
 
         System.out.println("Templates have been initialized.");
 
