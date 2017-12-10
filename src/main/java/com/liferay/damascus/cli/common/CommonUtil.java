@@ -1,20 +1,25 @@
 package com.liferay.damascus.cli.common;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.*;
-import com.google.common.io.*;
-import com.liferay.damascus.cli.*;
-import lombok.extern.slf4j.*;
-import org.apache.commons.io.*;
-import org.apache.commons.io.filefilter.*;
-import org.gradle.tooling.*;
+import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
+import com.liferay.damascus.cli.ProjectTemplatesBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.ProjectConnection;
 
-import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.InvalidPathException;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility Class
@@ -156,10 +161,10 @@ public class CommonUtil {
      */
     static public void createWorkspace(String destinationDir, String name) throws Exception {
         ProjectTemplatesBuilder.builder()
-                               .destinationDir(new File(destinationDir))
-                               .name(name)
-                               .template(DamascusProps.WORKSPACE_CMD)
-                               .build().create();
+            .destinationDir(new File(destinationDir))
+            .name(name)
+            .template(DamascusProps.WORKSPACE_CMD)
+            .build().create();
     }
 
     /**
@@ -172,11 +177,11 @@ public class CommonUtil {
      */
     static public void createServiceBuilderProject(String name, String packageName, String destinationDir) throws Exception {
         ProjectTemplatesBuilder.builder()
-                               .destinationDir(new File(destinationDir))
-                               .name(name)
-                               .packageName(packageName)
-                               .template(DamascusProps.SERVICE_BUILDER_CMD)
-                               .build().create();
+            .destinationDir(new File(destinationDir))
+            .name(name)
+            .packageName(packageName)
+            .template(DamascusProps.SERVICE_BUILDER_CMD)
+            .build().create();
     }
 
     /**
@@ -201,11 +206,11 @@ public class CommonUtil {
         }
 
         ProjectTemplatesBuilder.builder()
-                               .destinationDir(new File(destinationDir))
-                               .name(projectName)
-                               .packageName(packageNameForWeb)
-                               .template(DamascusProps.MVC_PORTLET_CMD)
-                               .build().create();
+            .destinationDir(new File(destinationDir))
+            .name(projectName)
+            .packageName(packageNameForWeb)
+            .template(DamascusProps.MVC_PORTLET_CMD)
+            .build().create();
 
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
 
@@ -289,12 +294,12 @@ public class CommonUtil {
             //Convert contents
             String converted =
                 patterns.entrySet()
-                        .stream()
-                        .reduce(
-                            fileContents,
-                            (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
-                            (s1, s2) -> null
-                        );
+                    .stream()
+                    .reduce(
+                        fileContents,
+                        (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
+                        (s1, s2) -> null
+                    );
 
             FileUtils.writeStringToFile(file, converted, StandardCharsets.UTF_8);
         }
@@ -325,5 +330,16 @@ public class CommonUtil {
     static public List<String> invertPathWithSize(String path, int size) throws IOException {
         List<String> paths = invertPathToList(path);
         return Lists.partition(paths, size).get(0);
+    }
+
+    /**
+     * Validate if this method called inside of a jar
+     *
+     * @param clazz Target class
+     * @return true if it's in a jar or false
+     */
+    static public boolean isInsideJar(Class<?> clazz) {
+        File path = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+        return path.isFile();
     }
 }

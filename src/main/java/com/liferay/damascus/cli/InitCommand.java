@@ -78,7 +78,7 @@ public class InitCommand implements ICommand {
     		targetDir.append(DamascusProps.DS);
     	}
 
-    	String projectDirectoryName = CaseUtil.getInstance().camelCaseToDashCase(getProjectName());
+    	String projectDirectoryName = CaseUtil.camelCaseToDashCase(getProjectName());
 
 		return targetDir
         		.append(projectDirectoryName)
