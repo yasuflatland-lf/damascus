@@ -4,7 +4,7 @@
   "liferayVersion": "${damascus.liferayVersion}",
   "applications": [
     {
-      "model"       : "${damascus.entityName}Entry",
+      "model"       : "${damascus.entityName}",
       "title"       : "${damascus.projectName} Test",
       "web"         : "true",
       "asset": {
