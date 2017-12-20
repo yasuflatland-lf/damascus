@@ -87,7 +87,7 @@ public class ${capFirstModel}ViewHelper {
      * @return SearchContainerResults<${capFirstModel}>
      */
     public SearchContainerResults<${capFirstModel}> getListFromDB(
-        PortletRequest request, SearchContainer<?> searchContainer) {
+        PortletRequest request, SearchContainer<?> searchContainer, int state) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request
             .getAttribute(WebKeys.THEME_DISPLAY);
@@ -112,23 +112,23 @@ public class ${capFirstModel}ViewHelper {
         if (prefsViewType
             .equals(${capFirstModel}Configuration.PREFS_VIEW_TYPE_DEFAULT)) {
             results = _${uncapFirstModel}LocalService.findAllInGroup(groupId,
-                                                           containerStart, containerEnd, orderByComparator);
-            total = _${uncapFirstModel}LocalService.countAllInGroup(groupId);
+                                                           containerStart, containerEnd, orderByComparator, state);
+            total = _${uncapFirstModel}LocalService.countAllInGroup(groupId, state);
 
         } else if (prefsViewType
             .equals(${capFirstModel}Configuration.PREFS_VIEW_TYPE_USER)) {
             results = _${uncapFirstModel}LocalService.findAllInUser(
                 themeDisplay.getUserId(), containerStart, containerEnd,
-                orderByComparator);
+                orderByComparator, state);
             total = _${uncapFirstModel}LocalService
-                .countAllInUser(themeDisplay.getUserId());
+                .countAllInUser(themeDisplay.getUserId(), state);
 
         } else {
             results = _${uncapFirstModel}LocalService.findAllInUserAndGroup(
                 themeDisplay.getUserId(), groupId, containerStart, containerEnd,
-                orderByComparator);
+                orderByComparator, state);
             total = _${uncapFirstModel}LocalService
-                .countAllInUserAndGroup(themeDisplay.getUserId(), groupId);
+                .countAllInUserAndGroup(themeDisplay.getUserId(), groupId, state);
 
         }
 
@@ -143,7 +143,7 @@ public class ${capFirstModel}ViewHelper {
      * @throws SearchException
      */
     public SearchContainerResults<${capFirstModel}> getListFromIndex(
-        PortletRequest request, SearchContainer<?> searchContainer)
+        PortletRequest request, SearchContainer<?> searchContainer, int state)
         throws SearchException {
 
         // Search Key
@@ -155,6 +155,10 @@ public class ${capFirstModel}ViewHelper {
 
         SearchContext searchContext = SearchContextFactory
             .getInstance(PortalUtil.getHttpServletRequest(request));
+
+        // TODO : When WorkflowConstants.STATUS_ANY, this parameter should be set to display all records in the list
+        //searchContext.setAndSearch(true);
+        searchContext.setAttribute(Field.STATUS, state);
 
         searchContext.setKeywords(searchFilter);
         searchContext.setStart(searchContainer.getStart());

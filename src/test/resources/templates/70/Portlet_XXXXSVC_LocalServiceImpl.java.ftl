@@ -215,20 +215,32 @@ public class ${capFirstModel}LocalServiceImpl
     }
 
     public int countAllInGroup(long groupId) {
-        int count = ${uncapFirstModel}Persistence.countByG_S(groupId,
-                                                   WorkflowConstants.STATUS_APPROVED);
+        int count = ${uncapFirstModel}Persistence.countByGroupId(groupId);
+        return count;
+    }
+
+    public int countAllInGroup(long groupId, int status) {
+        int count = ${uncapFirstModel}Persistence.countByG_S(groupId,status);
         return count;
     }
 
     public int countAllInUser(long userId) {
-        int count = ${uncapFirstModel}Persistence.countByU_S(userId,
-                                                   WorkflowConstants.STATUS_APPROVED);
+        int count = ${uncapFirstModel}Persistence.countByUserId(userId);
+        return count;
+    }
+
+    public int countAllInUser(long userId, int status) {
+        int count = ${uncapFirstModel}Persistence.countByU_S(userId, status);
         return count;
     }
 
     public int countAllInUserAndGroup(long userId, long groupId) {
-        int count = ${uncapFirstModel}Persistence.countByG_U_S(groupId, userId,
-                                                     WorkflowConstants.STATUS_APPROVED);
+        int count = ${uncapFirstModel}Persistence.countByUserIdGroupId(userId, groupId);
+        return count;
+    }
+
+    public int countAllInUserAndGroup(long userId, long groupId, int status) {
+        int count = ${uncapFirstModel}Persistence.countByG_U_S(groupId, userId, status);
         return count;
     }
 
@@ -306,7 +318,13 @@ public class ${capFirstModel}LocalServiceImpl
 
     public List<${capFirstModel}> findAllInGroup(long groupId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
-            .findByG_S(groupId, WorkflowConstants.STATUS_APPROVED);
+            .findByGroupId(groupId);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInGroup(long groupId, int status) {
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
+            .findByG_S(groupId, status);
         return list;
     }
 
@@ -315,22 +333,38 @@ public class ${capFirstModel}LocalServiceImpl
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_S(
-            groupId, WorkflowConstants.STATUS_APPROVED, start, end,
-            orderByComparator);
+        groupId, WorkflowConstants.STATUS_APPROVED, start, end,
+        orderByComparator);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInGroup(
+        long groupId, int start, int end,
+        OrderByComparator<${capFirstModel}> orderByComparator, int status) {
+
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_S(
+            groupId, status, start, end, orderByComparator);
         return list;
     }
 
     public List<${capFirstModel}> findAllInGroup(
         long groupId, OrderByComparator<${capFirstModel}> orderByComparator) {
 
-        List<${capFirstModel}> list = (List<${capFirstModel}>) findAllInGroup(groupId,
-                                                              QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
+        List<${capFirstModel}> list =
+            (List<${capFirstModel}>) findAllInGroup(groupId,
+                QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
         return list;
     }
 
     public List<${capFirstModel}> findAllInUser(long userId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
-            .findByU_S(userId, WorkflowConstants.STATUS_APPROVED);
+        .findByUserId(userId);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUser(long userId, int status) {
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
+            .findByU_S(userId, status);
         return list;
     }
 
@@ -338,9 +372,17 @@ public class ${capFirstModel}LocalServiceImpl
         long userId, int start, int end,
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByUserId(
+            userId, start, end, orderByComparator);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUser(
+        long userId, int start, int end,
+        OrderByComparator<${capFirstModel}> orderByComparator, int status) {
+
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByU_S(
-            userId, WorkflowConstants.STATUS_APPROVED, start, end,
-            orderByComparator);
+            userId, status, start, end, orderByComparator);
         return list;
     }
 
@@ -354,7 +396,13 @@ public class ${capFirstModel}LocalServiceImpl
 
     public List<${capFirstModel}> findAllInUserAndGroup(long userId, long groupId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
-            .findByG_U_S(groupId, userId, WorkflowConstants.STATUS_APPROVED);
+        .findByUserIdGroupId(userId, groupId);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUserAndGroup(long userId, long groupId, int status) {
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
+            .findByG_U_S(groupId, userId, status);
         return list;
     }
 
@@ -362,9 +410,17 @@ public class ${capFirstModel}LocalServiceImpl
         long userId, long groupId, int start, int end,
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByUserIdGroupId(
+            groupId, userId, start, end, orderByComparator);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUserAndGroup(
+        long userId, long groupId, int start, int end,
+        OrderByComparator<${capFirstModel}> orderByComparator, int status) {
+
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_U_S(
-            groupId, userId, WorkflowConstants.STATUS_APPROVED, start, end,
-            orderByComparator);
+            groupId, userId, status, start, end, orderByComparator);
         return list;
     }
 

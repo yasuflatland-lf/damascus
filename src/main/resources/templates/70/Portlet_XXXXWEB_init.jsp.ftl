@@ -35,6 +35,8 @@
 <%@ page import="com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil"%>
 <%@ page import="com.liferay.portal.kernel.dao.search.RowChecker" %>
 <%@ page import="com.liferay.portal.kernel.security.permission.ActionKeys" %>
+<%@ page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %>
+
 <%@ page import="javax.portlet.PortletPreferences" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.ArrayList" %>
