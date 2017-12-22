@@ -219,7 +219,7 @@ public class ${capFirstModel}LocalServiceImpl
         return count;
     }
 
-    public int countAllInGroup(long groupId, int status) {
+    public int countAllInGroup(long groupId, int[] status) {
         int count = ${uncapFirstModel}Persistence.countByG_S(groupId,status);
         return count;
     }
@@ -229,7 +229,7 @@ public class ${capFirstModel}LocalServiceImpl
         return count;
     }
 
-    public int countAllInUser(long userId, int status) {
+    public int countAllInUser(long userId, int[] status) {
         int count = ${uncapFirstModel}Persistence.countByU_S(userId, status);
         return count;
     }
@@ -239,7 +239,7 @@ public class ${capFirstModel}LocalServiceImpl
         return count;
     }
 
-    public int countAllInUserAndGroup(long userId, long groupId, int status) {
+    public int countAllInUserAndGroup(long userId, long groupId, int[] status) {
         int count = ${uncapFirstModel}Persistence.countByG_U_S(groupId, userId, status);
         return count;
     }
@@ -322,7 +322,7 @@ public class ${capFirstModel}LocalServiceImpl
         return list;
     }
 
-    public List<${capFirstModel}> findAllInGroup(long groupId, int status) {
+    public List<${capFirstModel}> findAllInGroup(long groupId, int[] status) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
             .findByG_S(groupId, status);
         return list;
@@ -332,15 +332,18 @@ public class ${capFirstModel}LocalServiceImpl
         long groupId, int start, int end,
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
-        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_S(
-        groupId, WorkflowConstants.STATUS_APPROVED, start, end,
-        orderByComparator);
-        return list;
+        return findAllInGroup(
+                    groupId,
+                    start,
+                    end,
+                    orderByComparator,
+                    new int[] {WorkflowConstants.STATUS_APPROVED}
+                );
     }
 
     public List<${capFirstModel}> findAllInGroup(
         long groupId, int start, int end,
-        OrderByComparator<${capFirstModel}> orderByComparator, int status) {
+        OrderByComparator<${capFirstModel}> orderByComparator, int[] status) {
 
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_S(
             groupId, status, start, end, orderByComparator);
@@ -362,7 +365,7 @@ public class ${capFirstModel}LocalServiceImpl
         return list;
     }
 
-    public List<${capFirstModel}> findAllInUser(long userId, int status) {
+    public List<${capFirstModel}> findAllInUser(long userId, int[] status) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
             .findByU_S(userId, status);
         return list;
@@ -379,7 +382,7 @@ public class ${capFirstModel}LocalServiceImpl
 
     public List<${capFirstModel}> findAllInUser(
         long userId, int start, int end,
-        OrderByComparator<${capFirstModel}> orderByComparator, int status) {
+        OrderByComparator<${capFirstModel}> orderByComparator, int[] status) {
 
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByU_S(
             userId, status, start, end, orderByComparator);
@@ -400,7 +403,7 @@ public class ${capFirstModel}LocalServiceImpl
         return list;
     }
 
-    public List<${capFirstModel}> findAllInUserAndGroup(long userId, long groupId, int status) {
+    public List<${capFirstModel}> findAllInUserAndGroup(long userId, long groupId, int[] status) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
             .findByG_U_S(groupId, userId, status);
         return list;
@@ -417,7 +420,7 @@ public class ${capFirstModel}LocalServiceImpl
 
     public List<${capFirstModel}> findAllInUserAndGroup(
         long userId, long groupId, int start, int end,
-        OrderByComparator<${capFirstModel}> orderByComparator, int status) {
+        OrderByComparator<${capFirstModel}> orderByComparator, int[] status) {
 
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_U_S(
             groupId, userId, status, start, end, orderByComparator);

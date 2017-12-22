@@ -87,7 +87,7 @@ public class ${capFirstModel}ViewHelper {
      * @return SearchContainerResults<${capFirstModel}>
      */
     public SearchContainerResults<${capFirstModel}> getListFromDB(
-        PortletRequest request, SearchContainer<?> searchContainer, int state) {
+        PortletRequest request, SearchContainer<?> searchContainer, int[] state) {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request
             .getAttribute(WebKeys.THEME_DISPLAY);
