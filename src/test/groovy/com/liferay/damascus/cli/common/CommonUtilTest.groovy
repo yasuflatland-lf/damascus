@@ -318,6 +318,7 @@ class CommonUtilTest extends Specification {
 
         where:
         file_names                   | result_num
+        [".*.java"]                  | 4
         ["Bar.*"]                    | 2
         ["Bar.*", "Foo.*"]           | 3
         [".*-service.java"]          | 2
