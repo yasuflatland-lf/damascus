@@ -32,7 +32,6 @@ public class UnderlineListener extends BaseErrorListener {
 		String[] lines = input.split("\n");
 		
 		if(lines.length <= line) {
-			System.err.println("Line index is overrun. Maybe dmsc tags are not mached.");
 			return;
 		}
 		

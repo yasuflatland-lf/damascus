@@ -38,7 +38,7 @@ public class CreateCommand implements ICommand {
      *
      * @return true if this command can be invoked
      */
-    public boolean isRunnable() {
+    public boolean isRunnable(Damascus damascus) {
         return isCreate();
     }
 

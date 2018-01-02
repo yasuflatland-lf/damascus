@@ -34,9 +34,6 @@ public class DmscSrcParserExListener extends DmscSrcParserBaseListener {
      * @param errors
      */
     public void setErrors(List<String> errors) {
-        for (String error : errors) {
-            log.error(error);
-        }
         errors.addAll(errors);
     }
 
@@ -46,7 +43,6 @@ public class DmscSrcParserExListener extends DmscSrcParserBaseListener {
      * @param error
      */
     public void setError(String error) {
-        log.error(error);
         errors.add(error);
     }
 
@@ -84,6 +80,18 @@ public class DmscSrcParserExListener extends DmscSrcParserBaseListener {
         }
 
         return stripQuotations(attributeContext.STRING().getText());
+    }
+
+    /**
+     * Printing Errors
+     */
+    public void printErrorIfExist() {
+        List<String> errors = getErrors();
+        if(!errors.isEmpty()) {
+            for(String error : errors) {
+                System.out.println(error);
+            }
+        }
     }
 
     @Getter

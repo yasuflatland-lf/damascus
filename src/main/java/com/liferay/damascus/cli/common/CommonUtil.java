@@ -373,4 +373,29 @@ public class CommonUtil {
 
         return Arrays.asList(source.split("\\s*,\\s*"));
     }
+
+
+    /**
+     * Normalize path
+     * <p>
+     * Normalize path and add separator if the path doesn't end with a separator.
+     *
+     * @param path
+     * @return
+     */
+    static public String normalizePath(String path) {
+        // Normalize path
+        String validatedPath = FilenameUtils.normalize(path);
+
+        if (null == validatedPath) {
+            log.error("Template file path is invalid. <" + path + ">");
+            return null;
+        }
+
+        if (!validatedPath.endsWith(DamascusProps.DS)) {
+            validatedPath = validatedPath.concat(DamascusProps.DS);
+        }
+
+        return validatedPath;
+    }
 }

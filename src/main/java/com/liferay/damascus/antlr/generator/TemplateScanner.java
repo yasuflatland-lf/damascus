@@ -5,6 +5,7 @@ import com.liferay.damascus.antlr.template.DmscSrcLexer;
 import com.liferay.damascus.antlr.template.DmscSrcParser;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -14,8 +15,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * Template Scanner
@@ -25,6 +26,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author Yasuyuki Takeo
  */
+@Slf4j
 @Builder
 public class TemplateScanner {
 
@@ -61,6 +63,8 @@ public class TemplateScanner {
         ParseTreeWalker      walker         = new ParseTreeWalker();
         TemplateScanListener templateLoader = new TemplateScanListener();
         walker.walk(templateLoader, tree);
+
+        templateLoader.printErrorIfExist();
 
         return templateLoader;
     }

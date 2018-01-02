@@ -1,6 +1,7 @@
 package com.liferay.damascus.cli.common;
 
 import com.beust.jcommander.internal.Lists;
+import com.liferay.damascus.antlr.generator.SourceToTemplateEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -81,7 +82,8 @@ public final class PropertyContextFactory {
             //User name for author in Javadoc
             Pair.of(DamascusProps.PROP_AUTHOR, DamascusProps.USER_NAME),
             Pair.of(DamascusProps.PROP_RESOURCE_ROOT_PATH, ""),
-            Pair.of(DamascusProps.PROP_BUILD_NUMBER, "")
+            Pair.of(DamascusProps.PROP_BUILD_NUMBER, ""),
+            Pair.of(DamascusProps.PROP_EXT_WHITE_LIST, String.join(",", SourceToTemplateEngine.EXT_WHITE_LIST))
         );
     }
 

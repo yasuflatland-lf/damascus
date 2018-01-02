@@ -367,9 +367,8 @@ public class TemplateUtil {
             return files;
         }
 
-        JarFile jarObj = null;
-        try {
-            jarObj = new JarFile(jarFile);
+        try (JarFile jarObj = new JarFile(jarFile);) {
+
             final Enumeration<JarEntry> entries = jarObj.entries(); //gives ALL entries in jarObj
             while (entries.hasMoreElements()) {
                 final String name = entries.nextElement().getName();
@@ -381,15 +380,8 @@ public class TemplateUtil {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (null != jarObj) {
-                try {
-                    jarObj.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
+
         return files;
     }
 
@@ -523,13 +515,10 @@ public class TemplateUtil {
             //Test environment (non-zipped environment)
             //The way of processing directory is different from contents in a jar
             //modifying path appropriately
-            String modifiedDistRoot = distinationRoot;
-            if (!distinationRoot.endsWith(DamascusProps.TEMPLATE_FOLDER_NAME) &&
-                !distinationRoot.endsWith(DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS)) {
-                modifiedDistRoot = distinationRoot +
-                    ((modifiedDistRoot.endsWith(DamascusProps.DS))
-                        ? DamascusProps.TEMPLATE_FOLDER_NAME
-                        : DamascusProps.DS + DamascusProps.TEMPLATE_FOLDER_NAME);
+            String modifiedDistRoot = CommonUtil.normalizePath(distinationRoot);
+
+            if (!modifiedDistRoot.endsWith(DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS)) {
+                modifiedDistRoot += DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS;
             }
 
             log.debug("templateRootPath : " + templateRootPath);

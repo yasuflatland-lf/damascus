@@ -6,7 +6,7 @@ public interface ICommand {
      *
      * @return true if it's runnable or false.
      */
-    public boolean isRunnable();
+    public boolean isRunnable(Damascus damascus);
 
     /**
      * Invoke actual command

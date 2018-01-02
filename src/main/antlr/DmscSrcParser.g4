@@ -10,7 +10,7 @@ options { tokenVocab=DmscSrcLexer; } // use tokens from ModeTagsLexer.g4
 }
 
 file
-	: alldata (dmsctags alldata | syncelementStart savedata )+ endoffile
+	: alldata (dmsctags alldata | syncelementStart savedata )* endoffile
 	;
 
 dmsctags     

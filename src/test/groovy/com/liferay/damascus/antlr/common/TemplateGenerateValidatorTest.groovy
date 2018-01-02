@@ -1,6 +1,7 @@
 package com.liferay.damascus.antlr.common
 
-import com.liferay.damascus.antlr.generator.TemplateContext
+import com.liferay.damascus.antlr.generator.TemplateContextImpl
+import com.liferay.damascus.antlr.generator.TemplateContextImpl
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -11,7 +12,7 @@ class TemplateGenerateValidatorTest extends Specification {
     @Unroll("rootValidator test <#attributes> expected errors(#result_size)")
     def "rootValidator test"() {
         when:
-        def tc = Spy(TemplateContext, constructorArgs: [])
+        def tc = Spy(TemplateContextImpl, constructorArgs: [])
         Map<String, String> rootAttributes = new ConcurrentHashMap<>();
         attributes.each { k, v ->
             rootAttributes.put(k, v);
@@ -33,7 +34,7 @@ class TemplateGenerateValidatorTest extends Specification {
     @Unroll("syncValidator test")
     def "syncValidator test"() {
         when:
-        def tc = Spy(TemplateContext, constructorArgs: [])
+        def tc = Spy(TemplateContextImpl, constructorArgs: [])
         Map<String, String> syncAttributes = new ConcurrentHashMap<>();
         attributes.each { k, v ->
             syncAttributes.put(k, v);

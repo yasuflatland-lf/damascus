@@ -1,5 +1,6 @@
 package com.liferay.damascus.antlr.generator
 
+import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.test.tools.AntlrTestBase
 import com.liferay.damascus.cli.test.tools.FileEnvUtils
 import org.apache.commons.io.FileUtils
@@ -24,7 +25,7 @@ class SourceToTemplateEngineTest extends AntlrTestBase {
         def targetTemplateName = "Portlet_XXXXROOT_service.xml.ftl"
 
         FileEnvUtils.createXmlSource(SRC_DIR, targetName, targetTemplateName)
-        File createdFile = new File(SRC_DIR + DS + targetName)
+        File createdFile = new File(SRC_DIR + DamascusProps.DS + targetName)
 
         SourceToTemplateEngine.builder()
                 .sourceRootPath(SRC_DIR)
@@ -33,7 +34,7 @@ class SourceToTemplateEngineTest extends AntlrTestBase {
                 .build()
                 .process()
 
-        File createdTemplate = new File(TMPLATE_DIR + DS + targetTemplateName)
+        File createdTemplate = new File(TMPLATE_DIR + DamascusProps.DS + targetTemplateName)
 
         then:
         true == createdFile.exists()
@@ -48,10 +49,10 @@ class SourceToTemplateEngineTest extends AntlrTestBase {
         def targetTemplateName1 = "Portlet_XXXXROOT_service.xml.ftl"
 
         FileEnvUtils.createXmlSource(SRC_DIR, targetName1, targetTemplateName1)
-        File createdFile1 = new File(SRC_DIR + DS + targetName1)
+        File createdFile1 = new File(SRC_DIR + DamascusProps.DS + targetName1)
 
         FileEnvUtils.createXmlTemplate(TMPLATE_DIR, targetTemplateName1, targetTemplateName1)
-        File createdTemplate1 = new File(TMPLATE_DIR + DS + targetTemplateName1)
+        File createdTemplate1 = new File(TMPLATE_DIR + DamascusProps.DS + targetTemplateName1)
 
         //---------------------
 
@@ -59,10 +60,10 @@ class SourceToTemplateEngineTest extends AntlrTestBase {
         def targetTemplateName2 = "Portlet_XXXXROOT_LocalServiceImpl.java.ftl"
 
         FileEnvUtils.createJavaSource(SRC_DIR, targetName2, targetTemplateName2)
-        File createdFile2 = new File(SRC_DIR + DS + targetName2)
+        File createdFile2 = new File(SRC_DIR + DamascusProps.DS + targetName2)
 
         FileEnvUtils.createJavaTemplate(TMPLATE_DIR, targetTemplateName2, targetTemplateName2)
-        File createdTemplate2 = new File(TMPLATE_DIR + DS + targetTemplateName2)
+        File createdTemplate2 = new File(TMPLATE_DIR + DamascusProps.DS + targetTemplateName2)
 
         //---------------------
 
@@ -70,16 +71,16 @@ class SourceToTemplateEngineTest extends AntlrTestBase {
         def targetTemplateName3 = "Portlet_XXXXROOT_test.properties.ftl"
 
         FileEnvUtils.createPropertiesSource(SRC_DIR, targetName3, targetTemplateName3)
-        File createdFile3 = new File(SRC_DIR + DS + targetName3)
+        File createdFile3 = new File(SRC_DIR + DamascusProps.DS + targetName3)
 
         FileEnvUtils.createPropertiesTemplate(TMPLATE_DIR, targetTemplateName3, targetTemplateName3)
-        File createdTemplate3 = new File(TMPLATE_DIR + DS + targetTemplateName3)
+        File createdTemplate3 = new File(TMPLATE_DIR + DamascusProps.DS + targetTemplateName3)
 
         //---------------------
 
         SourceToTemplateEngine.builder()
                 .sourceRootPath(SRC_DIR)
-                .templateDirPath(TMPLATE_DIR + DS)
+                .templateDirPath(TMPLATE_DIR + DamascusProps.DS)
                 .replacements(checkpattern)
                 .build()
                 .process()

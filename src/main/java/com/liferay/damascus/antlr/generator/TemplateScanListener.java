@@ -3,15 +3,17 @@ package com.liferay.damascus.antlr.generator;
 import com.liferay.damascus.antlr.common.DmscSrcParserExListener;
 import com.liferay.damascus.antlr.template.DmscSrcParser;
 import com.liferay.damascus.antlr.template.DmscSrcParser.AttributeContext;
+import com.liferay.damascus.cli.common.DamascusProps;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 /**
  * Template Scan Listener
- * <p/>
+ * <p>
  * Scanning a target template file to correct replace contents for template process
  *
  * @author Yasuyuki Takeo
@@ -23,7 +25,8 @@ public class TemplateScanListener extends DmscSrcParserExListener {
      * Constructor
      */
     public TemplateScanListener() {
-        targetTemplateContext = new TemplateContext();
+
+        targetTemplateContext = new TemplateContextImpl();
     }
 
     /**
@@ -33,7 +36,7 @@ public class TemplateScanListener extends DmscSrcParserExListener {
     public void exitSyncelementStart(DmscSrcParser.SyncelementStartContext ctx) {
         List<AttributeContext> attributes = ctx.attribute();
 
-        String currentId = getAttributeValue(attributes, TemplateContext.ATTR_ID);
+        String currentId = getAttributeValue(attributes, DamascusProps.ATTR_ID);
 
         if (!currentId.equals("")) {
             if (targetTemplateContext.isSyncIdExist(currentId)) {
@@ -57,7 +60,7 @@ public class TemplateScanListener extends DmscSrcParserExListener {
     @Override
     public void exitSavedata(DmscSrcParser.SavedataContext ctx) {
         if (null == currentSyncId) {
-            setError("Skip save data because some required data are null");
+            setError("Skip save data because some required data are null <" + StringUtils.truncate(ctx.getText(),100) + ">");
             return;
         }
 

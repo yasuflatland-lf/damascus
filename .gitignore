@@ -9,3 +9,5 @@ classes
 .classpath
 .project
 /bin
+/.metadata/
+target

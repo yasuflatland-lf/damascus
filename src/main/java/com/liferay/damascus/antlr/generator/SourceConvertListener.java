@@ -4,11 +4,13 @@ import com.liferay.damascus.antlr.common.DmscSrcParserExListener;
 import com.liferay.damascus.antlr.common.TemplateGenerateValidator;
 import com.liferay.damascus.antlr.template.DmscSrcParser;
 import com.liferay.damascus.antlr.template.DmscSrcParser.AttributeContext;
+import com.liferay.damascus.cli.common.DamascusProps;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.TokenStreamRewriter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class SourceConvertListener extends DmscSrcParserExListener {
     public SourceConvertListener(TokenStream tokens, TemplateContext targetTemplateContext) {
 
         rewriter = new TokenStreamRewriter(tokens);
-        sourceContext = new TemplateContext();
+        sourceContext = new TemplateContextImpl();
         this.targetTemplateContext = targetTemplateContext;
         setCurrentSyncId(null);
     }
@@ -67,7 +69,7 @@ public class SourceConvertListener extends DmscSrcParserExListener {
     public void exitSyncelementStart(DmscSrcParser.SyncelementStartContext ctx) {
         List<AttributeContext> attributes = ctx.attribute();
 
-        String currentId = getAttributeValue(attributes, TemplateContext.ATTR_ID);
+        String currentId = getAttributeValue(attributes, DamascusProps.ATTR_ID);
 
         if (!currentId.equals("")) {
             if (sourceContext.isSyncIdExist(currentId)) {
@@ -84,9 +86,18 @@ public class SourceConvertListener extends DmscSrcParserExListener {
      */
     @Override
     public void exitSavedata(DmscSrcParser.SavedataContext ctx) {
-        if (null == targetTemplateContext ||
-            null == currentSyncId) {
-            setError("Skip save data because some required data are null");
+        if (null == targetTemplateContext ) {
+            log.debug("targetTemplateContext is null. skip.");
+            return;
+        }
+
+        if (null == currentSyncId) {
+
+            StringBuffer errorMsg = new StringBuffer();
+            errorMsg.append("Skip save data because some required data are null <" + StringUtils.truncate(ctx.getText(),200) + "....>");
+            errorMsg.append(" currentSyncId <" + ((null==currentSyncId)?"null":"exist") + ">");
+            log.error(errorMsg.toString());
+            errors.add(errorMsg.toString());
             return;
         }
 

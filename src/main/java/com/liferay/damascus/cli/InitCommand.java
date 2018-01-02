@@ -1,18 +1,17 @@
 package com.liferay.damascus.cli;
 
 import com.beust.jcommander.Parameter;
-import com.google.common.collect.Maps;
 import com.liferay.damascus.cli.common.CaseUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
 import com.liferay.damascus.cli.common.TemplateUtil;
 import com.liferay.damascus.cli.validators.PackageNameValidator;
 import com.liferay.damascus.cli.validators.ProjectNameValidator;
-import com.liferay.damascus.cli.validators.VersionValidator;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Initialize Damascus
@@ -35,8 +34,9 @@ public class InitCommand implements ICommand {
      *
      * @return true if it's runnable or false
      */
-    public boolean isRunnable() {
-        return ((null != projectName) && (null != packageName));
+    public boolean isRunnable(Damascus damascus) {
+
+        return ((null != getProjectName()) && (null != getPackageName()));
     }
 
     /**
@@ -53,9 +53,9 @@ public class InitCommand implements ICommand {
             TemplateUtil.getInstance()
                 .process(
                     InitCommand.class,
-                    getLiferayVersion(),
+                    damascus.getLiferayVersion(),
                     DamascusProps.BASE_JSON,
-                    getParameters(),
+                    getParameters(damascus),
                     getTargetDir()
                 );
 
@@ -72,42 +72,43 @@ public class InitCommand implements ICommand {
      * @return Target directory where the output file is generated.
      */
     private String getTargetDir() {
-    	StringBuilder targetDir = new StringBuilder();
-    	targetDir.append(DamascusProps.CURRENT_DIR);
-    	if(!targetDir.toString().endsWith(DamascusProps.DS)) {
-    		targetDir.append(DamascusProps.DS);
-    	}
+        StringBuilder targetDir = new StringBuilder();
+        targetDir.append(DamascusProps.CURRENT_DIR);
+        if (!targetDir.toString().endsWith(DamascusProps.DS)) {
+            targetDir.append(DamascusProps.DS);
+        }
 
-    	String projectDirectoryName = CaseUtil.camelCaseToDashCase(getProjectName());
+        String projectDirectoryName = CaseUtil.camelCaseToDashCase(getProjectName());
 
-		return targetDir
-        		.append(projectDirectoryName)
-        		.append(DamascusProps.DS)
-        		.append(DamascusProps.BASE_JSON)
-        		.toString();
+        return targetDir
+            .append(projectDirectoryName)
+            .append(DamascusProps.DS)
+            .append(DamascusProps.BASE_JSON)
+            .toString();
     }
 
     /**
      * Gather Parameters for a template parsing
      *
+     * @param damascus
      * @return Map with required parameters to parse base.json
      */
-    private Map getParameters() {
-        Map params = Maps.newHashMap();
+    private Map getParameters(Damascus damascus) {
+        Map params = new ConcurrentHashMap<>();
 
         //Set parameters
         params.put(DamascusProps.BASE_PROJECT_NAME, getProjectName());
-        params.put(DamascusProps.BASE_LIFERAY_VERSION, getLiferayVersion());
+        params.put(DamascusProps.BASE_LIFERAY_VERSION, damascus.getLiferayVersion());
         params.put(DamascusProps.BASE_PACKAGE_NAME, getPackageName());
 
         String entityName = getProjectName().replace("-", "");
         params.put(DamascusProps.BASE_ENTITY_NAME, entityName);
         params.put(DamascusProps.BASE_ENTITY_NAME_LOWER, StringUtils.lowerCase(entityName));
 
-        Map damascus = com.beust.jcommander.internal.Maps.newHashMap();
-        damascus.put(DamascusProps.BASE_DAMASCUS_OBJ, params);
+        Map damascusMap = com.beust.jcommander.internal.Maps.newHashMap();
+        damascusMap.put(DamascusProps.BASE_DAMASCUS_OBJ, params);
 
-        return damascus;
+        return damascusMap;
     }
 
     @Parameter(names = "-init", description = "Create damascus base file. -init (project name) ", validateWith = ProjectNameValidator.class)
@@ -115,8 +116,5 @@ public class InitCommand implements ICommand {
 
     @Parameter(names = "-p", description = "Package name. (e.g. com.liferay.test)", validateWith = PackageNameValidator.class)
     private String packageName = null;
-
-    @Parameter(names = "-v", description = "Target Liferay Version. (e.g. 70)", validateWith = VersionValidator.class)
-    private String liferayVersion = DamascusProps.VERSION_70;
 
 }

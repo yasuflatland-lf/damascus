@@ -2,6 +2,7 @@ package com.liferay.damascus.antlr.generator;
 
 import com.liferay.damascus.antlr.common.TemplateGenerateValidator;
 import com.liferay.damascus.cli.common.CommonUtil;
+import com.liferay.damascus.cli.common.DamascusProps;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class SourceToTemplateEngine {
         throws IOException {
 
         // Normalize path
-        templateDirPath = normalizePath(templateDirPath);
+        templateDirPath = CommonUtil.normalizePath(templateDirPath);
 
         if (null == templateDirPath) {
             log.error("Template file path is invalid. <" + templateDirPath + ">");
@@ -55,22 +56,24 @@ public class SourceToTemplateEngine {
                     .getSourceContext();
 
             if (!sourceTemplateContext.isRootTagExist()) {
-                log.debug("A root tag does not exist. Skip.");
+                System.out.println("A root tag does not exist. Skip. <" + target.getName() + ">");
                 continue;
             }
+
+            System.out.println("processing file : " + target.getAbsolutePath());
 
             List<String> errors = TemplateGenerateValidator.rootValidator(sourceTemplateContext);
 
             if (!errors.isEmpty()) {
                 for (String error : errors) {
-                    log.error(error);
+                    System.out.println(error);
                 }
-                log.error("Error occurs at parameter validation of root tag. Skip this file.");
+                System.out.println("Error occurs at parameter validation of root tag. Skip this file.");
                 continue;
             }
 
             // Scan the template file and fetch contents to replace
-            String templateName     = sourceTemplateContext.getRootAttribute(TemplateContext.ATTR_TEMPLATE_NAME);
+            String templateName     = sourceTemplateContext.getRootAttribute(DamascusProps.ATTR_TEMPLATE_NAME);
             File   templateFullPath = new File(templateDirPath + templateName);
 
             TemplateContext targetTemplateContext = null;
@@ -106,30 +109,6 @@ public class SourceToTemplateEngine {
                 StandardCharsets.UTF_8);
 
         }
-    }
-
-    /**
-     * Normalize path
-     * <p>
-     * Normalize path and add separator if the path doesn't end with a separator.
-     *
-     * @param path
-     * @return
-     */
-    private String normalizePath(String path) {
-        // Normalize path
-        String validatedPath = FilenameUtils.normalize(path);
-
-        if (null == validatedPath) {
-            log.error("Template file path is invalid. <" + path + ">");
-            return null;
-        }
-
-        if (!validatedPath.endsWith(File.separator)) {
-            validatedPath = validatedPath.concat(File.separator);
-        }
-
-        return validatedPath;
     }
 
     /**

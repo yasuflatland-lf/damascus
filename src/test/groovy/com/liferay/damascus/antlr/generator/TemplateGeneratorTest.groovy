@@ -1,5 +1,6 @@
 package com.liferay.damascus.antlr.generator
 
+import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.test.tools.AntlrTestBase
 import com.liferay.damascus.cli.common.CommonUtil
 import org.apache.commons.io.FileUtils
@@ -14,7 +15,7 @@ class TemplateGeneratorTest extends AntlrTestBase {
         when:
         def testFileName = "test.jsp"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -57,12 +58,14 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
             }
         }
 
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
         def result = TemplateGenerator.builder().contentsFile(filePath).build().process()
 
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
+        def error_str = errContent.toString()
 
         then:
+        error_str.isEmpty()
         true == filePath.exists()
         contents == result
     }
@@ -72,7 +75,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
         when:
         def testFileName = "test.js"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -112,7 +115,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
             }
         }
 
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
         def result = TemplateGenerator.builder().contentsFile(filePath).build().process()
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
         def error_str = errContent.toString()
@@ -128,7 +131,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
         when:
         def testFileName = "test.js"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -168,7 +171,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
             }
         }
 
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
         def result = TemplateGenerator.builder().contentsFile(filePath).build().process()
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
         def error_str = errContent.toString()
@@ -184,7 +187,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
         when:
         def testFileName = "test.js"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -225,7 +228,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
             }
         }
 
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
         def result = TemplateGenerator.builder().contentsFile(filePath).build().process()
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
         def error_str = errContent.toString()
@@ -233,7 +236,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
         then:
         true == filePath.exists()
         contents == result
-        error_str.contains('Line index is overrun')
+        error_str.contains('dmsc:sync is not closed')
     }
 
     @Unroll("smoke test (java file)")
@@ -241,7 +244,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
         when:
         def testFileName = "test.java"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -395,7 +398,7 @@ public class JarUtil {
             }
         }
 
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
         def result = TemplateGenerator.builder().contentsFile(filePath).build().process()
 
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
@@ -410,7 +413,7 @@ public class JarUtil {
         when:
         def testFileName = "test.jsp"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -437,7 +440,7 @@ TEST
             }
         }
 
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
         TemplateGenerator tg = new TemplateGenerator(filePath, null)
         tg.process()
         TemplateContext sc = tg.getSourceContext()
@@ -456,7 +459,7 @@ TEST
         when:
         def testFileName = "dummy.text"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(TEMP_DIR))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -522,8 +525,8 @@ return entry;
                 }
             }
         }
-        def filePath = new File(TEMP_DIR + TEST_DIR + DS + testFileName)
-        def outPath = new File(TEMP_DIR + TEST_DIR + DS + outputFileName)
+        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
+        def outPath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + outputFileName)
 
         def checkpattern = [
                 'com.liferay.test': '${packageName}',
