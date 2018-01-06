@@ -56,4 +56,7 @@ public interface TemplateContext {
 
 	void setRootTagExist(boolean rootTagExist);
 
+	void setPickup(boolean pickup);
+
+	boolean isPickup();
 }

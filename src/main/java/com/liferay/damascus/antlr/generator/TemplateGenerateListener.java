@@ -15,14 +15,14 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 
 /**
- * Source Convert Listener
+ * Template Generate Listener
  * <p>
- * Listner for converting source files into templates.
+ * Listener for converting source files into templates.
  *
  * @author Yasuyuki Takeo
  */
 @Slf4j
-public class SourceConvertListener extends DmscSrcParserExListener {
+public class TemplateGenerateListener extends DmscSrcParserExListener {
 
     /**
      * Constructor
@@ -30,7 +30,7 @@ public class SourceConvertListener extends DmscSrcParserExListener {
      * @param tokens
      * @param targetTemplateContext
      */
-    public SourceConvertListener(TokenStream tokens, TemplateContext targetTemplateContext) {
+    public TemplateGenerateListener(TokenStream tokens, TemplateContext targetTemplateContext) {
 
         rewriter = new TokenStreamRewriter(tokens);
         sourceContext = new TemplateContextImpl();
@@ -47,10 +47,20 @@ public class SourceConvertListener extends DmscSrcParserExListener {
         List<AttributeContext> attributes = ctx.attribute();
         for (AttributeContext attribute : attributes) {
 
+            String Key = stripQuotations(attribute.Name().getText());
             String value = stripQuotations(attribute.STRING().getText());
 
-            sourceContext.setRootAttribute(attribute.Name().getText(), value);
+            sourceContext.setRootAttribute(Key, value);
+
+            if(Key.equals(DamascusProps.ATTR_PICKUP)) {
+
+                sourceContext.setPickup(true);
+
+                // Erase pickup tag for output.
+                rewriter.replace(attribute.start, attribute.stop, "");
+            }
         }
+
         // Root tag exist flag
         sourceContext.setRootTagExist(true);
 

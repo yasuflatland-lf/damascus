@@ -20,6 +20,7 @@ public class TemplateContextImpl implements TemplateContext {
         syncAttributes = new ConcurrentHashMap<>();
         contentsIdMap = new ConcurrentHashMap<>();
         rootTagExist = false;
+        pickup = false;
     }
 
     /**
@@ -85,5 +86,9 @@ public class TemplateContextImpl implements TemplateContext {
     @Getter
     @Setter
     protected boolean rootTagExist;
+
+    @Getter
+    @Setter
+    protected boolean pickup;
 
 }

@@ -56,7 +56,7 @@ public class TemplateGenerator {
      * @param targetTemplateContext
      * @return
      */
-    private SourceConvertListener getSourceLoader(String contents, TemplateContext targetTemplateContext) {
+    private TemplateGenerateListener getSourceLoader(String contents, TemplateContext targetTemplateContext) {
 
         CharStream        input  = CharStreams.fromString(contents);
         DmscSrcLexer      lexer  = new DmscSrcLexer(input);
@@ -71,7 +71,7 @@ public class TemplateGenerator {
 
         ParseTreeWalker walker = new ParseTreeWalker();
 
-        SourceConvertListener sourceLoader = new SourceConvertListener(tokens, targetTemplateContext);
+        TemplateGenerateListener sourceLoader = new TemplateGenerateListener(tokens, targetTemplateContext);
         walker.walk(sourceLoader, tree);
 
         sourceLoader.printErrorIfExist();

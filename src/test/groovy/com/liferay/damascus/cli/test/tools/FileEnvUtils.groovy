@@ -69,7 +69,7 @@ class FileEnvUtils {
 
     static def getRootTag(String templateName) {
         def retVal = $/
-<dmsc:root templateName="${templateName}" />
+<dmsc:root templateName="${templateName}" pickup="true" />
 /$;
         return retVal;
     }

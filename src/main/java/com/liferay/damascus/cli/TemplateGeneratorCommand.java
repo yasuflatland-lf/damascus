@@ -169,6 +169,9 @@ public class TemplateGeneratorCommand implements ICommand {
     @Parameter(names = "-model", description = "Model to convert. -model (target model name, \"SampleSB\" e.g.) ", validateWith = ProjectNameValidator.class)
     private String model = "";
 
+    @Parameter(names = "-pickup", description = "Only processing pickup flag is on. Default is false.")
+    private boolean pickup = false;
+
     /**
      * Template files' root directory.
      * <p>
@@ -176,7 +179,7 @@ public class TemplateGeneratorCommand implements ICommand {
      * The path must be end with '/'
      */
     @NonNull
-    @Parameter(names = "-templatedir", description = "Template root directory. If this is not configured, the default directory will be used.")
+    @Parameter(names = "-templatedir", description = "Template root directory. If this is not configured, the default directory will be used. Default is ${user_home}/.damascus")
     private String templateDirPath = DamascusProps.TEMPLATE_FILE_PATH;
 
     /**
@@ -186,7 +189,7 @@ public class TemplateGeneratorCommand implements ICommand {
      * (this method will process directories under the root recursively)
      */
     @NonNull
-    @Parameter(names = "-sourcerootdir", description = "The base directory where base.json exists. The default directory will be used if this value is not configured.")
+    @Parameter(names = "-sourcerootdir", description = "The base directory where base.json exists. The default directory will be used if this value is not configured. Default is current directory.")
     private String sourceRootPath = DamascusProps.CURRENT_DIR;
 
 

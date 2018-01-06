@@ -3,11 +3,12 @@ package com.liferay.damascus.antlr.generator;
 import com.liferay.damascus.antlr.common.TemplateGenerateValidator;
 import com.liferay.damascus.cli.common.CommonUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,8 +56,7 @@ public class SourceToTemplateEngine {
                     .build()
                     .getSourceContext();
 
-            if (!sourceTemplateContext.isRootTagExist()) {
-                System.out.println("A root tag does not exist. Skip. <" + target.getName() + ">");
+            if (!validateSourceContext(sourceTemplateContext, target)) {
                 continue;
             }
 
@@ -112,6 +112,30 @@ public class SourceToTemplateEngine {
     }
 
     /**
+     * Validate source context
+     *
+     * @param sourceTemplateContext source template context of the target file
+     * @param target                target file object
+     * @return true to process or skip to process this file.
+     */
+    private boolean validateSourceContext(TemplateContext sourceTemplateContext, File target) {
+
+        if (!sourceTemplateContext.isRootTagExist()) {
+            System.out.println("A root tag does not exist.  Skip. <" + target.getName() + ">");
+            return false;
+        }
+
+        if (pickup) {
+            if (!sourceTemplateContext.isPickup()) {
+                System.out.println("Pickup flag is not on.      Skip. <" + target.getName() + ">");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * REQUIRED
      * <p>
      * Source files' root directory.
@@ -154,4 +178,13 @@ public class SourceToTemplateEngine {
      */
     @Builder.Default
     private Map<String, String> replacements = new ConcurrentHashMap<>();
+
+    /**
+     * Pick up flag
+     * <p>
+     * If this is true, processing only files that
+     * pickup attribute is configured true in the target source files.
+     */
+    @Builder.Default
+    private boolean pickup = false;
 }

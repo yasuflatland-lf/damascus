@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.nio.charset.StandardCharsets
+
 class TemplateGeneratorCommandTest extends AntlrTestBase {
     def initCommand;
 
@@ -90,6 +92,48 @@ class TemplateGeneratorCommandTest extends AntlrTestBase {
         then:
         createdFile2.exists()
         createdTemplate2.exists()
+        error_output.isEmpty()
+    }
+
+    @Unroll("TemplateGeneratorCommand pickup erased test")
+    def "TemplateGeneratorCommand pickup erased test"() {
+        when:
+        //
+        //Generate base.json
+        //
+
+        String[] initArgs = ["-init", "SampleSB", "-p", "com.liferay.test"]
+        new JCommander(initCommand, initArgs)
+        def dms = Spy(Damascus)
+        dms.setLiferayVersion("70")
+        initCommand.run(dms, initArgs)
+
+        def SRC_PROJECT_DIR = SRC_DIR + DS + 'sample-sb' + DS
+
+        //
+        // Generate convert target files
+        //
+
+        def targetName2 = "SampleSBLocalServiceImpl.java"
+        def targetTemplateName2 = "Portlet_XXXXROOT_LocalServiceImpl.java.ftl"
+        def targetSrcDir = SRC_PROJECT_DIR + 'dir1' + DS + 'dir4' + DS + 'fuga' + DS
+        def targetTemplateDir = TMPLATE_DIR + DS
+
+        FileEnvUtils.createJavaSource(targetSrcDir, targetName2, targetTemplateName2)
+        File createdFile2 = new File(targetSrcDir + DS + targetName2)
+
+
+        String[] genArgs = ["-generate", "template", "-model", "SampleSB", "-v", "Foo", "-sourcerootdir", SRC_PROJECT_DIR, "-templatedir", targetTemplateDir]
+        Damascus.main(genArgs)
+
+        File createdTemplate2 = new File(targetTemplateDir + DS + "Foo" + DS + targetTemplateName2)
+        def output_contents = FileUtils.readFileToString(createdTemplate2,StandardCharsets.UTF_8)
+        def error_output = errContent.toString();
+
+        then:
+        createdFile2.exists()
+        createdTemplate2.exists()
+        !output_contents.contains("pickup=")
         error_output.isEmpty()
     }
 }

@@ -163,8 +163,9 @@ public class DamascusProps {
 
 
     /**
-     * Attribute keys
+     * Attribute keys for dmsc tags (dmsc:root, dmsc:sync)
      */
     static public final String ATTR_ID = "id";
     static public final String ATTR_TEMPLATE_NAME = "templateName";
+    static public final String ATTR_PICKUP = "pickup";
 }
