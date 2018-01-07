@@ -83,7 +83,8 @@ public final class PropertyContextFactory {
             Pair.of(DamascusProps.PROP_AUTHOR, DamascusProps.USER_NAME),
             Pair.of(DamascusProps.PROP_RESOURCE_ROOT_PATH, ""),
             Pair.of(DamascusProps.PROP_BUILD_NUMBER, ""),
-            Pair.of(DamascusProps.PROP_EXT_WHITE_LIST, String.join(",", SourceToTemplateEngine.EXT_WHITE_LIST))
+            Pair.of(DamascusProps.PROP_EXT_WHITE_LIST, String.join(",", SourceToTemplateEngine.EXT_WHITE_LIST)),
+            Pair.of(DamascusProps.PROP_DAMASCUS_OUTPUT_TEMPLATE_STRIP_TAGS, "true")
         );
     }
 

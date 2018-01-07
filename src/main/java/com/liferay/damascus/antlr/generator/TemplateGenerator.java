@@ -35,7 +35,7 @@ public class TemplateGenerator {
     public String process() throws IOException {
         String contents = FileUtils.readFileToString(contentsFile, StandardCharsets.UTF_8);
         // Always get data from a file
-        return getSourceLoader(contents, targetTemplateContext).getRewriter().getText();
+        return getTemplateGenerateListener(contents, targetTemplateContext).getRewriter().getText();
     }
 
     /**
@@ -46,17 +46,17 @@ public class TemplateGenerator {
      */
     public TemplateContext getSourceContext() throws IOException {
         String contents = FileUtils.readFileToString(contentsFile, StandardCharsets.UTF_8);
-        return getSourceLoader(contents, targetTemplateContext).getSourceContext();
+        return getTemplateGenerateListener(contents, targetTemplateContext).getSourceContext();
     }
 
     /**
-     * Get Source Loader
+     * Get Template Generate Listener
      *
      * @param contents
      * @param targetTemplateContext
-     * @return
+     * @return TemplateGenerateListener
      */
-    private TemplateGenerateListener getSourceLoader(String contents, TemplateContext targetTemplateContext) {
+    private TemplateGenerateListener getTemplateGenerateListener(String contents, TemplateContext targetTemplateContext) {
 
         CharStream        input  = CharStreams.fromString(contents);
         DmscSrcLexer      lexer  = new DmscSrcLexer(input);
@@ -71,12 +71,12 @@ public class TemplateGenerator {
 
         ParseTreeWalker walker = new ParseTreeWalker();
 
-        TemplateGenerateListener sourceLoader = new TemplateGenerateListener(tokens, targetTemplateContext);
-        walker.walk(sourceLoader, tree);
+        TemplateGenerateListener templateGenerateListener = new TemplateGenerateListener(tokens, targetTemplateContext);
+        walker.walk(templateGenerateListener, tree);
 
-        sourceLoader.printErrorIfExist();
+        templateGenerateListener.printErrorIfExist();
 
-        return sourceLoader;
+        return templateGenerateListener;
     }
 
     /**
@@ -95,7 +95,7 @@ public class TemplateGenerator {
 
     /**
      * REQUIRED
-     *
+     * <p>
      * Contents file path.
      */
     @NonNull

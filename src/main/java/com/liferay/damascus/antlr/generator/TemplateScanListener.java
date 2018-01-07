@@ -60,7 +60,7 @@ public class TemplateScanListener extends DmscSrcParserExListener {
     @Override
     public void exitSavedata(DmscSrcParser.SavedataContext ctx) {
         if (null == currentSyncId) {
-            setError("Skip save data because some required data are null <" + StringUtils.truncate(ctx.getText(),100) + ">");
+            setError("Skip save data because some required data are null <" + StringUtils.truncate(ctx.getText(), 100) + ">");
             return;
         }
 

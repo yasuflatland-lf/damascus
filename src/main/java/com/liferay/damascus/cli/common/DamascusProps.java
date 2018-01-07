@@ -133,6 +133,8 @@ public class DamascusProps {
 
     public static final String PROP_EXT_WHITE_LIST = "damascus.extentions.white.list";
 
+    public static final String PROP_DAMASCUS_OUTPUT_TEMPLATE_STRIP_TAGS = "damascus.output.template.strip.tags";
+
     /**
      * Service Builder directory structure suffix
      */

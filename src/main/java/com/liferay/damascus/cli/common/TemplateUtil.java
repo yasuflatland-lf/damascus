@@ -2,6 +2,7 @@ package com.liferay.damascus.cli.common;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
+import com.liferay.damascus.antlr.generator.TagsCleanup;
 import com.liferay.damascus.cli.Damascus;
 import freemarker.core.Configurable;
 import freemarker.core.Environment;
@@ -282,12 +283,12 @@ public class TemplateUtil {
 
         if (skipTemplate != null && skipTemplate.getAsBoolean()) {
 
-            log.debug("TemplateUtil#process skip file path <" + targetFilePath + ">");
+            log.debug("skip file path <" + targetFilePath + ">");
 
             return;
         }
 
-        log.debug("TemplateUtil#process output file path <" + targetFilePath + ">");
+        log.debug("output file path <" + targetFilePath + ">");
 
         FileUtils.writeStringToFile(new File(targetFilePath), sw.toString(), DamascusProps.FILE_ENCODING);
 
@@ -422,6 +423,28 @@ public class TemplateUtil {
     }
 
     /**
+     * Validate strip tags switch
+     *
+     * @return boolean
+     */
+    public boolean isStripTags() {
+        try {
+            PropertyContext propertyContext = getPropertyContext();
+            String          stripTags       = propertyContext.getString(DamascusProps.PROP_DAMASCUS_OUTPUT_TEMPLATE_STRIP_TAGS);
+            Boolean         isStripTags     = Boolean.valueOf(stripTags);
+
+            return isStripTags;
+
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
      * Copy Templates to Cache (In a jar)
      * <p>
      * This method copy the template files to the cache directory.
@@ -433,6 +456,7 @@ public class TemplateUtil {
      */
     public void copyTemplatesToCache(Class<?> clazz, List<String> files, String distinationRoot)
         throws IOException, URISyntaxException {
+
         for (String file : files) {
 
             if (file.endsWith(DamascusProps.SEP)) {
@@ -457,8 +481,13 @@ public class TemplateUtil {
 
             log.debug("copy file : " + url.toURI().toString());
 
-            String      contents = Resources.toString(url, StandardCharsets.UTF_8);
-            InputStream is       = new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
+            String contents = Resources.toString(url, StandardCharsets.UTF_8);
+
+            if (isStripTags()) {
+                contents = TagsCleanup.process(contents);
+            }
+
+            InputStream is = new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
             FileUtils.copyInputStreamToFile(is, new File(distinationRoot + file));
         }
     }
