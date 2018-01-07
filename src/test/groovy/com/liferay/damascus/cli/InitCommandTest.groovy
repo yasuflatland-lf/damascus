@@ -99,9 +99,10 @@ class InitCommandTest extends Specification {
     @Unroll("Init run from main method test")
     def "Init run from main method test"() {
         when:
-        String[] args = [argv1, argv2, argv3, argv4, argv5, argv6]
+        String[] args = [argv1, argv2, argv3, argv4]
         new JCommander(initCommand, args)
         def dms = Spy(Damascus)
+        dms.setLiferayVersion(argv6)
         initCommand.run(dms, args)
         def f = new File(workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON)
 

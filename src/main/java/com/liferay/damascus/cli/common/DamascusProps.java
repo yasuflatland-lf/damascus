@@ -31,6 +31,8 @@ public class DamascusProps {
 
     public static final String SERVICE_XML = "service.xml";
 
+    public static final String DOT_SLASH_CURRENT_DIR = "." + DS;
+
     /**
      * Base json parse parameters
      */
@@ -55,13 +57,13 @@ public class DamascusProps {
     /**
      * Property file configuration
      */
-    public static final String CACHE_DIR_PATH = DamascusProps.USER_HOME + DamascusProps.DS + ".damascus";
+    public static final String CACHE_DIR_PATH = USER_HOME + DS + ".damascus";
 
     public static final String PROPERTY_FILE_NAME = "settings.properties";
 
-    public static final String PROPERTY_FILE_PATH = CACHE_DIR_PATH + DamascusProps.DS + PROPERTY_FILE_NAME;
+    public static final String PROPERTY_FILE_PATH = CACHE_DIR_PATH + DS + PROPERTY_FILE_NAME;
 
-	public static final String TEMPLATE_FILE_PATH = CACHE_DIR_PATH + DamascusProps.DS + TEMPLATE_FOLDER_NAME;
+	public static final String TEMPLATE_FILE_PATH = CACHE_DIR_PATH + DS + TEMPLATE_FOLDER_NAME;
 
     /**
      * Liferay Version
@@ -128,7 +130,11 @@ public class DamascusProps {
     public static final String PROP_RESOURCE_ROOT_PATH = "damascus.resource.root.path";
 
     public static final String PROP_BUILD_NUMBER = "damascus.build.number";
-    
+
+    public static final String PROP_EXT_WHITE_LIST = "damascus.extentions.white.list";
+
+    public static final String PROP_DAMASCUS_OUTPUT_TEMPLATE_STRIP_TAGS = "damascus.output.template.strip.tags";
+
     /**
      * Service Builder directory structure suffix
      */
@@ -158,4 +164,10 @@ public class DamascusProps {
     public static final int _DEPTH_OF_MINIMAL_PROJECT_PATH = 3;
 
 
+    /**
+     * Attribute keys for dmsc tags (dmsc:root, dmsc:sync)
+     */
+    static public final String ATTR_ID = "id";
+    static public final String ATTR_TEMPLATE_NAME = "templateName";
+    static public final String ATTR_PICKUP = "pickup";
 }

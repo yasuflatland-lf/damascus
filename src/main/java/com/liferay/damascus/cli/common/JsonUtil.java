@@ -1,9 +1,10 @@
 package com.liferay.damascus.cli.common;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.liferay.project.templates.internal.util.Validator;
 import org.apache.commons.io.FileUtils;
@@ -98,8 +99,20 @@ public class JsonUtil {
      * @throws URISyntaxException
      */
     public static <T> void writer(String fullPath, T obj) throws IOException, URISyntaxException {
-        //ObjectMapper mapper = new ObjectMapper();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         ow.writeValue(new File(fullPath), obj);
+    }
+
+    /**
+     * Write JSON Value as String
+     *
+     * @param obj Object to convert to JSON String
+     * @param <T> Target class
+     * @return JSON String
+     * @throws JsonProcessingException
+     */
+    public static <T> String writeValueAsString(T obj) throws JsonProcessingException {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        return ow.writeValueAsString(obj);
     }
 }

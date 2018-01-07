@@ -10,6 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
@@ -341,5 +342,60 @@ public class CommonUtil {
     static public boolean isInsideJar(Class<?> clazz) {
         File path = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
         return path.isFile();
+    }
+
+    /**
+     * Replace keywords in contents
+     *
+     * @param contents
+     * @param replacements
+     * @return
+     */
+    static public String replaceKeywords(String contents, Map<String, String> replacements) {
+        String converted = contents;
+        for (Map.Entry<String, String> replacement : replacements.entrySet()) {
+            converted =
+                StringUtils.replace(
+                    converted,
+                    replacement.getKey(),
+                    replacement.getValue());
+        }
+        return converted;
+    }
+
+    /**
+     * Comma separated strings to List
+     *
+     * @param source comma separated strings
+     * @return String List
+     */
+    static public List<String> stringToList(String source) {
+
+        return Arrays.asList(source.split("\\s*,\\s*"));
+    }
+
+
+    /**
+     * Normalize path
+     * <p>
+     * Normalize path and add separator if the path doesn't end with a separator.
+     *
+     * @param path
+     * @return
+     */
+    static public String normalizePath(String path) {
+        // Normalize path
+        String validatedPath = FilenameUtils.normalize(path);
+
+        if (null == validatedPath) {
+            log.error("Template file path is invalid. <" + path + ">");
+            return null;
+        }
+
+        if (!validatedPath.endsWith(DamascusProps.DS)) {
+            validatedPath = validatedPath.concat(DamascusProps.DS);
+        }
+
+        return validatedPath;
     }
 }

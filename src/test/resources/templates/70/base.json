@@ -73,7 +73,10 @@
           "name": "${damascus.entityNameLower}Text",
           "title": "${damascus.projectName} Text"
         }
-      ]
+      ],
+      "customValue" : {
+        "your_own_id" : "your_custom_value_for_template_here"
+      }
     }
   ]
 }
