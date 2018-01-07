@@ -17,8 +17,6 @@ public class DamascusProps {
 
     public static final String CURRENT_DIR = System.getProperty("user.dir");
 
-    public static final String TMP_PATH = System.getProperty("java.io.tmpdir");
-
     public static final String FILE_ENCODING = "UTF-8";
 
     public static final String USER_NAME = System.getProperty("user.name");

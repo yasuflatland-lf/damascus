@@ -99,7 +99,7 @@ class TestUtils {
      * @return path with delimiter if it's not ended with it.
      */
     static public def getTempPath() {
-        def retStr = DamascusProps.TMP_PATH;
+        def retStr = System.getProperty("java.io.tmpdir");
         if(!retStr.endsWith(DamascusProps.DS)) {
             retStr = retStr + DamascusProps.DS;
         }

@@ -2,6 +2,7 @@ package com.liferay.damascus.antlr.generator
 
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.test.tools.AntlrTestBase
+import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import spock.lang.Unroll
 
@@ -14,7 +15,7 @@ class TemplateScannerTest extends AntlrTestBase {
         when:
         def testFileName = "test.jsp"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(TestUtils.getTempPath()))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -60,7 +61,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
 
         def compFileName = "comp.jsp"
 
-        final FileTreeBuilder tfc = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
+        final FileTreeBuilder tfc = new FileTreeBuilder(new File(TestUtils.getTempPath()))
         tf.dir(TEST_DIR) {
             file(compFileName) {
                 withWriter('UTF-8') { writer ->
@@ -90,8 +91,8 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
                 }
             }
         }
-        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
-        def compfilePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + compFileName)
+        def filePath = new File(TestUtils.getTempPath() + TEST_DIR + DS + testFileName)
+        def compfilePath = new File(TestUtils.getTempPath() + TEST_DIR + DS + compFileName)
 
         def result = TemplateScanner
                 .builder()

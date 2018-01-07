@@ -2,6 +2,7 @@ package com.liferay.damascus.antlr.generator
 
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.test.tools.AntlrTestBase
+import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import spock.lang.Unroll
 
@@ -14,7 +15,7 @@ class TagsCleanupTest extends AntlrTestBase {
         when:
         def testFileName = "test.jsp"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(TestUtils.getTempPath()))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -57,7 +58,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
             }
         }
 
-        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
+        def filePath = new File(TestUtils.getTempPath() + TEST_DIR + DamascusProps.DS + testFileName)
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
         def result = TagsCleanup.process(contents)
         def error_str = errContent.toString()
@@ -74,7 +75,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
         when:
         def testFileName = "test.jsp"
 
-        final FileTreeBuilder tf = new FileTreeBuilder(new File(DamascusProps.TMP_PATH))
+        final FileTreeBuilder tf = new FileTreeBuilder(new File(TestUtils.getTempPath()))
         tf.dir(TEST_DIR) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
@@ -108,7 +109,7 @@ Gadget gadget = (Gadget)renderRequest.getAttribute(WebKeys.GADGET);
             }
         }
 
-        def filePath = new File(DamascusProps.TMP_PATH + TEST_DIR + DamascusProps.DS + testFileName)
+        def filePath = new File(TestUtils.getTempPath() + TEST_DIR + DamascusProps.DS + testFileName)
         String contents = FileUtils.readFileToString(filePath, StandardCharsets.UTF_8);
         def result = TagsCleanup.process(contents)
         def error_str = errContent.toString()
