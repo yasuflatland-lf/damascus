@@ -179,7 +179,7 @@ public class TemplateGeneratorCommand implements ICommand {
      * The path must be end with '/'
      */
     @NonNull
-    @Parameter(names = "-templatedir", description = "Template root directory. If this is not configured, the default directory will be used. Default is ${user_home}/.damascus")
+    @Parameter(names = "-templatedir", description = "Template root directory. If this is not configured, the default directory will be used.")
     private String templateDirPath = DamascusProps.TEMPLATE_FILE_PATH;
 
     /**
