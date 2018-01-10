@@ -41,7 +41,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.kernel.workflow.WorkflowInstance;
+import com.liferay.portal.kernel.workflow.WorkflowTask;
 <#if generateActivity>
 import com.liferay.social.kernel.model.SocialActivityConstants;
 </#if>
@@ -52,6 +55,7 @@ import ${packageName}.service.util.${capFirstModel}Validator;
 <#if generateActivity>
 import ${packageName}.social.${capFirstModel}ActivityKeys;
 </#if>
+import ${packageName}.service.workflow.${capFirstModel}WorkflowManager;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
@@ -1257,6 +1261,188 @@ public class ${capFirstModel}LocalServiceImpl
 
         return entry;
     }
+
+    /**
+     * Workflow handling
+     */
+
+    /**
+     * Complete workflow at once
+     * <p/>
+     * Without assigning a task to a user, this method automatically assign user and update the workflow.
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param classPK
+     * @param transitionName
+     * @return WorkflowTask object
+     * @throws PortalException
+     */
+    public WorkflowTask completeWorkflowTaskAtOnce(
+        User user, long scorpGroupId, long classPK, String transitionName) throws PortalException {
+        return ${capFirstModel}WorkflowManager.completeWorkflowTaskAtOnce(
+                    user, scorpGroupId, classPK, transitionName);
+    }
+
+    /**
+     * Check if workflow is enabled.
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param classPK
+     * @return true if workflow is enabled or false
+     * @throws PortalException
+     */
+    public boolean isWorkflowEnable(User user, long scorpGroupId, long classPK)
+        throws PortalException {
+        return ${capFirstModel}WorkflowManager.isWorkflowEnable(
+        user, scorpGroupId, classPK);
+    }
+
+    /**
+     * Get Transition names
+     * <p/>
+     * A task includes transitions. This method retrieve a list of transition names
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param classPK
+     * @return Escaped transition names
+     * @throws PortalException
+     */
+    public List<String> getTransitionNames(User user, long scorpGroupId, long classPK)
+        throws PortalException {
+        return ${capFirstModel}WorkflowManager.getTransitionNames(
+        user, scorpGroupId, classPK);
+    }
+
+    /**
+     * Get Transition names
+     * <p/>
+     * A task includes transitions. This method retrieve a list of transition names
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return
+     * @throws PortalException
+     */
+    public List<String> getTransitionNames(User user, long scorpGroupId, String className, long classPK)
+        throws PortalException {
+        return ${capFirstModel}WorkflowManager.getTransitionNames(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get Transition Message
+     *
+     * @param transitionName
+     * @return Escaped Transition name
+     */
+    public String getTransitionName(String transitionName) {
+        return ${capFirstModel}WorkflowManager.getTransitionName(transitionName);
+    }
+
+    /**
+     * Get WorkFlow
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return
+     * @throws WorkflowException
+     */
+    public WorkflowTask getWorkflowTask(User user, long scorpGroupId, String className, long classPK)
+        throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowTask(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get Workflow Instance
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return workflow task instances if those exist
+     * @throws WorkflowException
+     */
+    public WorkflowInstance getWorkflowInstance(User user, long scorpGroupId, String className, long classPK)
+        throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowInstance(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get WorkflowTasks
+     * <p>
+     * Get unasigned tasks available for the current user.
+     *
+     * @param user
+     * @param className
+     * @return
+     * @throws WorkflowException
+     */
+    public List<WorkflowTask> getWorkflowTasks(User user, String className) throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowTasks(
+        user, className);
+    }
+
+    /**
+     * Get WorkflowTasks
+     * <p>
+     * Get unasigned tasks available for the current user.
+     *
+     * @param user
+     * @param className
+     * @param searchByUserRoles
+     * @return
+     * @throws WorkflowException
+     */
+    public List<WorkflowTask> getWorkflowTasks(User user, String className, boolean searchByUserRoles)
+        throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowTasks(
+        user, className,searchByUserRoles);
+    }
+
+    /**
+     * Is Workflow Exist
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return true if a workflow exists or false
+     */
+    public boolean isWorkflowExist(User user, long scorpGroupId, String className, long classPK) {
+        return ${capFirstModel}WorkflowManager.isWorkflowExist(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get STATUS_ANY for DB
+     *
+     * This is equivalent of WorkflowConstants.STATUS_ANY
+     * @return  All statuses for Workflow
+     */
+    public int[] getStatusAny() {
+        return STATUS_ANY;
+    }
+
+    private static final int[] STATUS_ANY = {
+        WorkflowConstants.STATUS_APPROVED,
+        WorkflowConstants.STATUS_DENIED,
+        WorkflowConstants.STATUS_DRAFT,
+        WorkflowConstants.STATUS_EXPIRED,
+        WorkflowConstants.STATUS_IN_TRASH,
+        WorkflowConstants.STATUS_INACTIVE,
+        WorkflowConstants.STATUS_INCOMPLETE,
+        WorkflowConstants.STATUS_PENDING,
+        WorkflowConstants.STATUS_SCHEDULED
+    };
 
     private static Pattern _friendlyURLPattern = Pattern.compile("[^a-z0-9_-]");
 
