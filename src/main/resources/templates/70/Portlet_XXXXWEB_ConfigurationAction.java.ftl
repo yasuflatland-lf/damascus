@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigurationAction.java">
-
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.portlet.action;
 
 import com.google.common.collect.Lists;

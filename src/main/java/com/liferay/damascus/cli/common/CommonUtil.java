@@ -1,20 +1,26 @@
 package com.liferay.damascus.cli.common;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.*;
-import com.google.common.io.*;
-import com.liferay.damascus.cli.*;
-import lombok.extern.slf4j.*;
-import org.apache.commons.io.*;
-import org.apache.commons.io.filefilter.*;
-import org.gradle.tooling.*;
+import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
+import com.liferay.damascus.cli.ProjectTemplatesBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.StringUtils;
+import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.ProjectConnection;
 
-import java.io.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.InvalidPathException;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility Class
@@ -30,6 +36,7 @@ public class CommonUtil {
      * @return true if this tool is on Windows system
      */
     static public boolean isWindows() {
+
         return (DamascusProps.OS.indexOf("win") >= 0);
     }
 
@@ -139,8 +146,6 @@ public class CommonUtil {
                     .forProjectDirectory(filePath)
                     .connect();
             connection.newBuild().forTasks(task).run();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (null != connection) {
                 connection.close();
@@ -157,10 +162,10 @@ public class CommonUtil {
      */
     static public void createWorkspace(String destinationDir, String name) throws Exception {
         ProjectTemplatesBuilder.builder()
-                               .destinationDir(new File(destinationDir))
-                               .name(name)
-                               .template(DamascusProps.WORKSPACE_CMD)
-                               .build().create();
+            .destinationDir(new File(destinationDir))
+            .name(name)
+            .template(DamascusProps.WORKSPACE_CMD)
+            .build().create();
     }
 
     /**
@@ -173,11 +178,11 @@ public class CommonUtil {
      */
     static public void createServiceBuilderProject(String name, String packageName, String destinationDir) throws Exception {
         ProjectTemplatesBuilder.builder()
-                               .destinationDir(new File(destinationDir))
-                               .name(name)
-                               .packageName(packageName)
-                               .template(DamascusProps.SERVICE_BUILDER_CMD)
-                               .build().create();
+            .destinationDir(new File(destinationDir))
+            .name(name)
+            .packageName(packageName)
+            .template(DamascusProps.SERVICE_BUILDER_CMD)
+            .build().create();
     }
 
     /**
@@ -202,11 +207,11 @@ public class CommonUtil {
         }
 
         ProjectTemplatesBuilder.builder()
-                               .destinationDir(new File(destinationDir))
-                               .name(projectName)
-                               .packageName(packageNameForWeb)
-                               .template(DamascusProps.MVC_PORTLET_CMD)
-                               .build().create();
+            .destinationDir(new File(destinationDir))
+            .name(projectName)
+            .packageName(packageNameForWeb)
+            .template(DamascusProps.MVC_PORTLET_CMD)
+            .build().create();
 
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
 
@@ -231,7 +236,7 @@ public class CommonUtil {
             DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
             DamascusProps._GRADLE_FOLDER_NAME
         ));
-        for(String path : paths) {
+        for (String path : paths) {
             FileUtils.deleteQuietly(new File(rootPath + path));
         }
     }
@@ -258,7 +263,7 @@ public class CommonUtil {
 
     /**
      * Fetch files with filter
-     *
+     * <p>
      * Only fetching files, omitting directories.
      *
      * @param rootPath Root path where starts searching
@@ -278,7 +283,7 @@ public class CommonUtil {
     /**
      * Replace Contents at once
      *
-     * @param files Files to be processed
+     * @param files    Files to be processed
      * @param patterns Replacement patterns in a map
      * @throws IOException
      */
@@ -290,12 +295,12 @@ public class CommonUtil {
             //Convert contents
             String converted =
                 patterns.entrySet()
-                        .stream()
-                        .reduce(
-                            fileContents,
-                            (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
-                            (s1, s2) -> null
-                        );
+                    .stream()
+                    .reduce(
+                        fileContents,
+                        (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
+                        (s1, s2) -> null
+                    );
 
             FileUtils.writeStringToFile(file, converted, StandardCharsets.UTF_8);
         }
@@ -309,9 +314,9 @@ public class CommonUtil {
      * @throws IOException
      */
     static public List<String> invertPathToList(String path) throws IOException {
-        File pathTmp = getDirFromPath(new File(path));
-        String separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
-        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
+        File         pathTmp   = getDirFromPath(new File(path));
+        String       separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
+        List<String> retList   = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
         return Lists.reverse(retList);
     }
 
@@ -326,5 +331,71 @@ public class CommonUtil {
     static public List<String> invertPathWithSize(String path, int size) throws IOException {
         List<String> paths = invertPathToList(path);
         return Lists.partition(paths, size).get(0);
+    }
+
+    /**
+     * Validate if this method called inside of a jar
+     *
+     * @param clazz Target class
+     * @return true if it's in a jar or false
+     */
+    static public boolean isInsideJar(Class<?> clazz) {
+        File path = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+        return path.isFile();
+    }
+
+    /**
+     * Replace keywords in contents
+     *
+     * @param contents
+     * @param replacements
+     * @return
+     */
+    static public String replaceKeywords(String contents, Map<String, String> replacements) {
+        String converted = contents;
+        for (Map.Entry<String, String> replacement : replacements.entrySet()) {
+            converted =
+                StringUtils.replace(
+                    converted,
+                    replacement.getKey(),
+                    replacement.getValue());
+        }
+        return converted;
+    }
+
+    /**
+     * Comma separated strings to List
+     *
+     * @param source comma separated strings
+     * @return String List
+     */
+    static public List<String> stringToList(String source) {
+
+        return Arrays.asList(source.split("\\s*,\\s*"));
+    }
+
+
+    /**
+     * Normalize path
+     * <p>
+     * Normalize path and add separator if the path doesn't end with a separator.
+     *
+     * @param path
+     * @return
+     */
+    static public String normalizePath(String path) {
+        // Normalize path
+        String validatedPath = FilenameUtils.normalize(path);
+
+        if (null == validatedPath) {
+            log.error("Template file path is invalid. <" + path + ">");
+            return null;
+        }
+
+        if (!validatedPath.endsWith(DamascusProps.DS)) {
+            validatedPath = validatedPath.concat(DamascusProps.DS);
+        }
+
+        return validatedPath;
     }
 }

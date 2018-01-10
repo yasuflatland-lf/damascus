@@ -1,5 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/resources/resource-actions/default.xml">
+<#assign skipTemplate = !generateWeb>
 <?xml version="1.0"?>
 <!DOCTYPE resource-action-mapping PUBLIC "-//Liferay//DTD Resource Action Mapping 7.0.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7_0_0.dtd">
 

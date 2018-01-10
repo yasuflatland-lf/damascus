@@ -41,7 +41,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
+import com.liferay.portal.kernel.workflow.WorkflowInstance;
+import com.liferay.portal.kernel.workflow.WorkflowTask;
 <#if generateActivity>
 import com.liferay.social.kernel.model.SocialActivityConstants;
 </#if>
@@ -52,6 +55,7 @@ import ${packageName}.service.util.${capFirstModel}Validator;
 <#if generateActivity>
 import ${packageName}.social.${capFirstModel}ActivityKeys;
 </#if>
+import ${packageName}.service.workflow.${capFirstModel}WorkflowManager;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.exception.TrashEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
@@ -215,20 +219,32 @@ public class ${capFirstModel}LocalServiceImpl
     }
 
     public int countAllInGroup(long groupId) {
-        int count = ${uncapFirstModel}Persistence.countByG_S(groupId,
-                                                   WorkflowConstants.STATUS_APPROVED);
+        int count = ${uncapFirstModel}Persistence.countByGroupId(groupId);
+        return count;
+    }
+
+    public int countAllInGroup(long groupId, int[] status) {
+        int count = ${uncapFirstModel}Persistence.countByG_S(groupId,status);
         return count;
     }
 
     public int countAllInUser(long userId) {
-        int count = ${uncapFirstModel}Persistence.countByU_S(userId,
-                                                   WorkflowConstants.STATUS_APPROVED);
+        int count = ${uncapFirstModel}Persistence.countByUserId(userId);
+        return count;
+    }
+
+    public int countAllInUser(long userId, int[] status) {
+        int count = ${uncapFirstModel}Persistence.countByU_S(userId, status);
         return count;
     }
 
     public int countAllInUserAndGroup(long userId, long groupId) {
-        int count = ${uncapFirstModel}Persistence.countByG_U_S(groupId, userId,
-                                                     WorkflowConstants.STATUS_APPROVED);
+        int count = ${uncapFirstModel}Persistence.countByUserIdGroupId(userId, groupId);
+        return count;
+    }
+
+    public int countAllInUserAndGroup(long userId, long groupId, int[] status) {
+        int count = ${uncapFirstModel}Persistence.countByG_U_S(groupId, userId, status);
         return count;
     }
 
@@ -306,7 +322,13 @@ public class ${capFirstModel}LocalServiceImpl
 
     public List<${capFirstModel}> findAllInGroup(long groupId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
-            .findByG_S(groupId, WorkflowConstants.STATUS_APPROVED);
+            .findByGroupId(groupId);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInGroup(long groupId, int[] status) {
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
+            .findByG_S(groupId, status);
         return list;
     }
 
@@ -314,23 +336,42 @@ public class ${capFirstModel}LocalServiceImpl
         long groupId, int start, int end,
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
+        return findAllInGroup(
+                    groupId,
+                    start,
+                    end,
+                    orderByComparator,
+                    new int[] {WorkflowConstants.STATUS_APPROVED}
+                );
+    }
+
+    public List<${capFirstModel}> findAllInGroup(
+        long groupId, int start, int end,
+        OrderByComparator<${capFirstModel}> orderByComparator, int[] status) {
+
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_S(
-            groupId, WorkflowConstants.STATUS_APPROVED, start, end,
-            orderByComparator);
+            groupId, status, start, end, orderByComparator);
         return list;
     }
 
     public List<${capFirstModel}> findAllInGroup(
         long groupId, OrderByComparator<${capFirstModel}> orderByComparator) {
 
-        List<${capFirstModel}> list = (List<${capFirstModel}>) findAllInGroup(groupId,
-                                                              QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
+        List<${capFirstModel}> list =
+            (List<${capFirstModel}>) findAllInGroup(groupId,
+                QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
         return list;
     }
 
     public List<${capFirstModel}> findAllInUser(long userId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
-            .findByU_S(userId, WorkflowConstants.STATUS_APPROVED);
+        .findByUserId(userId);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUser(long userId, int[] status) {
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
+            .findByU_S(userId, status);
         return list;
     }
 
@@ -338,9 +379,17 @@ public class ${capFirstModel}LocalServiceImpl
         long userId, int start, int end,
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByUserId(
+            userId, start, end, orderByComparator);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUser(
+        long userId, int start, int end,
+        OrderByComparator<${capFirstModel}> orderByComparator, int[] status) {
+
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByU_S(
-            userId, WorkflowConstants.STATUS_APPROVED, start, end,
-            orderByComparator);
+            userId, status, start, end, orderByComparator);
         return list;
     }
 
@@ -354,7 +403,13 @@ public class ${capFirstModel}LocalServiceImpl
 
     public List<${capFirstModel}> findAllInUserAndGroup(long userId, long groupId) {
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
-            .findByG_U_S(groupId, userId, WorkflowConstants.STATUS_APPROVED);
+        .findByUserIdGroupId(userId, groupId);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUserAndGroup(long userId, long groupId, int[] status) {
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence
+            .findByG_U_S(groupId, userId, status);
         return list;
     }
 
@@ -362,9 +417,17 @@ public class ${capFirstModel}LocalServiceImpl
         long userId, long groupId, int start, int end,
         OrderByComparator<${capFirstModel}> orderByComparator) {
 
+        List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByUserIdGroupId(
+            groupId, userId, start, end, orderByComparator);
+        return list;
+    }
+
+    public List<${capFirstModel}> findAllInUserAndGroup(
+        long userId, long groupId, int start, int end,
+        OrderByComparator<${capFirstModel}> orderByComparator, int[] status) {
+
         List<${capFirstModel}> list = (List<${capFirstModel}>) ${uncapFirstModel}Persistence.findByG_U_S(
-            groupId, userId, WorkflowConstants.STATUS_APPROVED, start, end,
-            orderByComparator);
+            groupId, userId, status, start, end, orderByComparator);
         return list;
     }
 
@@ -1198,6 +1261,188 @@ public class ${capFirstModel}LocalServiceImpl
 
         return entry;
     }
+
+    /**
+     * Workflow handling
+     */
+
+    /**
+     * Complete workflow at once
+     * <p/>
+     * Without assigning a task to a user, this method automatically assign user and update the workflow.
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param classPK
+     * @param transitionName
+     * @return WorkflowTask object
+     * @throws PortalException
+     */
+    public WorkflowTask completeWorkflowTaskAtOnce(
+        User user, long scorpGroupId, long classPK, String transitionName) throws PortalException {
+        return ${capFirstModel}WorkflowManager.completeWorkflowTaskAtOnce(
+                    user, scorpGroupId, classPK, transitionName);
+    }
+
+    /**
+     * Check if workflow is enabled.
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param classPK
+     * @return true if workflow is enabled or false
+     * @throws PortalException
+     */
+    public boolean isWorkflowEnable(User user, long scorpGroupId, long classPK)
+        throws PortalException {
+        return ${capFirstModel}WorkflowManager.isWorkflowEnable(
+        user, scorpGroupId, classPK);
+    }
+
+    /**
+     * Get Transition names
+     * <p/>
+     * A task includes transitions. This method retrieve a list of transition names
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param classPK
+     * @return Escaped transition names
+     * @throws PortalException
+     */
+    public List<String> getTransitionNames(User user, long scorpGroupId, long classPK)
+        throws PortalException {
+        return ${capFirstModel}WorkflowManager.getTransitionNames(
+        user, scorpGroupId, classPK);
+    }
+
+    /**
+     * Get Transition names
+     * <p/>
+     * A task includes transitions. This method retrieve a list of transition names
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return
+     * @throws PortalException
+     */
+    public List<String> getTransitionNames(User user, long scorpGroupId, String className, long classPK)
+        throws PortalException {
+        return ${capFirstModel}WorkflowManager.getTransitionNames(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get Transition Message
+     *
+     * @param transitionName
+     * @return Escaped Transition name
+     */
+    public String getTransitionName(String transitionName) {
+        return ${capFirstModel}WorkflowManager.getTransitionName(transitionName);
+    }
+
+    /**
+     * Get WorkFlow
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return
+     * @throws WorkflowException
+     */
+    public WorkflowTask getWorkflowTask(User user, long scorpGroupId, String className, long classPK)
+        throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowTask(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get Workflow Instance
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return workflow task instances if those exist
+     * @throws WorkflowException
+     */
+    public WorkflowInstance getWorkflowInstance(User user, long scorpGroupId, String className, long classPK)
+        throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowInstance(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get WorkflowTasks
+     * <p>
+     * Get unasigned tasks available for the current user.
+     *
+     * @param user
+     * @param className
+     * @return
+     * @throws WorkflowException
+     */
+    public List<WorkflowTask> getWorkflowTasks(User user, String className) throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowTasks(
+        user, className);
+    }
+
+    /**
+     * Get WorkflowTasks
+     * <p>
+     * Get unasigned tasks available for the current user.
+     *
+     * @param user
+     * @param className
+     * @param searchByUserRoles
+     * @return
+     * @throws WorkflowException
+     */
+    public List<WorkflowTask> getWorkflowTasks(User user, String className, boolean searchByUserRoles)
+        throws WorkflowException {
+        return ${capFirstModel}WorkflowManager.getWorkflowTasks(
+        user, className,searchByUserRoles);
+    }
+
+    /**
+     * Is Workflow Exist
+     *
+     * @param user
+     * @param scorpGroupId
+     * @param className
+     * @param classPK
+     * @return true if a workflow exists or false
+     */
+    public boolean isWorkflowExist(User user, long scorpGroupId, String className, long classPK) {
+        return ${capFirstModel}WorkflowManager.isWorkflowExist(
+        user, scorpGroupId, className, classPK);
+    }
+
+    /**
+     * Get STATUS_ANY for DB
+     *
+     * This is equivalent of WorkflowConstants.STATUS_ANY
+     * @return  All statuses for Workflow
+     */
+    public int[] getStatusAny() {
+        return STATUS_ANY;
+    }
+
+    private static final int[] STATUS_ANY = {
+        WorkflowConstants.STATUS_APPROVED,
+        WorkflowConstants.STATUS_DENIED,
+        WorkflowConstants.STATUS_DRAFT,
+        WorkflowConstants.STATUS_EXPIRED,
+        WorkflowConstants.STATUS_IN_TRASH,
+        WorkflowConstants.STATUS_INACTIVE,
+        WorkflowConstants.STATUS_INCOMPLETE,
+        WorkflowConstants.STATUS_PENDING,
+        WorkflowConstants.STATUS_SCHEDULED
+    };
 
     private static Pattern _friendlyURLPattern = Pattern.compile("[^a-z0-9_-]");
 

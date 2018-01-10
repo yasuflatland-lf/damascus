@@ -1,6 +1,9 @@
 package com.liferay.damascus.cli;
 
 import com.beust.jcommander.*;
+import com.liferay.damascus.cli.common.DamascusProps;
+import com.liferay.damascus.cli.validators.ProjectNameValidator;
+import com.liferay.damascus.cli.validators.VersionValidator;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.joda.time.LocalDateTime;
@@ -16,13 +19,16 @@ import org.joda.time.LocalDateTime;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20171120";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20180110";// + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();
 
     @ParametersDelegate
     private CreateCommand createCommand = new CreateCommand();
+
+    @ParametersDelegate
+    private TemplateGeneratorCommand templateGeneratorCommand = new TemplateGeneratorCommand();
 
     @ParametersDelegate
     private HelpCommand helpCommand = new HelpCommand();
@@ -55,14 +61,17 @@ public class Damascus {
         try {
             new JCommander(damascus).parse(args);
 
-            if (helpCommand.isRunnable()) {
+            if (helpCommand.isRunnable(damascus)) {
                 helpCommand.run(damascus, args);
 
-            } else if (initCommand.isRunnable()) {
+            } else if (initCommand.isRunnable(damascus)) {
                 initCommand.run(damascus, args);
 
-            } else if (createCommand.isRunnable()) {
+            } else if (createCommand.isRunnable(damascus)) {
                 createCommand.run(damascus, args);
+
+            } else if (templateGeneratorCommand.isRunnable(damascus)) {
+                templateGeneratorCommand.run(damascus, args);
 
             } else {
                 System.out.println("Damascus version : " + VERSION );
@@ -73,4 +82,11 @@ public class Damascus {
             e.printStackTrace();
         }
     }
+
+    @Parameter(names = "-v", description = "Target Liferay Version. (e.g. 70)", validateWith = VersionValidator.class)
+    private String liferayVersion = DamascusProps.VERSION_70;
+
+    @Parameter(names = {"-generate","-g"}, description = "Generate mode. This can be template.", validateWith = VersionValidator.class)
+    private String generate = "";
+
 }

@@ -1,6 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/init.jsp">
-
+<#assign skipTemplate = !generateWeb>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
@@ -35,6 +35,8 @@
 <%@ page import="com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil"%>
 <%@ page import="com.liferay.portal.kernel.dao.search.RowChecker" %>
 <%@ page import="com.liferay.portal.kernel.security.permission.ActionKeys" %>
+<%@ page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %>
+
 <%@ page import="javax.portlet.PortletPreferences" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.ArrayList" %>

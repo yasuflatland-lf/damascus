@@ -1,6 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}PanelApp.java">
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.portlet;
 
 import com.liferay.application.list.BasePanelApp;

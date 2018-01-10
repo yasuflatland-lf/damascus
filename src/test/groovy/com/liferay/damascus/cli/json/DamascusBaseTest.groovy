@@ -1,25 +1,18 @@
 package com.liferay.damascus.cli.json
 
-import com.beust.jcommander.internal.Lists
-import com.beust.jcommander.internal.Maps
 import com.liferay.damascus.cli.CreateCommand
 import com.liferay.damascus.cli.Damascus
 import com.liferay.damascus.cli.common.CommonUtil
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.common.JsonUtil
 import com.liferay.damascus.cli.common.TemplateUtil
-import com.liferay.damascus.cli.common.TemplateUtilTest
 import com.liferay.damascus.cli.test.tools.TestUtils
-import freemarker.core.Configurable
-import freemarker.template.Configuration
-import freemarker.template.TemplateExceptionHandler
+import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
-import org.apache.commons.lang3.StringUtils
 import spock.lang.Specification
 import spock.lang.Unroll
-import groovy.json.*
 
 class DamascusBaseTest extends Specification {
     static def DS = DamascusProps.DS;
@@ -126,7 +119,7 @@ class DamascusBaseTest extends Specification {
         def targetFile1 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*testfile.jsp"), TrueFileFilter.INSTANCE)
 
         then:
-        targetFile1.each{
+        targetFile1.each {
             def m1 = (it.text ==~ /.*FOOFOO.*/)
             def m2 = (it.text ==~ /.*BARBAR.*/)
             assert m1 instanceof Boolean
@@ -140,5 +133,39 @@ class DamascusBaseTest extends Specification {
         where:
         key1   | value1   | key2   | value2
         "key1" | "FOOFOO" | "key2" | "BARBAR"
+    }
+
+    @Unroll("web check test result<#result> web1_state<#web1_state> web2_state<#web2_state> web3_state<#web3_state>")
+    def "web check test"() {
+        when:
+        // Generate custom value base.json
+        //
+        def paramFilePath = workTempDir + DS + DamascusProps.BASE_JSON
+        def projectName = "Todo"
+        def expectedProjectDirName = "todo"
+        def liferayVersion = "70"
+        def packageName = "com.liferay.test.foo.bar"
+
+        // Once clear _cfg to initialize with an actual test target template directory
+        TemplateUtil.getInstance().clear()
+
+        DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath, false)
+
+        dmsb.applications = new ArrayList<>();
+        [web1_state, web2_state, web3_state].each { state ->
+            Application app = new Application()
+            app.web = state
+            dmsb.applications.add(app)
+        }
+
+        then:
+        result == dmsb.isWebExist()
+
+        where:
+        result | web1_state | web2_state | web3_state
+        true   | true       | true       | true
+        false  | false      | false      | false
+        true   | false      | true       | true
+        true   | true       | true       | false
     }
 }

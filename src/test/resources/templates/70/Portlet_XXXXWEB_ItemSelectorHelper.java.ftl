@@ -1,7 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/upload/${capFirstModel}ItemSelectorHelper.java">
-
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.upload;
 
 import com.liferay.item.selector.*;

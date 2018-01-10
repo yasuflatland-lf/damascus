@@ -61,17 +61,20 @@ class TestUtils {
      * @param liferayVersion
      * @param packageName
      * @param output_file_path
+     * @param outputDelete
      * @return
      */
     static public def createBaseJsonMock(projectName,liferayVersion,packageName,output_file_path, outputDelete = true) {
-        Map params = Maps.newHashMap();
+        Map params = Maps.newHashMap()
 
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
-        Map damascus = Maps.newHashMap();
-        damascus.put('damascus', params);
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
+        Map damascus = Maps.newHashMap()
+        damascus.put('damascus', params)
 
         //Output base.json with parameters.
         TemplateUtil.getInstance().process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, output_file_path)
@@ -96,7 +99,7 @@ class TestUtils {
      * @return path with delimiter if it's not ended with it.
      */
     static public def getTempPath() {
-        def retStr = DamascusProps.TMP_PATH;
+        def retStr = System.getProperty("java.io.tmpdir");
         if(!retStr.endsWith(DamascusProps.DS)) {
             retStr = retStr + DamascusProps.DS;
         }

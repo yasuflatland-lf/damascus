@@ -43,7 +43,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -107,7 +109,8 @@ class CreateCommandTest extends Specification {
         createCommand.generateProjectSkeleton(
                 projectName,
                 packageName,
-                workTempDir)
+                workTempDir,
+                web_switch)
 
         //Setup output files
         def outputFile = workTempDir + DS + projectName
@@ -124,18 +127,18 @@ class CreateCommandTest extends Specification {
         true == serviceXml.exists()
 
         //*-web
-        true == fweb.exists()
-        true == fweb.isDirectory()
-        true == srcDir_web.exists()
-        false == gradlewFile.exists()
-        false == gradlewBatFile.exists()
+        web_exist == fweb.exists()
+        web_isdir == fweb.isDirectory()
+        web_src_exist == srcDir_web.exists()
+        web_gradlew_exist == gradlewFile.exists()
+        web_gradlewbat_exist == gradlewBatFile.exists()
 
         where:
-        projectName | packageName
-        "ToDo"      | "com.liferay.test"
-        "Tasks"     | "com.foo"
-        "To-Do"     | "com.bar.foo.packeage.long"
-        "T_Ask"     | "com.foo.bar"
+        projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
+        "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
+        "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
+        "To-Do"     | "com.bar.foo.packeage.long" | true      | true      | true          | false             | false                | true
+        "T_Ask"     | "com.foo.bar"               | true      | true      | true          | false             | false                | true
     }
 
     @Unroll("Create Test from Main ProjectName<#projectName> version <#liferayVersion> Package <#packageName>")
@@ -148,7 +151,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -179,6 +184,11 @@ class CreateCommandTest extends Specification {
 
         def f = new File(workTempDir + DS + expectedProjectDirName)
 
+        //Target path map of a project
+        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
+
+        def checkLoop = getCheckLoop(expectedProjectDirName);
+
         then:
         //*-service / *-api
         true == f.exists()
@@ -190,6 +200,10 @@ class CreateCommandTest extends Specification {
         0 != implFile.size()
         0 != validatorFile.size()
         0 != portletKeysFile.size()
+        checkLoop.each { trow ->
+            def targetFile1 = FileUtils.listFiles(new File(trow.path), new RegexFileFilter(trow.target), TrueFileFilter.INSTANCE)
+            assert trow.amount == targetFile1.size()
+        }
 
         where:
         projectName | liferayVersion | packageName        | expectedProjectDirName
@@ -255,49 +269,6 @@ class CreateCommandTest extends Specification {
 
     }
 
-    @Unroll("Template creation tests")
-    def "Template creation tests"() {
-        setup:
-        Map params = Maps.newHashMap();
-
-        //Set parameters
-        params.put("projectName", projectName)
-        params.put("liferayVersion", liferayVersion)
-        params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
-        Map damascus = Maps.newHashMap();
-        damascus.put('damascus', params);
-
-        //Output base.json with parameters.
-        TemplateUtil.getInstance().process(
-                TemplateUtilTest.class,
-                liferayVersion,
-                DamascusProps.BASE_JSON,
-                damascus,
-                workTempDir + DS + DamascusProps.BASE_JSON)
-
-        //Run damascus -create
-        String[] args = ["-create"]
-        Damascus.main(args)
-
-        when:
-        //Target path map of a project
-        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
-
-        def checkLoop = getCheckLoop(expectedProjectDirName);
-
-        then:
-        checkLoop.each { trow ->
-            def targetFile1 = FileUtils.listFiles(new File(trow.path), new RegexFileFilter(trow.target), TrueFileFilter.INSTANCE)
-            assert trow.amount == targetFile1.size()
-        }
-
-        where:
-        projectName | liferayVersion | packageName        | expectedProjectDirName
-        "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
-    }
-
-
     @Unroll("Run Damascus with a different template")
     def "Run Damascus with a different template"() {
         setup:
@@ -307,7 +278,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -374,7 +347,9 @@ class CreateCommandTest extends Specification {
         params.put("projectName", projectName)
         params.put("liferayVersion", liferayVersion)
         params.put("packageName", packageName)
-        params.put("projectNameLower", StringUtils.lowerCase(projectName))
+        String entityName = projectName.replace("-", "")
+        params.put("entityName", entityName)
+        params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
 
@@ -437,4 +412,32 @@ class CreateCommandTest extends Specification {
         };
     }
 
+    @Unroll("Do not generate web test <#projectName> version <#liferayVersion> Package <#packageName> expectedProjectDirName <#expectedProjectDirName>")
+    def "Do not generate web test"() {
+        when:
+        // Once clear _cfg to initialize with an actual test target template directory
+        TemplateUtil.getInstance().clear()
+
+        def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
+        def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
+        dmsb.applications.get(0).web = false
+        JsonUtil.writer(target_file_path,dmsb)
+
+        //Run damascus -create
+        String[] args = ["-create"]
+        Damascus.main(args)
+
+        def fpath = TestUtils.getPathMap(expectedProjectDirName)
+        def f = new File(fpath["webPath"])
+
+        then:
+        //*-web doesn't exit
+        false == f.exists()
+        false == f.isDirectory()
+
+        where:
+        projectName | liferayVersion | packageName        | expectedProjectDirName
+        "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
+
+    }
 }

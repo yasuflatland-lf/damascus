@@ -1,5 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${entityWebResourcesPath}/edit.jsp">
+<#assign skipTemplate = !generateWeb>
 <%@ include file="/${snakecaseModel}/init.jsp"%>
 <%
 	PortletURL portletURL = PortletURLUtil.clone(renderResponse.createRenderURL(), liferayPortletResponse);
@@ -15,8 +16,7 @@
 </portlet:actionURL>
 
 <div class="container-fluid-1280">
-	<aui:form name="${lowercaseModel}Edit" action="<%=${lowercaseModel}EditURL%>"
-		method="post">
+	<aui:form name="${lowercaseModel}Edit" action="<%=${lowercaseModel}EditURL%>" method="post">
 		<aui:model-context bean="<%=${uncapFirstModel}%>" model="<%=${capFirstModel}.class%>" />
 		<aui:input name="<%=Constants.CMD%>" type="hidden" value="<%=CMD%>" />
         <aui:input type="hidden" name="fromAsset" value="<%=fromAsset%>" />
@@ -131,25 +131,31 @@
 		<%
 			}
 		%>
-</#if>		
-<#if categories >		
-		<aui:input name="categories" type="assetCategories" />
-</#if>		
-<#if tags >	
-		<aui:input name="tags" type="assetTags" />
-</#if>		
+</#if>
+<#if categories || tags >
+		<aui:fieldset-group markupView="lexicon">
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
+			<#if categories >
+				<aui:input name="categories" type="assetCategories" />
+			</#if>
+
+			<#if tags >
+				<aui:input name="tags" type="assetTags" />
+			</#if>
+			</aui:fieldset>
+		</aui:fieldset-group>
+</#if>
 
 <#if relatedAssets >
-		<liferay-ui:panel defaultState="closed" extended="<%=false%>"
-			id="${uncapFirstModel}EntryAssetLinksPanel" persistState="<%=true%>"
-			title="related-assets">
-			<aui:fieldset>
+		<aui:fieldset-group markupView="lexicon">
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
 				<liferay-ui:input-asset-links
-					className="<%=${capFirstModel}.class.getName()%>"
-					classPK="<%=${uncapFirstModel}.getPrimaryKey()%>" />
+					className="<%= ${capFirstModel}.class.getName() %>"
+					classPK="<%= ${uncapFirstModel}.getPrimaryKey() %>"
+				/>
 			</aui:fieldset>
-		</liferay-ui:panel>
-</#if>		
+		</aui:fieldset-group>
+</#if>
 
 		<%
 		//This tag is only necessary in Asset publisher
@@ -234,6 +240,9 @@
 	}
 </aui:script>
 
+
+<#list application.fields as field >
+    <#if field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" >
 <%
 	${capFirstModel}ItemSelectorHelper ${uncapFirstModel}ItemSelectorHelper = (${capFirstModel}ItemSelectorHelper) request
 		.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_ITEM_SELECTOR_HELPER);
@@ -274,3 +283,5 @@
 		);
     }
 </aui:script>
+    </#if>
+</#list>

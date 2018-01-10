@@ -1,6 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}CrudMVCActionCommand.java">
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.exception.PortalException;

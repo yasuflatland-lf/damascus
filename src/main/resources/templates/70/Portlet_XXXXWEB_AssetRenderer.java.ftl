@@ -1,6 +1,7 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRenderer.java">
+<#assign skipTemplate = !generateWeb>
 package ${packageName}.web.asset;
 
 import com.liferay.asset.kernel.model.AssetRendererFactory;

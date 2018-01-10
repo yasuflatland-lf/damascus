@@ -10,7 +10,10 @@
     </appender>
     <!-- categories -->
     <!--
-    <category name="com.liferay.damascus.cli.common">
+    <category name="com.liferay.damascus.cli">
+        <priority value="DEBUG" />
+    </category>
+    <category name="com.liferay.damascus.antlr">
         <priority value="DEBUG" />
     </category>
     -->

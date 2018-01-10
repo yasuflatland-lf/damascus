@@ -1,11 +1,11 @@
-<#assign void><#-- Just to prevent unexpected whitespace or lien breaks -->
+<#assign void><#-- Just to prevent unexpected whitespace or line breaks -->
 
 <#assign packageName = "${damascus.packageName}">
 <#assign packagePath = "${packageName?replace(\".\", \"/\")}">
 <#assign packageSnake = "${packageName?replace(\".\", \"_\")}">
 
-<#assign camelcaseProjectName = "${damascus.projectName}">
-<#assign dashcaseProjectName = "${caseUtil.camelCaseToDashCase(camelcaseProjectName)}"> 
+<#assign camelcaseProjectName = "${damascus.projectName?replace(\"-\", \"\")}">
+<#assign dashcaseProjectName = "${caseUtil.camelCaseToDashCase(camelcaseProjectName)}">
 <#assign projectPath = "${createPath_val}/${dashcaseProjectName}">
 <#assign apiModulePath = "${projectPath}/${dashcaseProjectName}-api">
 <#assign serviceModulePath = "${projectPath}/${dashcaseProjectName}-service">
@@ -24,6 +24,8 @@
 <#assign tags = application.asset?exists && application.asset.tags>
 <#assign relatedAssets = application.asset?exists && application.asset.relatedAssets>
 <#assign generateActivity = application.asset?exists && application.asset.generateActivity>
+<#assign generateWeb = application.web?exists && application.web>
+<#assign anyGeneratedWeb = damascus.isWebExist()>
 
 <#assign entityWebResourcesPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}">
 

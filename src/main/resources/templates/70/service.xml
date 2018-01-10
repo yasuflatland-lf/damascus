@@ -4,9 +4,10 @@
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
 
 <service-builder package-path="${packageName}">
-<namespace>${camelcaseProjectName?upper_case}</namespace>
 
-	 <#list damascus.applications as app >	
+    <namespace>${camelcaseProjectName}</namespace>
+
+    <#list damascus.applications as app>
 
     <!--<entity data-source="sampleDataSource" local-service="true" name="${app.model}" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
     <entity name="${app.model}" local-service="true" remote-service="false" uuid="${app.isSetAsset()?c}" trash-enabled="true">
@@ -56,30 +57,30 @@
         <!-- Workflow related Finders -->
         <finder name="C_S" return-type="Collection">
             <finder-column name="companyId" />
-            <finder-column name="status" />
+            <finder-column arrayable-operator="OR" comparator="=" name="status" />
         </finder>
         <finder name="G_S" return-type="Collection">
             <finder-column name="groupId" />
-            <finder-column name="status" />
+            <finder-column arrayable-operator="OR" comparator="=" name="status" />
         </finder>
         <finder name="C_U_S" return-type="Collection">
             <finder-column name="companyId" />
             <finder-column name="userId" />
-            <finder-column name="status" />
+            <finder-column arrayable-operator="OR" comparator="=" name="status" />
         </finder>
         <finder name="G_U_S" return-type="Collection">
             <finder-column name="groupId" />
             <finder-column name="userId" />
-            <finder-column name="status" />
+            <finder-column arrayable-operator="OR" comparator="=" name="status" />
         </finder>
         <finder name="U_S" return-type="Collection">
             <finder-column name="userId" />
-            <finder-column name="status" />
+            <finder-column arrayable-operator="OR" comparator="=" name="status" />
         </finder>
         <finder name="G_UT_ST" return-type="Collection">
             <finder-column name="groupId" />
             <finder-column name="urlTitle" />
-            <finder-column name="status" />
+            <finder-column arrayable-operator="OR" comparator="=" name="status" />
         </finder>
         </#if>
 
@@ -162,7 +163,7 @@
     </entity>
     </#list>
     <exceptions>
-    	<#list damascus.applications as app >	
+    	<#list damascus.applications as app >
         <exception>NoSuch${app.model}</exception>
         <exception>${app.model?cap_first}ValidateException</exception>
         </#list>

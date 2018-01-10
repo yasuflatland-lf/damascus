@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class HelpCommand implements ICommand {
     @Override
-    public boolean isRunnable() {
+    public boolean isRunnable(Damascus damascus) {
         return help;
     }
 

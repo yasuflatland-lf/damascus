@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.security.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JSON structure POJO : Application
@@ -42,7 +43,16 @@ public class Application {
 
     public List<Relation> relations = null;
 
+    /**
+     * Custom value map
+     */
     public Map<String, String> customValue;
+
+    /**
+     * Replacement keywords map
+     */
+    public Map<String, String> replacements;
+
 
     /**
      * Has an asset configured?
