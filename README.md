@@ -49,7 +49,7 @@ Let's make a Todo app with damascus
 4. Type ```damascus -create``` and damascus will create a scaffolding service and portlet according to the base.json file.
 5. Start up your Liferay server and in the ```Todo``` folder, type ```blade deploy```. Blade will run properly and service and portlet will be deployed.
 
-### How to complie Damascus on your own?
+### How to compile Damascus on your own?
 1. Clone this repository to your local. Please make sure you've already installed Gradle 3.0 or above and jpm.
 2. At the root directory, run ```gradle assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
 3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install the your jar with ```jpm install ./damascus.jar```.
