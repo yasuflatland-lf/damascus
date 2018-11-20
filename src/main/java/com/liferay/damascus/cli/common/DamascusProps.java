@@ -66,7 +66,7 @@ public class DamascusProps {
     /**
      * Liferay Version
      */
-    public static final String VERSION_70 = "70";
+    public static final String VERSION_70 = "7.0";
 
     /**
      * Service Builder command

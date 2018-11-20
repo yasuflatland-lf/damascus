@@ -25,13 +25,13 @@ class ApplicationTest extends Specification {
     static def workTempDir = "";
     static def createCommand;
 
-    def setup() {
+    def setupEx(version) {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
         TemplateUtil.getInstance().clear();
 
         //Create Workspace
-        CommonUtil.createWorkspace(workspaceRootDir, workspaceName);
+        CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);
 
         //Execute all tests under modules
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
@@ -43,6 +43,9 @@ class ApplicationTest extends Specification {
     @Unroll("Applications has hasPrimary Success test var1<#var1> var2<#var2> var3<#var3> ")
     def "Application has hasPrimary Success test"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         def app = new Application()
         app.fields = Lists.newArrayList()
         def field1 = new com.liferay.damascus.cli.json.fields.Long();
@@ -63,15 +66,18 @@ class ApplicationTest extends Specification {
         true == app.hasPrimary()
 
         where:
-        var1  | var2  | var3
-        true  | false | false
-        false | true  | false
-        false | false | true
+        var1  | var2  | var3  | liferayVersion
+        true  | false | false | DamascusProps.VERSION_70
+        false | true  | false | DamascusProps.VERSION_70
+        false | false | true  | DamascusProps.VERSION_70
     }
 
     @Unroll("Applications has hasPrimary Fail test var1<#var1> var2<#var2> var3<#var3>")
     def "Application has hasPrimary Fail test"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         def app = new Application()
         app.fields = Lists.newArrayList()
         def field1 = new com.liferay.damascus.cli.json.fields.Long();
@@ -92,19 +98,21 @@ class ApplicationTest extends Specification {
         thrown(InvalidParameterException)
 
         where:
-        var1  | var2  | var3
-        true  | true  | false
-        false | true  | true
-        true  | true  | true
-        false | false | false
+        var1  | var2  | var3  | liferayVersion
+        true  | true  | false | DamascusProps.VERSION_70
+        false | true  | true  | DamascusProps.VERSION_70
+        true  | true  | true  | DamascusProps.VERSION_70
+        false | false | false | DamascusProps.VERSION_70
     }
 
     @Unroll("Smoke Test for customValue <#key1>:<#value1> | <#key2><#value2>")
     def "Smoke Test for customValue"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         def paramFilePath = workTempDir + DS + "temp.json"
         def projectName = "Todo"
-        def liferayVersion = "70"
         def packageName = "com.liferay.test.foo.bar"
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath)
 
@@ -124,20 +132,22 @@ class ApplicationTest extends Specification {
         FileUtils.deleteQuietly(new File(paramFilePath))
 
         where:
-        key1      | value1     | key2   | value2
-        "keytest" | "valutest" | "key2" | "value2"
+        key1      | value1     | key2   | value2   | liferayVersion
+        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_70
     }
 
     @Unroll("Smoke Test for customValue value convert <#key1>:<#value1> | <#key2><#value2>")
     def "Smoke Test for customValue value convert"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         //
         // Generate custom value base.json
         //
         def paramFilePath = workTempDir + DS + DamascusProps.BASE_JSON
         def projectName = "Todo"
         def expectedProjectDirName = "todo"
-        def liferayVersion = "70"
         def packageName = "com.liferay.test.foo.bar"
 
         // Once clear _cfg to initialize with an actual test target template directory
@@ -156,7 +166,7 @@ class ApplicationTest extends Specification {
         def targetDir = DamascusProps.TEMPLATE_FILE_PATH;
         def testFileName = "Portlet_testfile.jsp.ftl"
         final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
-        tf.dir(DamascusProps.VERSION_70) {
+        tf.dir(liferayVersion) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
                     writer.write '''
@@ -181,7 +191,7 @@ class ApplicationTest extends Specification {
         def targetFile1 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*testfile.jsp"), TrueFileFilter.INSTANCE)
 
         then:
-        targetFile1.each{
+        targetFile1.each {
             def m1 = (it.text ==~ /.*FOOFOO.*/)
             def m2 = (it.text ==~ /.*BARBAR.*/)
             assert m1 instanceof Boolean
@@ -190,11 +200,11 @@ class ApplicationTest extends Specification {
 
         cleanup:
         // Delete test file
-        FileUtils.deleteQuietly(new File(targetDir + DS + DamascusProps.VERSION_70 + DS + testFileName))
+        FileUtils.deleteQuietly(new File(targetDir + DS + liferayVersion + DS + testFileName))
 
         where:
-        key1   | value1   | key2   | value2
-        "key1" | "FOOFOO" | "key2" | "BARBAR"
+        key1   | value1   | key2   | value2   | liferayVersion
+        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_70
     }
 
 }

@@ -68,8 +68,8 @@ class ReplacementGeneratorTest extends Specification {
         }
 
         where:
-        argv1   | argv2  | argv3 | argv4              | argv5 | argv6 | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | "70"  | "to-do"
+        argv1   | argv2  | argv3 | argv4              | argv5 | argv6                    | expectedProjectDirName
+        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | DamascusProps.VERSION_70 | "to-do"
 
     }
 
@@ -110,8 +110,8 @@ class ReplacementGeneratorTest extends Specification {
         }
 
         where:
-        argv1   | argv2  | argv3 | argv4              | argv5 | argv6 | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | "70"  | "to-do"
+        argv1   | argv2  | argv3 | argv4              | argv5 | argv6                    | expectedProjectDirName
+        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | DamascusProps.VERSION_70 | "to-do"
 
     }
 
@@ -137,8 +137,8 @@ class ReplacementGeneratorTest extends Specification {
         }
 
         where:
-        argv1   | argv2  | argv3 | argv4              | argv5 | argv6 | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | "70"  | "to-do"
+        argv1   | argv2  | argv3 | argv4              | argv5 | argv6                    | expectedProjectDirName
+        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | DamascusProps.VERSION_70 | "to-do"
 
     }
 }

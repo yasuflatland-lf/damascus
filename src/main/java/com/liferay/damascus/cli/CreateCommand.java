@@ -66,7 +66,7 @@ public class CreateCommand implements ICommand {
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
 
         PropertyContext propertyContext = PropertyContextFactory.createPropertyContext();
-        String          author          = propertyContext.getString(DamascusProps.PROP_AUTHOR);
+        String author = propertyContext.getString(DamascusProps.PROP_AUTHOR);
         params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), author);
 
         //Parse template and output
@@ -83,16 +83,18 @@ public class CreateCommand implements ICommand {
      * <p>
      * Generating service and web project skeleton at once.
      *
+     * @param version        Liferay Version
      * @param projectName    Project Name
      * @param packageName    Package Name
      * @param destinationDir Destination dir where the project is created.
      * @param webEnable      when it's true, *-web will be created.
      * @throws Exception
      */
-    private void generateProjectSkeleton(String projectName, String packageName, String destinationDir, boolean webEnable) throws Exception {
+    private void generateProjectSkeleton(String version, String projectName, String packageName, String destinationDir, boolean webEnable) throws Exception {
 
         //Generate Service (*-service, *-api) skelton
         CommonUtil.createServiceBuilderProject(
+            version,
             projectName,
             packageName,
             destinationDir
@@ -101,6 +103,7 @@ public class CreateCommand implements ICommand {
         if (true == webEnable) {
             //Generate Web project (*-web)
             CommonUtil.createMVCPortletProject(
+                version,
                 projectName,
                 packageName,
                 destinationDir + DamascusProps.DS + projectName
@@ -160,7 +163,7 @@ public class CreateCommand implements ICommand {
     private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
 
         //Generated Project files are nested. Move into current directory
-        File srcDir  = new File("." + DamascusProps.DS + projectName);
+        File srcDir = new File("." + DamascusProps.DS + projectName);
         File distDir = new File("." + DamascusProps.DS);
 
         if (!srcDir.exists() || !srcDir.isDirectory()) {
@@ -243,6 +246,7 @@ public class CreateCommand implements ICommand {
 
             // Generate skeletons of the project
             generateProjectSkeleton(
+                dmsb.getLiferayVersion(),
                 dashCaseProjectName,
                 dmsb.getPackageName(),
                 CREATE_TARGET_PATH,

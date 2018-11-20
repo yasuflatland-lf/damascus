@@ -10,7 +10,7 @@ import spock.lang.Unroll
 
 class JsonUtilTest extends Specification {
     static def DS = DamascusProps.DS;
-	static def SEP = "/";
+    static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
 
     def template_path = DamascusProps.TEMPLATE_FOLDER_NAME;
@@ -95,14 +95,14 @@ class JsonUtilTest extends Specification {
         def out_file_path = workTempDir + DS + "output.server.xml"
         def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
         dmsb.applications.get(0).asset = null
-        JsonUtil.writer(out_file_path,dmsb)
+        JsonUtil.writer(out_file_path, dmsb)
         def serializedObj = JsonUtil.getObject(out_file_path, DamascusBase.class)
 
         then:
         thrown(JsonMappingException.class)
 
         where:
-        projectName | liferayVersion | packageName
-        "Todo"      | "70"           | "com.liferay.test.foo.bar"
+        projectName | liferayVersion           | packageName
+        "Todo"      | DamascusProps.VERSION_70 | "com.liferay.test.foo.bar"
     }
 }

@@ -1,8 +1,8 @@
 package com.liferay.damascus.antlr.generator
 
+import com.liferay.damascus.cli.common.CommonUtil
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.test.tools.AntlrTestBase
-import com.liferay.damascus.cli.common.CommonUtil
 import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import spock.lang.Unroll
@@ -422,7 +422,7 @@ public class JarUtil {
 <%--
 <dmsc:root id="hoge" 
 templateFileName="Portlet_XXXXWEB_Test.java.ftl"
-version="70"
+version="7.0"
 templateDirPath="/hoge/fuga/aaa" />
 --%>
 <%
@@ -451,7 +451,7 @@ TEST
         true == filePath.exists()
         "hoge" == rootAttr.get("id")
         "Portlet_XXXXWEB_Test.java.ftl" == rootAttr.get("templateFileName")
-        "70" == rootAttr.get("version")
+        DamascusProps.VERSION_70 == rootAttr.get("version")
         "/hoge/fuga/aaa" == rootAttr.get("templateDirPath")
     }
 
