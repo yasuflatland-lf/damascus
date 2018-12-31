@@ -87,6 +87,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName
+        "ToDo"      | DamascusProps.VERSION_71 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_70 | "com.liferay.test"
     }
 
@@ -143,6 +144,7 @@ class CreateCommandTest extends Specification {
 
         where:
         liferayVersion           | projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
+        DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
         DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
         DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_70 | "To-Do"     | "com.bar.foo.packeage.long" | true      | true      | true          | false             | false                | true
@@ -218,6 +220,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
     }
@@ -281,6 +284,7 @@ class CreateCommandTest extends Specification {
 
     }
 
+    //TODO:This test should be executed when a bundle generation with arbitrary templates is implemented.
     @Ignore("Liferay Version and Template need to be separated.")
     @Unroll("Run Damascus with a different template")
     def "Run Damascus with a different template"() {
@@ -303,12 +307,12 @@ class CreateCommandTest extends Specification {
         //Output base.json with parameters and create the default templates
         TemplateUtil.getInstance().process(
                 TemplateUtilTest.class,
-                DamascusProps.VERSION_70,
+                liferayVersion,
                 DamascusProps.BASE_JSON,
                 damascus,
                 workTempDir + DS + DamascusProps.BASE_JSON)
 
-        File org = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + DamascusProps.VERSION_70);
+        File org = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
         File dist = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
         FileUtils.copyDirectory(org, dist)
 
@@ -415,6 +419,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | baseFilename                 | prohibitedTerms            | prohibitedInServiceImpl | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities'] | true                    | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities'] | true                    | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories'] | false                   | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_discussion_false.json" | ['Comments', 'discussion'] | true                    | "sample-sb"
@@ -459,6 +464,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
     }

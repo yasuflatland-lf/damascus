@@ -64,6 +64,7 @@ class DamascusBaseTest extends Specification {
 
         where:
         key1      | value1     | key2   | value2   | liferayVersion
+        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_71
         "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_70
 
     }
@@ -136,6 +137,7 @@ class DamascusBaseTest extends Specification {
 
         where:
         key1   | value1   | key2   | value2   | liferayVersion
+        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_71
         "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_70
     }
 
@@ -169,6 +171,10 @@ class DamascusBaseTest extends Specification {
 
         where:
         result | web1_state | web2_state | web3_state | liferayVersion
+        true   | true       | true       | true       | DamascusProps.VERSION_71
+        false  | false      | false      | false      | DamascusProps.VERSION_71
+        true   | false      | true       | true       | DamascusProps.VERSION_71
+        true   | true       | true       | false      | DamascusProps.VERSION_71
         true   | true       | true       | true       | DamascusProps.VERSION_70
         false  | false      | false      | false      | DamascusProps.VERSION_70
         true   | false      | true       | true       | DamascusProps.VERSION_70

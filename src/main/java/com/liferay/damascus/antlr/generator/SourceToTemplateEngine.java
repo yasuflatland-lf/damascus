@@ -3,10 +3,9 @@ package com.liferay.damascus.antlr.generator;
 import com.liferay.damascus.antlr.common.TemplateGenerateValidator;
 import com.liferay.damascus.cli.common.CommonUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NonNull;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 

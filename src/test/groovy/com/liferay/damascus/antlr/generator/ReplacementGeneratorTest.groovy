@@ -104,7 +104,6 @@ class ReplacementGeneratorTest extends Specification {
         f.exists()
         !result.isEmpty()
 
-        def cnt = 0
         checkpattern.each { v ->
             assert !result.contains(v)
         }

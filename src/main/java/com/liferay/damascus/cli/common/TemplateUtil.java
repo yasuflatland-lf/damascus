@@ -127,7 +127,7 @@ public class TemplateUtil {
      * <p>
      * If a path outside of jar is configured, use the path instead of the resource path pointing inside of jar
      *
-     * @param version Liferay version (e.g. 70)
+     * @param version Liferay version (e.g. 7.0)
      * @return File object pointing the resource location
      * @throws IOException            most likely when it can't access to the resource folder for some reasons.
      * @throws ConfigurationException settings.properties file manipulation error
@@ -138,7 +138,7 @@ public class TemplateUtil {
 
         //Fetch root path for resources from .damascus first.
         //Damascus uses resource in this jar if no configuration is found in .damascus.
-        String rootPath            = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        String rootPath = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
         String defaultTemplatePath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
 
         log.debug("getResourceRootPath : rootPath            : " + rootPath);
@@ -254,8 +254,8 @@ public class TemplateUtil {
         /* Get the template (uses cache internally) */
         Template template = cfg.getTemplate(templateFileName);
 
-        StringWriter sw  = new StringWriter();
-        Environment  env = template.createProcessingEnvironment(params, sw);
+        StringWriter sw = new StringWriter();
+        Environment env = template.createProcessingEnvironment(params, sw);
 
         // Process a template
         env.process();
@@ -302,7 +302,7 @@ public class TemplateUtil {
      * @return relative path to the service.xml from the root directory
      */
     public String getServiceXmlPath(String rootPath, String dashcaseProjectName) {
-        String DS        = DamascusProps.DS;
+        String DS = DamascusProps.DS;
         String returnStr = rootPath;
 
         if (rootPath.endsWith(DamascusProps.DS)) {
@@ -361,8 +361,8 @@ public class TemplateUtil {
      * @return template file lists
      */
     public List<String> getTemplateFileLists(String templateRootPath) {
-        File         jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-        List<String> files   = new ArrayList<>();
+        File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        List<String> files = new ArrayList<>();
 
         if (!jarFile.isFile()) {
             return files;
@@ -430,8 +430,8 @@ public class TemplateUtil {
     public boolean isStripTags() {
         try {
             PropertyContext propertyContext = getPropertyContext();
-            String          stripTags       = propertyContext.getString(DamascusProps.PROP_DAMASCUS_OUTPUT_TEMPLATE_STRIP_TAGS);
-            Boolean         isStripTags     = Boolean.valueOf(stripTags);
+            String stripTags = propertyContext.getString(DamascusProps.PROP_DAMASCUS_OUTPUT_TEMPLATE_STRIP_TAGS);
+            Boolean isStripTags = Boolean.valueOf(stripTags);
 
             return isStripTags;
 
@@ -514,13 +514,13 @@ public class TemplateUtil {
             log.debug("isInsideJar     <" + String.valueOf(isInsideJar(clazz)) + ">");
         }
 
-        File            distFile        = new File(distinationRoot);
+        File distFile = new File(distinationRoot);
         PropertyContext propertyContext = getPropertyContext();
-        String          rootPath        = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
+        String rootPath = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
 
         boolean insideJar = isInsideJar(clazz);
 
-        String buildNumber      = getBuildNumber(clazz, insideJar);
+        String buildNumber = getBuildNumber(clazz, insideJar);
         String cacheBuildNumber = propertyContext.getString(DamascusProps.PROP_BUILD_NUMBER);
 
         if (distFile.exists() &&

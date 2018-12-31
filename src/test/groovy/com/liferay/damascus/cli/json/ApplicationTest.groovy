@@ -67,9 +67,9 @@ class ApplicationTest extends Specification {
 
         where:
         var1  | var2  | var3  | liferayVersion
-        true  | false | false | DamascusProps.VERSION_70
-        false | true  | false | DamascusProps.VERSION_70
-        false | false | true  | DamascusProps.VERSION_70
+        true  | false | false | DamascusProps.VERSION_71
+        false | true  | false | DamascusProps.VERSION_71
+        false | false | true  | DamascusProps.VERSION_71
     }
 
     @Unroll("Applications has hasPrimary Fail test var1<#var1> var2<#var2> var3<#var3>")
@@ -99,10 +99,10 @@ class ApplicationTest extends Specification {
 
         where:
         var1  | var2  | var3  | liferayVersion
-        true  | true  | false | DamascusProps.VERSION_70
-        false | true  | true  | DamascusProps.VERSION_70
-        true  | true  | true  | DamascusProps.VERSION_70
-        false | false | false | DamascusProps.VERSION_70
+        true  | true  | false | DamascusProps.VERSION_71
+        false | true  | true  | DamascusProps.VERSION_71
+        true  | true  | true  | DamascusProps.VERSION_71
+        false | false | false | DamascusProps.VERSION_71
     }
 
     @Unroll("Smoke Test for customValue <#key1>:<#value1> | <#key2><#value2>")
@@ -133,7 +133,7 @@ class ApplicationTest extends Specification {
 
         where:
         key1      | value1     | key2   | value2   | liferayVersion
-        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_70
+        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_71
     }
 
     @Unroll("Smoke Test for customValue value convert <#key1>:<#value1> | <#key2><#value2>")
@@ -204,7 +204,7 @@ class ApplicationTest extends Specification {
 
         where:
         key1   | value1   | key2   | value2   | liferayVersion
-        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_70
+        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_71
     }
 
 }

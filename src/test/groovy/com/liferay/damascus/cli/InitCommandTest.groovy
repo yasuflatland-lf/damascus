@@ -73,27 +73,34 @@ class InitCommandTest extends Specification {
         null != initCommand.getPackageName()
 
         where:
-        argv1 | argv2
-        "-p"  | "com.liferay"
-        "-p"  | "com.liferay.damascus.cli"
-        "-p"  | "com.a"
-        "-p"  | "com"
+        argv1 | argv2                      | argv3 | argv4
+        "-p"  | "com.liferay"              | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "com.liferay.damascus.cli" | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "com.a"                    | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "com"                      | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "com.liferay"              | "-v"  | DamascusProps.VERSION_70
+        "-p"  | "com.liferay.damascus.cli" | "-v"  | DamascusProps.VERSION_70
+        "-p"  | "com.a"                    | "-v"  | DamascusProps.VERSION_70
+        "-p"  | "com"                      | "-v"  | DamascusProps.VERSION_70
     }
 
     @Unroll("Smoke test for -init Error Pattern(#argv1 #argv2)")
     def "Package name test for Error Pattern"() {
         when:
-        String[] args = [argv1, argv2]
+        String[] args = [argv1, argv2, argv3, argv4]
         new JCommander(initCommand, args)
 
         then:
         thrown(ParameterException.class)
 
         where:
-        argv1 | argv2
-        "-p"  | "999.aaa"
-        "-p"  | "9.aaa"
-        "-p"  | "aaa.9aa"
+        argv1 | argv2     | argv3 | argv4
+        "-p"  | "999.aaa" | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "9.aaa"   | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "aaa.9aa" | "-v"  | DamascusProps.VERSION_71
+        "-p"  | "999.aaa" | "-v"  | DamascusProps.VERSION_70
+        "-p"  | "9.aaa"   | "-v"  | DamascusProps.VERSION_70
+        "-p"  | "aaa.9aa" | "-v"  | DamascusProps.VERSION_70
     }
 
     @Unroll("Init run from main method test")
@@ -112,6 +119,7 @@ class InitCommandTest extends Specification {
 
         where:
         argv1   | argv2  | argv3 | argv4         | argv5 | argv6                    | expectedProjectDirName
+        "-init" | "ToDo" | "-p"  | "com.liferay" | "-v"  | DamascusProps.VERSION_71 | "to-do"
         "-init" | "ToDo" | "-p"  | "com.liferay" | "-v"  | DamascusProps.VERSION_70 | "to-do"
     }
 }
