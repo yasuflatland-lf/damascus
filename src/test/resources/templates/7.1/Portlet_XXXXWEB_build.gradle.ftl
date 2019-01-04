@@ -35,24 +35,23 @@ task getHomeDir << {
 }
 
 dependencies {
-    compile 'biz.aQute.bnd:biz.aQute.bndlib:3.1.0'
     compile 'com.google.errorprone:error_prone_annotations:2.0.19'
     compile 'commons-digester:commons-digester:1.8.1'
     compile "com.google.guava:guava:21.0"
     compile "commons-io:commons-io:2.5"
     compile "commons-validator:commons-validator:1.6"
     compile "org.apache.commons:commons-lang3:3.5"
-    compile group: "com.liferay", name: "com.liferay.application.list.api", version: "2.0.0"
-    compile group: "com.liferay", name: "com.liferay.frontend.taglib", version: "2.0.0"
+	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+	compile group: "com.liferay", name: "com.liferay.portal.spring.extender.api", version: "3.0.0"
+    compile group: "com.liferay", name: "com.liferay.application.list.api", version: "3.0.0"
+    compile group: "com.liferay", name: "com.liferay.frontend.taglib", version: "3.0.0"
     compile group: "com.liferay", name: "com.liferay.item.selector.api", version: "3.0.0"
     compile group: "com.liferay", name: "com.liferay.item.selector.criteria.api", version: "3.0.0"
     compile group: "com.liferay", name: "com.liferay.item.selector.taglib", version: "1.0.0"
-    compile group: "com.liferay", name: "com.liferay.frontend.taglib", version: "2.0.0"
-    compile group: "com.liferay", name: "com.liferay.trash.taglib", version: "2.0.0"
-    compile group: "com.liferay", name: "com.liferay.portal.spring.extender", version: "2.0.13"
+    compile group: "com.liferay", name: "com.liferay.trash.taglib", version: "3.0.0"
     compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "3.0.0"
-    compile group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "2.15.0"
-    compile group: "com.liferay.portal", name: "com.liferay.util.taglib", version: "2.8.0"
+    compile group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "3.0.0"
+    compile group: "com.liferay.portal", name: "com.liferay.util.taglib", version: "3.0.0"
     compile group: "javax.portlet", name: "portlet-api", version: "2.0"
     compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
     compile group: "jstl", name: "jstl", version: "1.2"

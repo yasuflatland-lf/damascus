@@ -2,16 +2,12 @@
 <#assign createPath = "${createPath_val}/${dashcaseProjectName}/build.gradle">
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins", version: "3.1.3"
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.defaults", version: "latest.release"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins", version: "3.13.26"
 	}
 
 	repositories {
-		mavenLocal()
-
 		maven {
-			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
-
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
 	}
 }
@@ -20,10 +16,8 @@ subprojects {
 	apply plugin: "com.liferay.plugin"
 
 	repositories {
-		mavenLocal()
-
 		maven {
-			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
 	}
 }
