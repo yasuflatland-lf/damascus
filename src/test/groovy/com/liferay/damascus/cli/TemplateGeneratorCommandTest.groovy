@@ -33,7 +33,7 @@ class TemplateGeneratorCommandTest extends AntlrTestBase {
         String[] initArgs = ["-init", "SampleSB", "-p", "com.liferay.test"]
         new JCommander(initCommand, initArgs)
         def dms = Spy(Damascus)
-        dms.setLiferayVersion("70")
+        dms.setLiferayVersion(DamascusProps.VERSION_70)
         initCommand.run(dms, initArgs)
 
         def SRC_PROJECT_DIR = SRC_DIR + DS + 'sample-sb' + DS
@@ -105,7 +105,7 @@ class TemplateGeneratorCommandTest extends AntlrTestBase {
         String[] initArgs = ["-init", "SampleSB", "-p", "com.liferay.test"]
         new JCommander(initCommand, initArgs)
         def dms = Spy(Damascus)
-        dms.setLiferayVersion("70")
+        dms.setLiferayVersion(DamascusProps.VERSION_70)
         initCommand.run(dms, initArgs)
 
         def SRC_PROJECT_DIR = SRC_DIR + DS + 'sample-sb' + DS

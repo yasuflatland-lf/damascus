@@ -21,6 +21,7 @@ The list of what Damascus automatically generate is as follows
 * Multiple service builder portlets at once
 ### Required enviroment
 * Liferay 7.0 CE GA4 and Liferay DXP SP3 or higher versions.
+* Liferay 7.1 CE GA1 and higher.
 * Java 1.8 or above
 * gradle 3.0 or above need to be installed
 * jpm needs to be installed. (instruction to install is as follows)
@@ -33,7 +34,7 @@ curl https://raw.githubusercontent.com/yasuflatland-lf/damascus/master/installer
 ```
 
 **Windows**
-1. Download jpm (https://raw.githubusercontent.com/jpm4j/jpm4j.installers/master/dist/jpm-setup.exe) and install.
+1. [Download jpm](https://raw.githubusercontent.com/jpm4j/jpm4j.installers/master/dist/jpm-setup.exe) and install.
 2. Install damascus.jar with jpm as follows. ```jpm install https://github.com/yasuflatland-lf/damascus/raw/master/latest/damascus.jar```
 
 ### How to update
@@ -43,13 +44,13 @@ curl https://raw.githubusercontent.com/yasuflatland-lf/damascus/master/installer
 
 ### Getting started
 Let's make a Todo app with damascus
-1. Create a Liferay workspace with Blade cli or Liferay IDE / Liferay Developer Studio. For more details, please see https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/blade-cli
-2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus -init Todo -p com.liferay.sb.test -v 70```
-3. Navigate to ```todo``` folder. You'll see ```base.json``` file is created. For detailed configuration, please see https://github.com/yasuflatland-lf/damascus/wiki Just for demonstration now, we'll create a scaffolding as it is.
+1. Create a Liferay workspace with Blade cli or Liferay IDE / Liferay Developer Studio. For more details, please see [this document](https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-1/blade-cli).
+2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus -init Todo -p com.liferay.sb.test -v 7.1```
+3. Navigate to ```todo``` folder. You'll see ```base.json``` file is created. For detailed configuration, please see [the official documentation](https://damascusweb.wedeploy.io). Just for demonstration now, we'll create a scaffolding as it is.
 4. Type ```damascus -create``` and damascus will create a scaffolding service and portlet according to the base.json file.
 5. Start up your Liferay server and in the ```Todo``` folder, type ```blade deploy```. Blade will run properly and service and portlet will be deployed.
 
-### How to complie Damascus on your own?
+### How to compile Damascus on your own?
 1. Clone this repository to your local. Please make sure you've already installed Gradle 3.0 or above and jpm.
 2. At the root directory, run ```gradle assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
 3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install the your jar with ```jpm install ./damascus.jar```.

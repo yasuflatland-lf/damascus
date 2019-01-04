@@ -2,6 +2,7 @@ package com.liferay.damascus.cli.common;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -80,6 +81,8 @@ public class JsonUtil {
 
         //just ignore unknown properties in json
         //mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.enable(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES);
+
         mapper.registerModule(new JodaModule());
 
         if (Validator.isNull(jsonString)) {

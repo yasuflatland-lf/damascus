@@ -13,13 +13,5 @@ build_script:
 test_script:
   - gradlew.bat test --info --no-daemon
 
-branches:
-  only:
-    - master
-    - development
-
-cache:
-  - C:\Users\appveyor\.gradle
-
 matrix:
   fast_finish: true

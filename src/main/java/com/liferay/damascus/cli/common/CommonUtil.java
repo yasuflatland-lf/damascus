@@ -156,12 +156,14 @@ public class CommonUtil {
     /**
      * Create workspace
      *
+     * @param version        Liferay Version
      * @param destinationDir Directory path to create a workspace
      * @param name           workspace name to create
      * @throws Exception
      */
-    static public void createWorkspace(String destinationDir, String name) throws Exception {
+    static public void createWorkspace(String version, String destinationDir, String name) throws Exception {
         ProjectTemplatesBuilder.builder()
+            .liferayVersion(version)
             .destinationDir(new File(destinationDir))
             .name(name)
             .template(DamascusProps.WORKSPACE_CMD)
@@ -171,13 +173,15 @@ public class CommonUtil {
     /**
      * Create Service Builder Project base
      *
+     * @param version        Liferay Version (7.0,7.1, etc.)
      * @param name           Project Name
      * @param packageName    Package Name
      * @param destinationDir Destination dir where the project is created.
      * @throws Exception
      */
-    static public void createServiceBuilderProject(String name, String packageName, String destinationDir) throws Exception {
+    static public void createServiceBuilderProject(String version, String name, String packageName, String destinationDir) throws Exception {
         ProjectTemplatesBuilder.builder()
+            .liferayVersion(version)
             .destinationDir(new File(destinationDir))
             .name(name)
             .packageName(packageName)
@@ -188,12 +192,13 @@ public class CommonUtil {
     /**
      * Create MVC Portlet project
      *
+     * @param version        Liferay Version
      * @param name           Project Name. If it doesn't have "-web" as suffix, it's automatically added.
      * @param packageName    Package Name
      * @param destinationDir Destination dir where the project is created.
      * @throws Exception
      */
-    static public void createMVCPortletProject(String name, String packageName, String destinationDir) throws Exception {
+    static public void createMVCPortletProject(String version, String name, String packageName, String destinationDir) throws Exception {
 
         // According to DXP code standard, add "-web" as a suffix if the project name doesn't have "-web" at the end
         String projectName = name;
@@ -207,6 +212,7 @@ public class CommonUtil {
         }
 
         ProjectTemplatesBuilder.builder()
+            .liferayVersion(version)
             .destinationDir(new File(destinationDir))
             .name(projectName)
             .packageName(packageNameForWeb)
@@ -314,9 +320,9 @@ public class CommonUtil {
      * @throws IOException
      */
     static public List<String> invertPathToList(String path) throws IOException {
-        File         pathTmp   = getDirFromPath(new File(path));
-        String       separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
-        List<String> retList   = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
+        File pathTmp = getDirFromPath(new File(path));
+        String separator = (isWindows()) ? "\\\\" : DamascusProps.DS;
+        List<String> retList = Arrays.asList(pathTmp.getAbsolutePath().toString().split(separator));
         return Lists.reverse(retList);
     }
 
