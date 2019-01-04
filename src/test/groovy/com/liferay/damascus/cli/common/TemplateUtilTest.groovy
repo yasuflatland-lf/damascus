@@ -77,8 +77,8 @@ class TemplateUtilTest extends Specification {
         true == retrivedObj.applications.get(0).fields.get(0).getClass().equals(com.liferay.damascus.cli.json.fields.Long.class)
 
         where:
-        projectName | liferayVersion | packageName
-        "ToDo"      | "70"           | "com.liferay.test"
+        projectName | liferayVersion           | packageName
+        "ToDo"      | DamascusProps.VERSION_70 | "com.liferay.test"
     }
 
     @Unroll("process test fetching output file path from a template pj<#projectName> version<#liferayVersion> package<#packageName> filepath<#filepath>")
@@ -108,9 +108,9 @@ class TemplateUtilTest extends Specification {
         false == f.isDirectory()
 
         where:
-        projectName | liferayVersion | packageName                | filepath
-        "Todo"      | "70"           | "com.liferay.test.foo.bar" | "foo" + DS + "bar"
-        "Todo"      | "70"           | "com.liferay.test.foo.bar" | ""
+        projectName | liferayVersion           | packageName                | filepath
+        "Todo"      | DamascusProps.VERSION_70 | "com.liferay.test.foo.bar" | "foo" + DS + "bar"
+        "Todo"      | DamascusProps.VERSION_70 | "com.liferay.test.foo.bar" | ""
     }
 
     @Unroll("Search template files Success Test file1<#file1> file2<#file2> file3<#file3> file4<#file4>")

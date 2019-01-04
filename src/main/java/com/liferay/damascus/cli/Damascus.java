@@ -11,7 +11,7 @@ import org.joda.time.LocalDateTime;
 /**
  * Damascus Tool
  * <p>
- * Damascus is an extension of blade tool (
+ * Damascus is an extension of blade tool
  *
  * @author Yasuyuki Takeo
  */
@@ -19,7 +19,7 @@ import org.joda.time.LocalDateTime;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20180110";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20190104";// + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();
@@ -83,8 +83,8 @@ public class Damascus {
         }
     }
 
-    @Parameter(names = "-v", description = "Target Liferay Version. (e.g. 70)", validateWith = VersionValidator.class)
-    private String liferayVersion = DamascusProps.VERSION_70;
+    @Parameter(names = "-v", description = "Target Liferay Version. (e.g. 7.1)", validateWith = VersionValidator.class)
+    private String liferayVersion = DamascusProps.VERSION_71;
 
     @Parameter(names = {"-generate","-g"}, description = "Generate mode. This can be template.", validateWith = VersionValidator.class)
     private String generate = "";

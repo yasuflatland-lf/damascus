@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
 import org.apache.commons.lang3.StringUtils
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -18,13 +19,13 @@ class CreateCommandTest extends Specification {
     static def workTempDir = "";
     static def createCommand;
 
-    def setup() {
+    def setupEx(version) {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
         TemplateUtil.getInstance().clear();
 
         //Create Workspace
-        CommonUtil.createWorkspace(workspaceRootDir, workspaceName);
+        CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);
 
         //Execute all tests under modules
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
@@ -37,6 +38,9 @@ class CreateCommandTest extends Specification {
     def "Smoke test for service.xml generate"() {
 
         when:
+        //Initialize
+        setupEx(liferayVersion);
+
         Map params = Maps.newHashMap();
 
         //Set parameters
@@ -82,14 +86,18 @@ class CreateCommandTest extends Specification {
         false == ret1.equals("")
 
         where:
-        projectName | liferayVersion | packageName
-        "ToDo"      | "70"           | "com.liferay.test"
+        projectName | liferayVersion           | packageName
+        "ToDo"      | DamascusProps.VERSION_71 | "com.liferay.test"
+        "ToDo"      | DamascusProps.VERSION_70 | "com.liferay.test"
     }
 
     @Unroll("Smoke test for generating Project Project<#projectName> Package<#packageName>")
     def "Smoke test for generating Project"() {
 
         when:
+        //Initialize
+        setupEx(liferayVersion);
+
         def projectNameCommon = workTempDir + DS + projectName + DS + projectName;
         def service_path = new File(projectNameCommon + "-service");
         def api_path = new File(projectNameCommon + "-api");
@@ -107,6 +115,7 @@ class CreateCommandTest extends Specification {
 
         //Generate project skeleton
         createCommand.generateProjectSkeleton(
+                liferayVersion,
                 projectName,
                 packageName,
                 workTempDir,
@@ -134,16 +143,20 @@ class CreateCommandTest extends Specification {
         web_gradlewbat_exist == gradlewBatFile.exists()
 
         where:
-        projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
-        "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
-        "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
-        "To-Do"     | "com.bar.foo.packeage.long" | true      | true      | true          | false             | false                | true
-        "T_Ask"     | "com.foo.bar"               | true      | true      | true          | false             | false                | true
+        liferayVersion           | projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
+        DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
+        DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
+        DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
+        DamascusProps.VERSION_70 | "To-Do"     | "com.bar.foo.packeage.long" | true      | true      | true          | false             | false                | true
+        DamascusProps.VERSION_70 | "T_Ask"     | "com.foo.bar"               | true      | true      | true          | false             | false                | true
     }
 
     @Unroll("Create Test from Main ProjectName<#projectName> version <#liferayVersion> Package <#packageName>")
     def "Create Test from Main"() {
         when:
+        //Initialize
+        setupEx(liferayVersion);
+
         Map params = Maps.newHashMap();
         def workTempDirAPI = workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api";
 
@@ -206,12 +219,14 @@ class CreateCommandTest extends Specification {
         }
 
         where:
-        projectName | liferayVersion | packageName        | expectedProjectDirName
-        "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
+        projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
     }
 
     def getCheckLoop(expectedProjectDirName) {
+
         def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
         return [
@@ -269,9 +284,14 @@ class CreateCommandTest extends Specification {
 
     }
 
+    //TODO:This test should be executed when a bundle generation with arbitrary templates is implemented.
+    @Ignore("Liferay Version and Template need to be separated.")
     @Unroll("Run Damascus with a different template")
     def "Run Damascus with a different template"() {
         setup:
+        //Initialize
+        setupEx(liferayVersion);
+
         Map params = Maps.newHashMap();
 
         //Set parameters
@@ -287,12 +307,12 @@ class CreateCommandTest extends Specification {
         //Output base.json with parameters and create the default templates
         TemplateUtil.getInstance().process(
                 TemplateUtilTest.class,
-                DamascusProps.VERSION_70,
+                liferayVersion,
                 DamascusProps.BASE_JSON,
                 damascus,
                 workTempDir + DS + DamascusProps.BASE_JSON)
 
-        File org = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + DamascusProps.VERSION_70);
+        File org = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
         File dist = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
         FileUtils.copyDirectory(org, dist)
 
@@ -341,6 +361,9 @@ class CreateCommandTest extends Specification {
     @Unroll("Template creation tests with asset flags variations <#baseFilename> <#prohibitedTerms> <#prohibitedInServiceImpl>")
     def "Template creation tests with asset flags variations"() {
         setup:
+        //Initialize
+        setupEx(liferayVersion);
+
         Map params = Maps.newHashMap();
 
         //Set parameters
@@ -395,13 +418,14 @@ class CreateCommandTest extends Specification {
         noFileContainsAnyTerm(prohibitedTermsTargetFiles, prohibitedTerms)
 
         where:
-        projectName | liferayVersion | packageName        | baseFilename                 | prohibitedTerms            | prohibitedInServiceImpl | expectedProjectDirName
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities'] | true                    | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories'] | false                   | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_discussion_false.json" | ['Comments', 'discussion'] | true                    | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                | true                    | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_tags_false.json"       | ['tags']                   | false                   | "sample-sb"
-        "SampleSB"  | "70"           | "com.liferay.test" | "base_related_false.json"    | ['asset-links']            | false                   | "sample-sb"
+        projectName | liferayVersion           | packageName        | baseFilename                 | prohibitedTerms            | prohibitedInServiceImpl | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities'] | true                    | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_activity_false.json"   | ['activity', 'activities'] | true                    | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_categories_false.json" | ['category', 'categories'] | false                   | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_discussion_false.json" | ['Comments', 'discussion'] | true                    | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_ratings_false.json"    | ['ratings']                | true                    | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_tags_false.json"       | ['tags']                   | false                   | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "base_related_false.json"    | ['asset-links']            | false                   | "sample-sb"
     }
 
     void noFileContainsAnyTerm(files, terms) {
@@ -415,13 +439,16 @@ class CreateCommandTest extends Specification {
     @Unroll("Do not generate web test <#projectName> version <#liferayVersion> Package <#packageName> expectedProjectDirName <#expectedProjectDirName>")
     def "Do not generate web test"() {
         when:
+        //Initialize
+        setupEx(liferayVersion);
+
         // Once clear _cfg to initialize with an actual test target template directory
         TemplateUtil.getInstance().clear()
 
         def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
         def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
         dmsb.applications.get(0).web = false
-        JsonUtil.writer(target_file_path,dmsb)
+        JsonUtil.writer(target_file_path, dmsb)
 
         //Run damascus -create
         String[] args = ["-create"]
@@ -436,8 +463,9 @@ class CreateCommandTest extends Specification {
         false == f.isDirectory()
 
         where:
-        projectName | liferayVersion | packageName        | expectedProjectDirName
-        "SampleSB"  | "70"           | "com.liferay.test" | "sample-sb"
+        projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
     }
 }

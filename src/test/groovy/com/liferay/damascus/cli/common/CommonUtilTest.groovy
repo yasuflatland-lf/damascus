@@ -91,7 +91,7 @@ class CommonUtilTest extends Specification {
         def createCommand = new CreateCommand();
 
         when:
-        CommonUtil.createServiceBuilderProject(name, packageName, workTempDir)
+        CommonUtil.createServiceBuilderProject(liferayVersion, name, packageName, workTempDir)
         def projectNameCommon = workTempDir + DS + name + DS + name;
         def servicePath = new File(projectNameCommon + "-service");
 
@@ -110,10 +110,10 @@ class CommonUtilTest extends Specification {
         true == implFile.exists()
 
         where:
-        name   | packageName
-        "Todo" | "com.liferay.test"
-        "Task" | "jp.co.liferay.test"
-        "Task" | "jp.co.liferay.test.longpackage.namehere"
+        name   | packageName                               | liferayVersion
+        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_70
+        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_70
+        "Task" | "jp.co.liferay.test.longpackage.namehere" | DamascusProps.VERSION_70
     }
 
     @Unroll("Gradlew getDirFromPath test for a file")
@@ -188,7 +188,7 @@ class CommonUtilTest extends Specification {
     @Unroll("Smoke test for Create Service Builder project name <#name> package <#packageName>")
     def "Smoke test for Create Service Builder project"() {
         when:
-        CommonUtil.createServiceBuilderProject(name, packageName, workTempDir)
+        CommonUtil.createServiceBuilderProject(liferayVersion, name, packageName, workTempDir)
         def projectNameCommon = workTempDir + DS + name + DS + name;
         def service_path = new File(projectNameCommon + "-service");
         def api_path = new File(projectNameCommon + "-api");
@@ -205,15 +205,15 @@ class CommonUtilTest extends Specification {
         true == serviceXml.exists()
 
         where:
-        name        | packageName
-        "Todo"      | "com.liferay.test"
-        "Todo_Dada" | "c.aaa"
+        name        | packageName        | liferayVersion
+        "Todo"      | "com.liferay.test" | DamascusProps.VERSION_70
+        "Todo_Dada" | "c.aaa"            | DamascusProps.VERSION_70
     }
 
     @Unroll("Smoke test for Create MVC Portlet project. Project name <#name> package <#packageName>")
     def "Smoke test for Create MVC Portlet project"() {
         when:
-        CommonUtil.createMVCPortletProject(name, packageName, workTempDir + DS + name)
+        CommonUtil.createMVCPortletProject(liferayVersion, name, packageName, workTempDir + DS + name)
 
         def projectName = name;
         if (!name.endsWith("-web")) {
@@ -235,15 +235,15 @@ class CommonUtilTest extends Specification {
         false == buildGradleBat.exists()
 
         where:
-        name       | packageName
-        "Hoge"     | "com.liferay.test"
-        "Hoge-web" | "com.liferay"
+        name       | packageName        | liferayVersion
+        "Hoge"     | "com.liferay.test" | DamascusProps.VERSION_70
+        "Hoge-web" | "com.liferay"      | DamascusProps.VERSION_70
     }
 
     @Unroll("Smoke test for Create workspace name<#name>")
     def "Smoke test for Create workspace"() {
         when:
-        CommonUtil.createWorkspace(workTempDir, name)
+        CommonUtil.createWorkspace(liferayVersion, workTempDir, name)
 
         def projectNameCommon = workTempDir + DS + name
         def portlet_path = new File(projectNameCommon);
@@ -259,10 +259,10 @@ class CommonUtilTest extends Specification {
         true == modulesDir.exists()
 
         where:
-        name      | _
-        "Foo"     | _
-        "Foo-web" | _
-        "Bar_web" | _
+        name      | liferayVersion
+        "Foo"     | DamascusProps.VERSION_70
+        "Foo-web" | DamascusProps.VERSION_70
+        "Bar_web" | DamascusProps.VERSION_70
     }
 
     void dummyWriter(file, dummy_text) {
@@ -335,24 +335,24 @@ class CommonUtilTest extends Specification {
                 file('build.gradle') {
                     withWriter('UTF-8') { writer ->
                         writer.write 'apply plugin: "com.liferay.portal.tools.service.builder"\n' +
-                            '\n' +
-                            '//Need for Windows\n' +
-                            'def defaultEncoding = \'UTF-8\'\n' +
-                            '\n' +
-                            'dependencies {\n' +
-                            '    compile group: "javax.portlet", name: "portlet-api", version: "2.0"\n' +
-                            '    compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"\n' +
-                            '    compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"\n' +
-                            '    compile project(":First-api")\n' +
-                            '    compileOnly project(":First-api")\n' +
-                            '    compileOnly project(":First-service")    \n' +
-                            '}\n' +
-                            '\n' +
-                            'buildService {\n' +
-                            '    apiDir = "../First-api/src/main/java"\n' +
-                            '}\n' +
-                            '\n' +
-                            'group = "com.liferay.first"'
+                                '\n' +
+                                '//Need for Windows\n' +
+                                'def defaultEncoding = \'UTF-8\'\n' +
+                                '\n' +
+                                'dependencies {\n' +
+                                '    compile group: "javax.portlet", name: "portlet-api", version: "2.0"\n' +
+                                '    compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"\n' +
+                                '    compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"\n' +
+                                '    compile project(":First-api")\n' +
+                                '    compileOnly project(":First-api")\n' +
+                                '    compileOnly project(":First-service")    \n' +
+                                '}\n' +
+                                '\n' +
+                                'buildService {\n' +
+                                '    apiDir = "../First-api/src/main/java"\n' +
+                                '}\n' +
+                                '\n' +
+                                'group = "com.liferay.first"'
                     }
                 }
             }
@@ -360,9 +360,9 @@ class CommonUtilTest extends Specification {
 
         //Get File list
         List<File> files = FileUtils.listFiles(
-            new File(targetDir),
-            new RegexFileFilter(".*"),
-            TrueFileFilter.INSTANCE
+                new File(targetDir),
+                new RegexFileFilter(".*"),
+                TrueFileFilter.INSTANCE
         ).stream().collect(Collectors.toList());
 
         //Set replace patterns into a Map
@@ -392,7 +392,7 @@ class CommonUtilTest extends Specification {
         [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*":First-api".*/: "project(\":modules:First:First-api\")"]
         [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
         ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
-            "(\":modules:First:First-api\")", /project.*":First-service".*/                                                                          : "project(\":modules:First:First-service\")"]
+                "(\":modules:First:First-api\")", /project.*":First-service".*/                                                                      : "project(\":modules:First:First-service\")"]
 
     }
 

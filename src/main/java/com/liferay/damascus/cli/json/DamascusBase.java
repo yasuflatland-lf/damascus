@@ -3,6 +3,7 @@ package com.liferay.damascus.cli.json;
 import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class DamascusBase {

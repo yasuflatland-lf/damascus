@@ -1,0 +1,79 @@
+{
+  "projectName": "${damascus.projectName}",
+  "packageName" : "${damascus.packageName}",
+  "liferayVersion": "${damascus.liferayVersion}",
+  "applications": [
+    {
+      "model"       : "${damascus.projectName}",
+      "title"       : "${damascus.projectName} Test",
+      "web"         : "true",
+      "asset": {
+        "assetTitleFieldName": "${damascus.entityNameLower}TitleName",
+        "assetSummaryFieldName": "${damascus.entityNameLower}SummaryName",
+        "categories": "true",
+        "discussion": "true",
+        "ratings": "true",
+        "tags": "true",
+        "relatedAssets": "false",
+        "fullContentFieldName": "${damascus.entityNameLower}fullContent",
+        "workflow": "true",
+        "generateActivity": "true",
+        "trash":"true"
+      },
+      "fieldsName" : "${damascus.projectName}s",
+      "fields": [
+        {
+          "type": "com.liferay.damascus.cli.json.fields.Long",
+          "primary":true,
+          "name": "${damascus.entityNameLower}Id",
+          "title": "${damascus.projectName} Id",
+          "showFieldInView": "false",
+          "required": "true"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.Varchar",
+          "name": "title",
+          "title": "Title",
+          "length": "80",
+          "showFieldInView": "true",
+          "required": "true"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.Boolean",
+          "name": "${damascus.entityNameLower}BooleanStat",
+          "title": "${damascus.projectName} Boolean Stat"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.DateTime",
+          "name": "${damascus.entityNameLower}DateTime",
+          "title": "${damascus.projectName} DateTime"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.DocumentLibrary",
+          "name": "${damascus.entityNameLower}DocumentLibrary",
+          "title": "${damascus.projectName} DocumentLibrary"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.Double",
+          "name": "${damascus.entityNameLower}Double",
+          "title": "${damascus.projectName} Double"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.Integer",
+          "name": "${damascus.entityNameLower}Integer",
+          "title": "${damascus.projectName} Integer"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.RichText",
+          "name": "${damascus.entityNameLower}RichText",
+          "title": "${damascus.projectName} RichText"
+        },
+        {
+          "type": "com.liferay.damascus.cli.json.fields.Text",
+          "name": "${damascus.entityNameLower}Text",
+          "title": "${damascus.projectName} Text"
+        }
+      ]
+    }
+  ]
+}

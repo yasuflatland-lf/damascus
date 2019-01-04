@@ -6,6 +6,7 @@ import com.liferay.project.templates.ProjectTemplatesArgs;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 import java.io.File;
 
@@ -34,6 +35,8 @@ public class ProjectTemplatesBuilder {
     private String packageName;
     private String service;
     @Builder.Default private String template = DamascusProps.MVC_PORTLET_CMD;
+    @NonNull
+    private String liferayVersion;
 
     /**
      * Create scaffold
@@ -52,6 +55,7 @@ public class ProjectTemplatesBuilder {
         projectTemplatesArgs.setPackageName(getPackageName());
         projectTemplatesArgs.setService(getService());
         projectTemplatesArgs.setTemplate(getTemplate());
+        projectTemplatesArgs.setLiferayVersion(getLiferayVersion());
 
         new ProjectTemplates(projectTemplatesArgs);
     }

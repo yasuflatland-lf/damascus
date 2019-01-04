@@ -21,13 +21,13 @@ class DamascusBaseTest extends Specification {
     static def workTempDir = "";
     static def createCommand;
 
-    def setup() {
+    def setupEx(version) {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
         TemplateUtil.getInstance().clear();
 
         //Create Workspace
-        CommonUtil.createWorkspace(workspaceRootDir, workspaceName);
+        CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);
 
         //Execute all tests under modules
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
@@ -39,9 +39,11 @@ class DamascusBaseTest extends Specification {
     @Unroll("Smoke Test for customValue <#key1>:<#value1> | <#key2><#value2>")
     def "Smoke Test for customValue"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         def paramFilePath = workTempDir + DS + "temp.json"
         def projectName = "Todo"
-        def liferayVersion = "70"
         def packageName = "com.liferay.test.foo.bar"
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath)
 
@@ -61,21 +63,24 @@ class DamascusBaseTest extends Specification {
         FileUtils.deleteQuietly(new File(paramFilePath))
 
         where:
-        key1      | value1     | key2   | value2
-        "keytest" | "valutest" | "key2" | "value2"
+        key1      | value1     | key2   | value2   | liferayVersion
+        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_71
+        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_70
 
     }
 
     @Unroll("Smoke Test for customValue value convert <#key1>:<#value1> | <#key2><#value2>")
     def "Smoke Test for customValue value convert"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         //
         // Generate custom value base.json
         //
         def paramFilePath = workTempDir + DS + DamascusProps.BASE_JSON
         def projectName = "Todo"
         def expectedProjectDirName = "todo"
-        def liferayVersion = "70"
         def packageName = "com.liferay.test.foo.bar"
 
         // Once clear _cfg to initialize with an actual test target template directory
@@ -94,7 +99,7 @@ class DamascusBaseTest extends Specification {
         def targetDir = DamascusProps.TEMPLATE_FILE_PATH;
         def testFileName = "Portlet_testfile.jsp.ftl"
         final FileTreeBuilder tf = new FileTreeBuilder(new File(targetDir))
-        tf.dir(DamascusProps.VERSION_70) {
+        tf.dir(liferayVersion) {
             file(testFileName) {
                 withWriter('UTF-8') { writer ->
                     writer.write '''
@@ -128,22 +133,25 @@ class DamascusBaseTest extends Specification {
 
         cleanup:
         // Delete test file
-        FileUtils.deleteQuietly(new File(targetDir + DS + DamascusProps.VERSION_70 + DS + testFileName))
+        FileUtils.deleteQuietly(new File(targetDir + DS + liferayVersion + DS + testFileName))
 
         where:
-        key1   | value1   | key2   | value2
-        "key1" | "FOOFOO" | "key2" | "BARBAR"
+        key1   | value1   | key2   | value2   | liferayVersion
+        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_71
+        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_70
     }
 
     @Unroll("web check test result<#result> web1_state<#web1_state> web2_state<#web2_state> web3_state<#web3_state>")
     def "web check test"() {
         when:
+        //Initialize
+        setupEx(liferayVersion)
+
         // Generate custom value base.json
         //
         def paramFilePath = workTempDir + DS + DamascusProps.BASE_JSON
         def projectName = "Todo"
         def expectedProjectDirName = "todo"
-        def liferayVersion = "70"
         def packageName = "com.liferay.test.foo.bar"
 
         // Once clear _cfg to initialize with an actual test target template directory
@@ -162,10 +170,14 @@ class DamascusBaseTest extends Specification {
         result == dmsb.isWebExist()
 
         where:
-        result | web1_state | web2_state | web3_state
-        true   | true       | true       | true
-        false  | false      | false      | false
-        true   | false      | true       | true
-        true   | true       | true       | false
+        result | web1_state | web2_state | web3_state | liferayVersion
+        true   | true       | true       | true       | DamascusProps.VERSION_71
+        false  | false      | false      | false      | DamascusProps.VERSION_71
+        true   | false      | true       | true       | DamascusProps.VERSION_71
+        true   | true       | true       | false      | DamascusProps.VERSION_71
+        true   | true       | true       | true       | DamascusProps.VERSION_70
+        false  | false      | false      | false      | DamascusProps.VERSION_70
+        true   | false      | true       | true       | DamascusProps.VERSION_70
+        true   | true       | true       | false      | DamascusProps.VERSION_70
     }
 }
