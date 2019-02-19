@@ -169,9 +169,33 @@ public class ${capFirstModel}AssetRenderer
         LiferayPortletResponse liferayPortletResponse,
         String noSuchEntryRedirect) {
 
-        return getURLViewInContext(
-            liferayPortletRequest, noSuchEntryRedirect, ${capFirstModel}PortletKeys.${uppercaseModel}_FIND_ENTRY,
-            "resourcePrimKey", _entry.getPrimaryKey());
+        try {
+            ThemeDisplay themeDisplay = (ThemeDisplay) liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+            long plid = getPlidsFromPreferenceValue(themeDisplay.getScopeGroupId(), ${capFirstModel}PortletKeys.${uppercaseModel}, false); 
+            String namespace = getPortletInstanceFromPreferenceValue(themeDisplay.getScopeGroupId(), ${capFirstModel}PortletKeys.${uppercaseModel}, false);
+
+            PortletURL portletURL;
+
+            if (plid == LayoutConstants.DEFAULT_PLID) {
+                portletURL = liferayPortletResponse.createLiferayPortletURL(plid, namespace, PortletRequest.RENDER_PHASE);
+            } else {
+                portletURL = PortletURLFactoryUtil.create(liferayPortletRequest, namespace, plid, PortletRequest.RENDER_PHASE);
+            }
+
+            portletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/crud");
+            portletURL.setParameter(Constants.CMD, Constants.VIEW);
+            portletURL.setParameter("resourcePrimKey", String.valueOf(_entry.getPrimaryKey()));
+        
+            String currentUrl = PortalUtil.getCurrentURL(liferayPortletRequest);
+        
+            portletURL.setParameter("redirect", currentUrl);
+        
+            return portletURL.toString();
+        
+            } catch (SystemException e) {
+            }
+        
+            return noSuchEntryRedirect;
     }
 
     @Override
