@@ -33,6 +33,38 @@
 
 	${capFirstModel}ViewHelper ${uncapFirstModel}ViewHelper = (${capFirstModel}ViewHelper) request
 			.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER);
+	
+	SearchContainer _searchContainer = new SearchContainer(renderRequest, PortletURLUtil.clone(navigationPortletURL, liferayPortletResponse), null, "no-records-were-found");
+	_searchContainer.setId("entryList"); 
+	_searchContainer.setDeltaConfigurable(true); 
+	
+	_searchContainer.setOrderByCol(orderByCol);
+    _searchContainer.setOrderByType(orderByType);
+
+    SearchContainerResults<${capFirstModel}> searchContainerResults = null;
+    if (Validator.isNull(keywords)) {
+        searchContainerResults = ${uncapFirstModel}ViewHelper.getListFromDB(renderRequest, _searchContainer, new int[] {WorkflowConstants.STATUS_APPROVED});
+    } else {
+        searchContainerResults = ${uncapFirstModel}ViewHelper.getListFromIndex(renderRequest, _searchContainer, WorkflowConstants.STATUS_APPROVED);
+    }
+
+    _searchContainer.setTotal(searchContainerResults.getTotal());
+    _searchContainer.setResults(searchContainerResults.getResults());
+
+	boolean managementCheckboxEnabled = false;
+	List<${capFirstModel}> results = _searchContainer.getResults();
+	if (results != null && results.size() > 0) {
+		for(${capFirstModel} result: results) {
+			if (${capFirstModel}PermissionChecker.contains(permissionChecker, result, ActionKeys.DELETE)) {
+				managementCheckboxEnabled = true;
+				break;
+			}
+		}
+	} 
+	if (managementCheckboxEnabled) {
+		EmptyOnClickRowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
+		_searchContainer.setRowChecker(rowChecker);
+	}
 %>
 
 <portlet:renderURL var="${lowercaseModel}AddURL">
@@ -75,7 +107,7 @@
 	</aui:form>
 </aui:nav-bar>
 
-<liferay-frontend:management-bar includeCheckBox="<%=true%>"
+<liferay-frontend:management-bar includeCheckBox="<%= managementCheckboxEnabled %>" 
 	searchContainerId="entryList">
 
 	<liferay-frontend:management-bar-filters>
@@ -113,26 +145,19 @@
 		<liferay-ui:error exception="<%=PortletException.class%>"
 			message="there-was-an-unexpected-error.-please-refresh-the-current-page" />
 
-		<liferay-ui:search-container id="entryList" deltaConfigurable="true"
-			rowChecker="<%=new EmptyOnClickRowChecker(renderResponse)%>"
-			searchContainer='<%=new SearchContainer(renderRequest,
-							PortletURLUtil.clone(navigationPortletURL, liferayPortletResponse), null,
-							"no-recodes-were-found")%>'>
-
-			<liferay-ui:search-container-results>
-				<%@ include file="/${snakecaseModel}/search_results.jspf"%>
-			</liferay-ui:search-container-results>
+		<liferay-ui:search-container searchContainer='<%=_searchContainer%>'>
 
 			<liferay-ui:search-container-row
 				className="${packageName}.model.${capFirstModel}"
 				escapedModel="<%= true %>" keyProperty="${primaryKeyParam}"
 				rowIdProperty="${primaryKeyParam}" modelVar="${uncapFirstModel}">
 
+			<c:choose>
+				<c:when test="<%= ${capFirstModel}PermissionChecker.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.VIEW) %>">
 			<#-- ---------------- -->
 			<#-- field loop start -->
 			<#-- ---------------- -->
 			<#list application.fields as field >
-
 				<#-- ---------------- -->
 				<#--     Long         -->
 				<#--     Varchar      -->
@@ -186,7 +211,6 @@
 					<liferay-ui:icon image="<%= ${field.name}Icon %>" />
 				</liferay-ui:search-container-column-text>
 					</#if>
-
 			</#list>
 			<#-- ---------------- -->
 			<#-- field loop ends  -->
@@ -194,6 +218,13 @@
 
 				<liferay-ui:search-container-column-jsp align="right"
 					path="/${snakecaseModel}/edit_actions.jsp" />
+			</c:when>
+			<c:otherwise>
+				<% 
+					row.setCssClass("hidden");
+				%>
+			</c:otherwise>
+			</c:choose>
 
 			</liferay-ui:search-container-row>
 			<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />

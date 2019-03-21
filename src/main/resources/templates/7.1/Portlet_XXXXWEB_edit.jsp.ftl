@@ -184,7 +184,7 @@
 			<%
 				if (!fromAsset) {
 			%>
-            &nbsp;&nbsp;&minus; or &minus;
+            &nbsp;&nbsp;&minus; <liferay-ui:message key="or"/> &minus;
 			<aui:button onClick="<%=redirect%>" type="cancel" />
 			<%
 				}
