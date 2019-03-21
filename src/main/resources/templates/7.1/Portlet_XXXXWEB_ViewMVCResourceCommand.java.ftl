@@ -56,6 +56,8 @@ public class ${capFirstModel}ViewMVCResourceCommand implements MVCResourceComman
         ResourceRequest resourceRequest, ResourceResponse resourceResponse) {
     	
     	String cmd = ParamUtil.getString(resourceRequest, Constants.CMD, "");
+    	
+    	<#if exportExcel>
     	if (cmd.equals(Constants.EXPORT)) {
     		${capFirstModel}Configuration ${uncapFirstModel}Configuration =
         	        (${capFirstModel}Configuration) resourceRequest.getAttribute(${capFirstModel}Configuration.class.getName());
@@ -139,7 +141,9 @@ public class ${capFirstModel}ViewMVCResourceCommand implements MVCResourceComman
 				e.printStackTrace();
 				return false;
 			} 
-        }    	
+        }
+        </#if>
+        
         return false;                
     }
 

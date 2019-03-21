@@ -87,20 +87,24 @@
 	<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.ADD%>" />
 	<portlet:param name="redirect" value="<%=portletURL.toString()%>" />
 </portlet:renderURL>
+<#if exportExcel>
 <portlet:resourceURL id="/${lowercaseModel}/res" var="exportExcelURL" >
 	<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.EXPORT%>" />
 	<portlet:param name="<%=DisplayTerms.KEYWORDS%>" value="<%=keywords%>" />
 	<portlet:param name="<%=SearchContainer.DEFAULT_ORDER_BY_COL_PARAM%>" value="<%=orderByCol%>" />
 	<portlet:param name="<%=SearchContainer.DEFAULT_ORDER_BY_TYPE_PARAM%>" value="<%=orderByType%>" />
 </portlet:resourceURL>
+</#if>
     <div class="container-fluid-1280 icons-container lfr-meta-actions">
 		<div class="add-record-button-container pull-left">
 			<c:if test="<%= ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.ADD_ENTRY) %>">
             <aui:button href="<%=${lowercaseModel}AddURL%>" cssClass="btn btn-default"
                 icon="icon-plus" value="add-${lowercaseModel}" />
 			</c:if>
+			<#if exportExcel>
 			<aui:button href="<%=exportExcelURL%>" cssClass="btn btn-default"
                 icon="icon-plus" value="export-to-excel" />
+            </#if>    
         </div>
 		<div class="lfr-icon-actions">
 			<c:if test="<%= ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.PERMISSIONS) %>">
