@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/resources/content/Language.properties">
+<#assign createPath = "${webModulePath}/src/main/resources/content/Language_en.properties">
 
 model.resource.${packageName}=${damascus.projectName}
 
