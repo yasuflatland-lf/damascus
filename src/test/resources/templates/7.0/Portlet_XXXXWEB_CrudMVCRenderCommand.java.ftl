@@ -6,15 +6,26 @@ package ${packageName}.web.portlet.action;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+
 import ${packageName}.constants.${capFirstModel}PortletKeys;
+import ${packageName}.exception.${capFirstModel}ValidateException;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.service.${capFirstModel}LocalService;
 import ${packageName}.service.${capFirstModel}LocalServiceUtil;
+import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
+import ${packageName}.service.permission.${capFirstModel}ResourcePermissionChecker;
+
 import ${packageName}.web.constants.${capFirstModel}WebKeys;
 import ${packageName}.web.upload.${capFirstModel}ItemSelectorHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -48,33 +59,49 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
 
         // Fetch primary key
         long primaryKey = ParamUtil.getLong(request, "resourcePrimKey", 0);
-
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute( WebKeys.THEME_DISPLAY);
+        
         try {
             if (cmd.equalsIgnoreCase(Constants.UPDATE)) {
 
                 ${capFirstModel} record = ${capFirstModel}LocalServiceUtil.get${capFirstModel}(primaryKey);
-                request.setAttribute("${uncapFirstModel}", record);
-                renderJSP = ${capFirstModel}WebKeys.EDIT_JSP;
-
+                if (${capFirstModel}PermissionChecker.contains(themeDisplay.getPermissionChecker(), record, ActionKeys.UPDATE)) {
+                    request.setAttribute("${uncapFirstModel}", record);
+                    renderJSP = ${capFirstModel}WebKeys.EDIT_JSP;
+                } else {
+                    List<String> error = new ArrayList<String>();
+                    error.add("permission-error");
+                    throw new ${capFirstModel}ValidateException(error);
+                }
             } else if (cmd.equalsIgnoreCase(Constants.VIEW)) {
 
                 ${capFirstModel} record = ${capFirstModel}LocalServiceUtil.get${capFirstModel}(primaryKey);
-                request.setAttribute("${uncapFirstModel}", record);
-                renderJSP = ${capFirstModel}WebKeys.VIEW_RECORD_JSP;
-
+                if (${capFirstModel}PermissionChecker.contains(themeDisplay.getPermissionChecker(), record, ActionKeys.VIEW)) {
+                    request.setAttribute("${uncapFirstModel}", record);
+                    renderJSP = ${capFirstModel}WebKeys.VIEW_RECORD_JSP;
+                } else {
+                    List<String> error = new ArrayList<String>();
+                    error.add("permission-error");
+                    throw new ${capFirstModel}ValidateException(error);
+                }
             } else {
 
                 ${capFirstModel} record = _${uncapFirstModel}LocalService.getNewObject(primaryKey);
+                if (${capFirstModel}ResourcePermissionChecker.contains(themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(), ActionKeys.ADD_ENTRY)) {
+                    if (Validator.isNull(request.getParameter("addErrors"))) {
 
-                if (Validator.isNull(request.getParameter("addErrors"))) {
+                        record = _${uncapFirstModel}LocalService.getInitialized${capFirstModel}(primaryKey, request);
+                    } else {
 
-                    record = _${uncapFirstModel}LocalService.getInitialized${capFirstModel}(primaryKey, request);
+                        record = _${uncapFirstModel}LocalService.get${capFirstModel}FromRequest(primaryKey, request);
+                    }
+                    request.setAttribute("${uncapFirstModel}", record);
+                    renderJSP = ${capFirstModel}WebKeys.EDIT_JSP;
                 } else {
-
-                    record = _${uncapFirstModel}LocalService.get${capFirstModel}FromRequest(primaryKey, request);
+                    List<String> error = new ArrayList<String>();
+                    error.add("permission-error");
+                    throw new ${capFirstModel}ValidateException(error);
                 }
-                request.setAttribute("${uncapFirstModel}", record);
-                renderJSP = ${capFirstModel}WebKeys.EDIT_JSP;
             }
         } catch (PortalException e) {
             throw new PortletException(e.getMessage());
