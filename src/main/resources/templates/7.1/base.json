@@ -18,7 +18,8 @@
         "fullContentFieldName": "${damascus.entityNameLower}fullContent",
         "workflow": "true",
         "generateActivity": "true",
-        "trash":"true"
+        "trash":"true",
+        "advancedSearch": "true"
       },
       "fieldsName" : "${damascus.projectName}s",
       "fields": [
