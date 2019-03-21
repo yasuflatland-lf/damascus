@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.service.${capFirstModel}LocalService;
@@ -69,21 +70,35 @@ public class ${capFirstModel}ViewHelper {
      */
     public OrderByComparator<${capFirstModel}> getOrderByComparator(
         SearchContainer<?> searchContainer) {
+		
+        return getOrderByComparator(searchContainer.getOrderByCol(), searchContainer.getOrderByType());
+    }
+    
+    /**
+     *
+     * Order Comparetor
+     *
+     * @param orderByCol
+     * @param orderByType
+     * @return OrderByComparator
+     */
+    public OrderByComparator<${capFirstModel}> getOrderByComparator(
+        String orderByCol, String orderByType) {
 
         if (_log.isDebugEnabled()) {
             _log.debug("searchContainer.getOrderByCol()"
-                           + (null != searchContainer.getOrderByCol()
-                ? searchContainer.getOrderByCol()
+                           + (null != orderByCol
+                ? orderByCol
                 : "null"));
             _log.debug("searchContainer.getOrderByType()"
-                           + (null != searchContainer.getOrderByType()
-                ? searchContainer.getOrderByType()
+                           + (null != orderByType
+                ? orderByType
                 : "null"));
         }
 
         return OrderByComparatorFactoryUtil.create("${capFirstModel}_${capFirstModel}",
-                                                   searchContainer.getOrderByCol(),
-                                                   getOrder(searchContainer.getOrderByType()));
+                                                   orderByCol,
+                                                   getOrder(orderByType));
     }
 
     /**
@@ -96,6 +111,26 @@ public class ${capFirstModel}ViewHelper {
      */
     public SearchContainerResults<${capFirstModel}> getListFromDB(
         PortletRequest request, SearchContainer<?> searchContainer, int[] state) 
+        throws ParseException  {
+
+        return getListFromDB(request, searchContainer.getStart(), searchContainer.getEnd(), 
+        		searchContainer.getOrderByCol(), searchContainer.getOrderByType(), state);
+    }
+    
+    /**
+     * Get Data list from Database
+     *
+     * @param request PortletRequest
+     * @param start int
+     * @param end int
+     * @param orderByCol String
+     * @param orderByType String
+     * @return SearchContainerResults<${capFirstModel}>
+     * @throws ParseException
+     */
+    public SearchContainerResults<${capFirstModel}> getListFromDB(
+        PortletRequest request, int start, int end, String orderByCol,
+        String orderByType, int[] state) 
         throws ParseException  {
 
         ThemeDisplay themeDisplay = (ThemeDisplay) request
@@ -111,15 +146,15 @@ public class ${capFirstModel}ViewHelper {
         Map<String, Object> advSearchKeywords = getAdvSearchKeywordsObject(request);
 		
         long groupId = themeDisplay.getScopeGroupId();
-        int containerStart = searchContainer.getStart();
-        int containerEnd = searchContainer.getEnd();
+        int containerStart = start;
+        int containerEnd = end;
 
         List<${capFirstModel}> results = Lists.newArrayList();
         int total = 0;
 
         // Get Order
         OrderByComparator<${capFirstModel}> orderByComparator = getOrderByComparator(
-            searchContainer);
+            orderByCol, orderByType);
 
         if (prefsViewType
             .equals(${capFirstModel}Configuration.PREFS_VIEW_TYPE_DEFAULT)) {
@@ -172,6 +207,20 @@ public class ${capFirstModel}ViewHelper {
     public SearchContainerResults<${capFirstModel}> getListFromIndex(
         PortletRequest request, SearchContainer<?> searchContainer, int state)
         throws SearchException {
+        return getListFromIndex(request, searchContainer.getStart(), searchContainer.getEnd(), state);
+    }
+	
+	/**
+     * Get Data list from Index
+     *
+     * @param request PortletRequest
+     * @param start int
+     * @param end int
+     * @throws SearchException
+     */
+    public SearchContainerResults<${capFirstModel}> getListFromIndex(
+        PortletRequest request, int start, int end, int state)
+        throws SearchException {
 
         // Search Key
         String searchFilter = ParamUtil.getString(request,
@@ -188,8 +237,8 @@ public class ${capFirstModel}ViewHelper {
 	    searchContext.setAttribute(Field.STATUS, state);
 	
 	    searchContext.setKeywords(searchFilter);
-	    searchContext.setStart(searchContainer.getStart());
-	    searchContext.setEnd(searchContainer.getEnd());
+	    searchContext.setStart(start);
+	    searchContext.setEnd(end);
 	
 	    // Search in index
 	    Hits results = indexer.search(searchContext);
@@ -225,7 +274,7 @@ public class ${capFirstModel}ViewHelper {
 		
         return new SearchContainerResults<>(tempResults, total);
     }
-
+	
 	@SuppressWarnings("unchecked")
 	public Map<String, String> getAdvSearchKeywords(PortletRequest request, SimpleDateFormat dateFormat) throws ParseException {
     	Map<String, Object> advSearchKeywordsObj = getAdvSearchKeywordsObject(request);
@@ -257,7 +306,8 @@ public class ${capFirstModel}ViewHelper {
     	
     	PortletPreferences portletPreferences = request.getPreferences();
     	String dateFormatVal = HtmlUtil.escape(
-                portletPreferences.getValue("dateFormat", ${uncapFirstModel}Configuration.dateFormat()));
+                portletPreferences.getValue("dateFormat", 
+                		Validator.isNull(${uncapFirstModel}Configuration) ? "yyyy/MM/dd" : ${uncapFirstModel}Configuration.dateFormat()));
     	
     	SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatVal);
     	

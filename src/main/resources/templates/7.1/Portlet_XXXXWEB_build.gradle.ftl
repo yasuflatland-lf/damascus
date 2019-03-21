@@ -57,7 +57,13 @@ dependencies {
     compile group: "jstl", name: "jstl", version: "1.2"
     compile group: "org.osgi", name: "osgi.cmpn", version: "6.0.0"
     compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
-
+	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.1'
+	compile group: 'org.apache.poi', name: 'poi', version: '4.0.1'
+	compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '4.0.1'	
+	compile group: 'org.apache.xmlbeans', name: 'xmlbeans', version: '3.0.2'
+	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.2'
+	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
+	
     compileOnly project(":${dashcaseProjectName}-api")
     compileOnly project(":${dashcaseProjectName}-service")
 }
