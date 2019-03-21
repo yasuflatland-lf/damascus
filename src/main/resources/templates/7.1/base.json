@@ -19,7 +19,8 @@
         "workflow": "true",
         "generateActivity": "true",
         "trash":"true",
-        "advancedSearch": "true"
+        "advancedSearch": "true",
+        "exportExcel": "true"
       },
       "fieldsName" : "${damascus.projectName}s",
       "fields": [

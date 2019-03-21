@@ -34,4 +34,5 @@ public class Asset {
     public boolean generateActivity = true;
     public boolean trash = true;
     public boolean advancedSearch = true;
+    public boolean exportExcel = true;
 }
