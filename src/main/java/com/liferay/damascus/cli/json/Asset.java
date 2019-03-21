@@ -33,4 +33,5 @@ public class Asset {
     public boolean workflow = true;
     public boolean generateActivity = true;
     public boolean trash = true;
+    public boolean advancedSearch = true;
 }

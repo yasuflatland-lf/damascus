@@ -13,11 +13,12 @@
 	
 	${capFirstModel}ViewHelper ${uncapFirstModel}ViewHelper = (${capFirstModel}ViewHelper) request
 			.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER);
-
+	
+<#if advancedSearch>
 	Map<String, String> advSearchKeywords = ${uncapFirstModel}ViewHelper.getAdvSearchKeywords(renderRequest, dateFormat);
 	
 	Calendar today = Calendar.getInstance();
-
+</#if>
 	
 	String keywords = ParamUtil.getString(request, DisplayTerms.KEYWORDS);
 	int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
@@ -32,10 +33,12 @@
 	</#if>
 </#list>
 	};
-	
+
+<#if advancedSearch>	
 	for(String key : advSearchKeywords.keySet()) {
 		navigationPortletURL.setParameter(key, advSearchKeywords.get(key));
 	}
+</#if>
 	
 	navigationPortletURL.setParameter(DisplayTerms.KEYWORDS, keywords);
 	navigationPortletURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, String.valueOf(cur));
@@ -94,6 +97,7 @@
 	</aui:form>
 </aui:nav-bar>
 
+<#if advancedSearch>
 <liferay-ui:panel-container>
 <liferay-ui:panel title="advanceSearch" state="close" iconCssClass="icon-plus-sign" id="advanceSearchPanel">
 	<style>
@@ -232,7 +236,7 @@
 	</aui:form>
 </liferay-ui:panel>
 </liferay-ui:panel-container>
-
+</#if>
 
 <liferay-frontend:management-bar includeCheckBox="<%=true%>"
 	searchContainerId="entryList">
