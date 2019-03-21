@@ -6,21 +6,38 @@ package ${packageName}.web.asset;
 
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+
+
 import ${packageName}.constants.${capFirstModel}PortletKeys;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.service.permission.${capFirstModel}PermissionChecker;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletRequest;
@@ -169,10 +186,72 @@ public class ${capFirstModel}AssetRenderer
         LiferayPortletResponse liferayPortletResponse,
         String noSuchEntryRedirect) {
 
-        return getURLViewInContext(
-            liferayPortletRequest, noSuchEntryRedirect, ${capFirstModel}PortletKeys.${uppercaseModel}_FIND_ENTRY,
-            "resourcePrimKey", _entry.getPrimaryKey());
+        try {
+            ThemeDisplay themeDisplay = (ThemeDisplay) liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+            long plid = getPlidsFromPreferenceValue(themeDisplay.getScopeGroupId(), ${capFirstModel}PortletKeys.${uppercaseModel}, false); 
+            String namespace = getPortletInstanceFromPreferenceValue(themeDisplay.getScopeGroupId(), ${capFirstModel}PortletKeys.${uppercaseModel}, false);
+
+            PortletURL portletURL;
+
+            if (plid == LayoutConstants.DEFAULT_PLID) {
+                portletURL = liferayPortletResponse.createLiferayPortletURL(plid, namespace, PortletRequest.RENDER_PHASE);
+            } else {
+                portletURL = PortletURLFactoryUtil.create(liferayPortletRequest, namespace, plid, PortletRequest.RENDER_PHASE);
+            }
+
+            portletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/crud");
+            portletURL.setParameter(Constants.CMD, Constants.VIEW);
+            portletURL.setParameter("resourcePrimKey", String.valueOf(_entry.getPrimaryKey()));
+        
+            String currentUrl = PortalUtil.getCurrentURL(liferayPortletRequest);
+        
+            portletURL.setParameter("redirect", currentUrl);
+        
+            return portletURL.toString();
+        
+            } catch (SystemException e) {
+            }
+        
+            return noSuchEntryRedirect;
     }
+
+    private static long getPlidsFromPreferenceValue(long groupId, String portletId, boolean privateLayout) {
+		Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+		long[] plids = new long[0];
+
+		if (group != null) {
+			List<PortletPreferences> portletPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferences(group.getCompanyId(), groupId, PortletKeys.PREFS_OWNER_ID_DEFAULT, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, portletId, privateLayout);
+
+			for (PortletPreferences curPortletPreferences : portletPreferences) {
+                plids = ArrayUtil.append(plids, curPortletPreferences.getPlid());
+			}
+		}
+
+        if (ArrayUtil.isEmpty(plids))
+			return LayoutConstants.DEFAULT_PLID;
+		else
+			return plids[0];
+    }
+    
+    private static String getPortletInstanceFromPreferenceValue(long groupId, String portletId, boolean privateLayout) {
+		Group group = GroupLocalServiceUtil.fetchGroup(groupId);
+
+		String[] plids = new String[0];
+
+		if (group != null) {
+			List<PortletPreferences> portletPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferences(group.getCompanyId(), groupId, PortletKeys.PREFS_OWNER_ID_DEFAULT, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, portletId, privateLayout);
+
+			for (PortletPreferences curPortletPreferences : portletPreferences) {
+                plids = ArrayUtil.append(plids, curPortletPreferences.getPortletId());
+			}
+		}
+
+        if (ArrayUtil.isEmpty(plids))
+			return portletId;
+		else
+			return plids[0];
+	}
 
     @Override
     public long getUserId() {
