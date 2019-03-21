@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20190321";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20190322";// + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();

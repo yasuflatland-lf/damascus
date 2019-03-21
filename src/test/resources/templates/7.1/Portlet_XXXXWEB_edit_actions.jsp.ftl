@@ -26,7 +26,7 @@
             resourcePrimKey="<%=String.valueOf(primKey)%>"
             var="permissionsEntryURL" />
 
-        <liferay-ui:icon image="permissions" url="<%=permissionsEntryURL%>" />
+        <liferay-ui:icon iconCssClass="icon-lock" message="permissions" label="<%= true %>" url="<%=permissionsEntryURL%>" markupView="lexicon"/>
     </c:if>
 
     <c:if test="<%= ${capFirstModel}PermissionChecker.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.VIEW) %>">
@@ -37,7 +37,7 @@
             <portlet:param name="redirect" value="<%=portletURL.toString()%>" />
             <portlet:param name="resourcePrimKey" value="<%=primKey%>" />
         </portlet:renderURL>
-        <liferay-ui:icon image="view" url="<%=view${capFirstModel}URL.toString()%>" />
+        <liferay-ui:icon iconCssClass="icon-eye-open" message="view" label="<%= true %>" url="<%=view${capFirstModel}URL.toString()%>" markupView="lexicon"/>
     </c:if>
 
     <c:if test="<%= ${capFirstModel}PermissionChecker.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.UPDATE) %>">
@@ -48,7 +48,7 @@
             <portlet:param name="redirect" value="<%=portletURL.toString()%>" />
             <portlet:param name="resourcePrimKey" value="<%=primKey%>" />
         </portlet:renderURL>
-        <liferay-ui:icon image="edit" url="<%=edit${capFirstModel}URL.toString()%>" />
+        <liferay-ui:icon iconCssClass="icon-edit" message="edit" label="<%= true %>" url="<%=edit${capFirstModel}URL.toString()%>" markupView="lexicon"/>
     </c:if>
 
     <c:if test="<%= ${capFirstModel}PermissionChecker.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.DELETE) %>">
@@ -58,7 +58,7 @@
             <portlet:param name="redirect" value="<%=portletURL.toString()%>" />
             <portlet:param name="resourcePrimKey" value="<%=primKey%>" />
         </portlet:actionURL>
-        <liferay-ui:icon image="delete" url="<%=delete${capFirstModel}URL.toString()%>" />
+        <liferay-ui:icon iconCssClass="icon-remove" message="remove" label="<%= true %>" url="<%=delete${capFirstModel}URL.toString()%>" markupView="lexicon"/>
     </c:if>
 
     <c:if test="<%= ${capFirstModel}PermissionChecker.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.DELETE) %>">
@@ -68,7 +68,7 @@
             <portlet:param name="redirect" value="<%=portletURL.toString()%>" />
             <portlet:param name="resourcePrimKey" value="<%=primKey%>" />
         </portlet:actionURL>
-        <liferay-ui:icon image="trash" url="<%=moveToTrash${capFirstModel}URL.toString()%>" />
+        <liferay-ui:icon iconCssClass="icon-trash" message="trash" label="<%= true %>" url="<%=moveToTrash${capFirstModel}URL.toString()%>" markupView="lexicon"/>
     </c:if>
 
 </liferay-ui:icon-menu>

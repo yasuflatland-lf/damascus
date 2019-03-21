@@ -1,5 +1,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/resources/content/Language_en.properties">
+<#assign skipTemplate = !generateWeb>
 
 model.resource.${packageName}=${damascus.projectName}
 
