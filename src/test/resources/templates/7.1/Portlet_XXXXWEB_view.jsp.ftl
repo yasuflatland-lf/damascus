@@ -11,6 +11,15 @@
 	PortletURL navigationPortletURL = renderResponse.createRenderURL();
 	PortletURL portletURL = PortletURLUtil.clone(navigationPortletURL, liferayPortletResponse);
 
+	${capFirstModel}ViewHelper ${uncapFirstModel}ViewHelper = (${capFirstModel}ViewHelper) request
+			.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER);
+
+<#if advancedSearch>
+	Map<String, String> advSearchKeywords = ${uncapFirstModel}ViewHelper.getAdvSearchKeywords(renderRequest, dateFormat);
+
+	Calendar today = Calendar.getInstance();
+</#if>
+
 	String keywords = ParamUtil.getString(request, DisplayTerms.KEYWORDS);
 	int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 	int delta = ParamUtil.getInteger(request, SearchContainer.DEFAULT_DELTA_PARAM);
@@ -25,19 +34,22 @@
 </#list>
 	};
 
+<#if advancedSearch>
+	for(String key : advSearchKeywords.keySet()) {
+		navigationPortletURL.setParameter(key, advSearchKeywords.get(key));
+	}
+</#if>
+
 	navigationPortletURL.setParameter(DisplayTerms.KEYWORDS, keywords);
 	navigationPortletURL.setParameter(SearchContainer.DEFAULT_CUR_PARAM, String.valueOf(cur));
 	navigationPortletURL.setParameter("mvcRenderCommandName", "/${lowercaseModel}/view");
 	navigationPortletURL.setParameter(SearchContainer.DEFAULT_ORDER_BY_COL_PARAM, orderByCol);
 	navigationPortletURL.setParameter(SearchContainer.DEFAULT_ORDER_BY_TYPE_PARAM, orderByType);
 
-	${capFirstModel}ViewHelper ${uncapFirstModel}ViewHelper = (${capFirstModel}ViewHelper) request
-			.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER);
-	
 	SearchContainer _searchContainer = new SearchContainer(renderRequest, PortletURLUtil.clone(navigationPortletURL, liferayPortletResponse), null, "no-records-were-found");
-	_searchContainer.setId("entryList"); 
-	_searchContainer.setDeltaConfigurable(true); 
-	
+	_searchContainer.setId("entryList");
+	_searchContainer.setDeltaConfigurable(true);
+
 	_searchContainer.setOrderByCol(orderByCol);
     _searchContainer.setOrderByType(orderByType);
 
@@ -60,7 +72,7 @@
 				break;
 			}
 		}
-	} 
+	}
 	if (managementCheckboxEnabled) {
 		EmptyOnClickRowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
 		_searchContainer.setRowChecker(rowChecker);
@@ -72,12 +84,24 @@
 	<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.ADD%>" />
 	<portlet:param name="redirect" value="<%=portletURL.toString()%>" />
 </portlet:renderURL>
+<#if exportExcel>
+<portlet:resourceURL id="/${lowercaseModel}/res" var="exportExcelURL" >
+	<portlet:param name="<%=Constants.CMD%>" value="<%=Constants.EXPORT%>" />
+	<portlet:param name="<%=DisplayTerms.KEYWORDS%>" value="<%=keywords%>" />
+	<portlet:param name="<%=SearchContainer.DEFAULT_ORDER_BY_COL_PARAM%>" value="<%=orderByCol%>" />
+	<portlet:param name="<%=SearchContainer.DEFAULT_ORDER_BY_TYPE_PARAM%>" value="<%=orderByType%>" />
+</portlet:resourceURL>
+</#if>
     <div class="container-fluid-1280 icons-container lfr-meta-actions">
 		<div class="add-record-button-container pull-left">
 			<c:if test="<%= ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.ADD_ENTRY) %>">
             <aui:button href="<%=${lowercaseModel}AddURL%>" cssClass="btn btn-default"
                 icon="icon-plus" value="add-${lowercaseModel}" />
 			</c:if>
+			<#if exportExcel>
+			<aui:button href="<%=exportExcelURL%>" cssClass="btn btn-default"
+                icon="icon-plus" value="export-to-excel" />
+            </#if>
         </div>
 		<div class="lfr-icon-actions">
 			<c:if test="<%= ${capFirstModel}ResourcePermissionChecker.contains(permissionChecker, themeDisplay.getScopeGroupId(), ActionKeys.PERMISSIONS) %>">
@@ -107,7 +131,138 @@
 	</aui:form>
 </aui:nav-bar>
 
-<liferay-frontend:management-bar includeCheckBox="<%= managementCheckboxEnabled %>" 
+<#if advancedSearch>
+<liferay-ui:panel-container cssClass="container-fluid-1280" extended="<%= false %>" persistState="<%= true %>" markupView="lexicon">
+<liferay-ui:panel title="Advance Search" markupView="lexicon" collapsible="<%= true %>" extended="<%= false %>" iconCssClass="icon-plus-sign" id="advanceSearchPanel" persistState="<%= true %>">
+	<style>
+		#advanceSearchPanel {
+			margin-bottom: 4px;
+		}
+    </style>
+	<aui:form action="<%=portletURL.toString()%>" name="advanceSearchForm">
+		<aui:container fluid="false">
+			<#-- ---------------- -->
+			<#-- field loop start -->
+			<#-- ---------------- -->
+			<#assign dateExist = false>
+			<#assign counter = 1>
+			<#list application.fields as field >
+				<#if
+					field.type?string == "com.liferay.damascus.cli.json.fields.Long"     		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Double"   		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Integer"			||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Date"     		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+					>
+
+					<#if counter % 2 != 0>
+						<aui:row>
+					</#if>
+					<aui:col span="6">
+					<#if
+						field.type?string == "com.liferay.damascus.cli.json.fields.Long"     		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.Double"   		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.Integer"
+						>
+						<aui:input name="search${field.name?cap_first}Start" label="search${field.name?cap_first}Range" type="text"
+							inlineField="true">
+							<aui:validator name="number" />
+						</aui:input>
+						<div class="form-group form-group-inline">
+							<label class="form-control" style="border-bottom: 0px; display: table-cell; vertical-align: middle;">
+								<%= LanguageUtil.get(request, "until") %>
+							</label>
+						</div>
+						<aui:input name="search${field.name?cap_first}End" label="" inlineLabel="true" inlineField="true" type="text">
+							<aui:validator name="number" />
+						</aui:input>
+					</#if>
+					<#if
+						field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+						>
+						<aui:input  name="search${field.name?cap_first}" type="text"/>
+					</#if>
+
+					<#if
+						field.type?string == "com.liferay.damascus.cli.json.fields.Date"     ||
+						field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"
+						>
+						<#assign dateExist = true>
+						<aui:input name="search${field.name?cap_first}Start" label="search${field.name?cap_first}Range" cssClass="date" type="text"
+							placeholder="<%= dateFormatVal %>" inlineField="true" >
+							<aui:validator name="date" />
+						</aui:input>
+						<div class="form-group form-group-inline">
+							<label class="form-control" style="border-bottom: 0px; display: table-cell; vertical-align: middle;">
+								<%= LanguageUtil.get(request, "until") %>
+							</label>
+						</div>
+						<aui:input name="search${field.name?cap_first}End" label="" inlineLabel="true" inlineField="true"
+							cssClass="date" type="text" placeholder="<%= dateFormatVal %>" >
+							<aui:validator name="date" />
+						</aui:input>
+					</#if>
+					</aui:col>
+					<#if counter % 2 == 0 || field?is_last>
+						</aui:row>
+					</#if>
+					<#assign counter += 1>
+				</#if>
+				<#if
+					field.type?string == "com.liferay.damascus.cli.json.fields.Boolean"  		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary"
+				>
+					<#if field?is_last && counter % 2 == 0>
+						</aui:row>
+					</#if>
+				</#if>
+			</#list>
+			<#-- ---------------- -->
+			<#-- field loop ends  -->
+			<#-- ---------------- -->
+
+			<#if dateExist>
+				<aui:script>
+				    AUI().use(
+				        'aui-datepicker',
+				        function(A) {
+				            new A.DatePicker({
+				                trigger: '.date',
+				                mask: '<%= datePickerFormatVal %>',
+				                popover: {
+				                    zIndex: 1000
+				                }
+				            });
+				        }
+				    );
+				</aui:script>
+			</#if>
+			<style>.center-text { text-align: center; }</style>
+			<aui:button-row id="searchButton" cssClass="center-text">
+				<aui:button name="searchSubmit" type="submit" value="search" />
+				<aui:button name="searchReset" type="cancel" value="reset"
+					onClick='<%= portletDisplay.getNamespace() + "resetAdvanceSearch()" %>'>
+					<aui:script>
+						function <portlet:namespace />resetAdvanceSearch() {
+							$('#<portlet:namespace />advanceSearchForm input').each(function() {
+								$(this).val('');
+							});
+						}
+					</aui:script>
+				</aui:button>
+			</aui:button-row>
+		</aui:container>
+	</aui:form>
+</liferay-ui:panel>
+</liferay-ui:panel-container>
+</#if>
+
+<liferay-frontend:management-bar includeCheckBox="<%=true%>"
 	searchContainerId="entryList">
 
 	<liferay-frontend:management-bar-filters>
@@ -220,7 +375,7 @@
 					path="/${snakecaseModel}/edit_actions.jsp" />
 			</c:when>
 			<c:otherwise>
-				<% 
+				<%
 					row.setCssClass("hidden");
 				%>
 			</c:otherwise>
