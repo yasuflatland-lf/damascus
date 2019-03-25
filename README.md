@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
 [![Coverage Status](https://coveralls.io/repos/github/yasuflatland-lf/damascus/badge.svg?branch=master)](https://coveralls.io/github/yasuflatland-lf/damascus?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/r2bk6piebddjry3n?svg=true)](https://ci.appveyor.com/project/yasuflatland-lf/damascus)
+[![Build status](https://ci.appveyor.com/api/projects/status/qqpdw6drt8w07ljp?svg=true)](https://ci.appveyor.com/project/yasuflatland-lf/damascus)
 
 Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see https://github.com/yasuflatland-lf/damascus/wiki
 
@@ -13,13 +13,15 @@ The list of what Damascus automatically generate is as follows
     * Assets required field (if you have a corresponding field in base.json)
 * Workflow
 * Trashbox
-* Search
+* Search (Including Advanced search for individual fields)
 * Comments
 * Related assets
 * Ratings
 * Activities (The activities on the portlet will be recorded and visible on an activity portlet)
 * Multiple service builder portlets at once
-### Required enviroment
+* Exporting entities by xls file format
+
+### Required environment
 * Liferay 7.0 CE GA4 and Liferay DXP SP3 or higher versions.
 * Liferay 7.1 CE GA1 and higher.
 * Java 1.8 or above
@@ -53,7 +55,7 @@ Let's make a Todo app with damascus
 ### How to compile Damascus on your own?
 1. Clone this repository to your local. Please make sure you've already installed Gradle 3.0 or above and jpm.
 2. At the root directory, run ```gradle assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
-3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install the your jar with ```jpm install ./damascus.jar```.
+3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install your jar with ```jpm install ./damascus.jar```.
 
 ### Proxy settings
 Please see more detailed settings [here](https://github.com/yasuflatland-lf/damascus/wiki/4.-Proxy-settings)
@@ -77,12 +79,12 @@ In terms of bugs, please post Github issues or send me a PR. To send me PR, plea
 4. Send PR to /development repository. I'll create a fix brunch accordingly.
 
 ### Enhancement requests
-Contribution is always welcome! In terms of an Enhancement request, please follow the process below. If you wonder it's a complex feature, please create an issue first and let's discuss. In terms of simple enhancement, please follow steps below.
+A contribution is always welcome! In terms of an Enhancement request, please follow the process below. If you wonder it's a complex feature, please create an issue first and let's discuss. In terms of simple enhancement, please follow steps below.
 
-1. After implemented your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes and in a test class, each test should be written each method basis.
+1. After implementing your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes and in a test class, each test should be written each method basis.
 2. Run test locally with ```gradle clean test``` until your code pass all tests
 3. Send a PR to /development branch. According to the status of Travis CI / Appveyor, I may create a feature branch and request you to make it pass the test on Travis CI / Appveyor environment.
-4. After all tests pass on Travis CI / Appveyor, will marge into development branch and relase into master at some points according to the impact of the code.
+4. After all tests pass on Travis CI / Appveyor, will merge into the development branch and relase into master at some points according to the impact of the code.
 
 ### What does Damascus stand for?
-Damascus is named after "Damascus blade", which is a strong / sharp blade made out from Damascus steel and forged with a lost technology. Liferay has it's official development tool,"Blade", so I gave this name in hope of reinforcement or extension of Blade tool.
+Damascus is named after "Damascus blade", which is a strong/sharp blade made out from Damascus steel and forged with lost technology. Liferay has it's an official development tool, "Blade", so I gave this name in hope of reinforcement or extension of Blade tool.
