@@ -40,8 +40,10 @@
 <%@ page import="javax.portlet.PortletPreferences" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Calendar"%>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map"%>
 
 <%@ page import="javax.portlet.PortletURL" %>
 <%@ page import="javax.portlet.WindowState" %>
@@ -75,6 +77,7 @@
     String prefsViewType = StringPool.BLANK;
     String dateFormatVal = StringPool.BLANK;
     String datetimeFormatVal = StringPool.BLANK;
+	 String datePickerFormatVal = StringPool.BLANK;
 
     if (Validator.isNotNull(${uncapFirstModel}Configuration)) {
         prefsViewType =
@@ -91,6 +94,11 @@
             HtmlUtil.escape(
                 portletPreferences.getValue(
                     "datetimeFormat", ${uncapFirstModel}Configuration.datetimeFormat()));
+                    
+        datePickerFormatVal =
+                HtmlUtil.escape(
+                    portletPreferences.getValue(
+                        "datePickerFormat", ${uncapFirstModel}Configuration.datePickerFormat()));               
     }
 
 %>

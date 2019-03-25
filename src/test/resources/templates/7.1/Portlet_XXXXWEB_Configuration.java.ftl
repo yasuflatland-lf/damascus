@@ -33,4 +33,7 @@ public interface ${capFirstModel}Configuration {
 
     @Meta.AD(deflt = "yyyy/MM/dd HH:mm", required = false)
     public String datetimeFormat();
+    
+    @Meta.AD(deflt = "%Y/%m/%d", required = false)
+    public String datePickerFormat();
 }
