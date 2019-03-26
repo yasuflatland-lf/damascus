@@ -65,6 +65,15 @@
 <%@ page import="${packageName}.web.util.${capFirstModel}ViewHelper" %>
 <%@ page import="${packageName}.constants.${capFirstModel}PortletKeys" %>
 
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+<%@page import="${packageName}.model.${field.validation.className}"%>
+<%@page import="${packageName}.web.constants.${field.validation.className}WebKeys"%>
+<%@page import="${packageName}.web.util.${field.validation.className}ViewHelper"%>
+<%@page import="${packageName}.service.${field.validation.className}LocalService"%>		
+	</#if>
+</#list>
+
 <liferay-frontend:defineObjects/>
 <liferay-theme:defineObjects/>
 <portlet:defineObjects/>
