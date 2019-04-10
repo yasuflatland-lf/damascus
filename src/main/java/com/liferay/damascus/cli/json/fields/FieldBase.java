@@ -3,11 +3,8 @@ package com.liferay.damascus.cli.json.fields;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.liferay.damascus.cli.json.Validation;
 
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * Field Base
@@ -47,8 +44,6 @@ public abstract class FieldBase {
     @JsonProperty(required = true)
     public String type;
 
-    public Validation validation = null;
-    
     public boolean primary = false;
 
     public boolean showFieldInView = true;

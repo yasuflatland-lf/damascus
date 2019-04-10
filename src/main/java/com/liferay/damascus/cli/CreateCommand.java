@@ -1,22 +1,38 @@
 package com.liferay.damascus.cli;
 
-import com.beust.jcommander.Parameter;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.liferay.damascus.cli.common.*;
-import com.liferay.damascus.cli.exception.DamascusProcessException;
-import com.liferay.damascus.cli.json.Application;
-import com.liferay.damascus.cli.json.DamascusBase;
-import freemarker.template.TemplateException;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
+
+import com.beust.jcommander.Parameter;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.liferay.damascus.cli.common.CaseUtil;
+import com.liferay.damascus.cli.common.CommonUtil;
+import com.liferay.damascus.cli.common.DamascusProps;
+import com.liferay.damascus.cli.common.JsonUtil;
+import com.liferay.damascus.cli.common.PropertyContext;
+import com.liferay.damascus.cli.common.PropertyContextFactory;
+import com.liferay.damascus.cli.common.TemplateUtil;
+import com.liferay.damascus.cli.exception.DamascusProcessException;
+import com.liferay.damascus.cli.json.Application;
+import com.liferay.damascus.cli.json.DamascusBase;
+import com.liferay.damascus.cli.relation.validators.RelationValidator;
+
+import freemarker.template.TemplateException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Create Service
@@ -193,6 +209,22 @@ public class CreateCommand implements ICommand {
     }
 
     /**
+     * base.json validation
+     *
+     * Validation checking across multiple application definitions in base.json
+     *
+     * @param baseJsonPath
+     * @throws IOException
+     */
+    public void validation(String baseJsonPath) throws IOException {
+    	String baseJson = FileUtils.readFileToString(new File(baseJsonPath), StandardCharsets.UTF_8);
+    	RelationValidator relationValidator = new RelationValidator();
+    	if(!relationValidator.check(baseJson)) {
+    		throw new InvalidParameterException("Validation mapping error");
+    	}
+    }
+
+    /**
      * Execute create command
      *
      * @param damascus
@@ -203,6 +235,9 @@ public class CreateCommand implements ICommand {
         try {
 
             System.out.println("Started creating service scaffolding. Fetching base.json");
+
+            // base.json validation
+            validation(CREATE_TARGET_PATH + DamascusProps.BASE_JSON);
 
             // Mapping base.json into an object after parsing values
             DamascusBase dmsb = JsonUtil.getObject(

@@ -7,6 +7,7 @@ import com.liferay.damascus.cli.common.TemplateUtil
 import com.liferay.damascus.cli.common.TemplateUtilTest
 import com.liferay.damascus.cli.json.DamascusBase
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils
 import org.apache.commons.lang3.StringUtils
 
 import java.lang.reflect.Field
@@ -91,7 +92,7 @@ class TestUtils {
     }
 
     /**
-     * Temporaly path generator
+     * Temporally path generator
      *
      * Depending on the environment, the path format is different.
      * This method standardize the end of path ends with delimiter.
@@ -107,6 +108,7 @@ class TestUtils {
     }
 
     /**
+     * Path Map
      *
      * @param expectedProjectDirName
      * @return

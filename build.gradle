@@ -21,7 +21,7 @@ plugins {
 apply plugin: 'com.github.kt3k.coveralls'
 
 lombok { // optional: values below are the defaults
-    version = "1.18.4"
+    version = "1.18.6"
     sha256 = ""
 }
 
@@ -58,7 +58,7 @@ jar {
     manifest {
         attributes(
             "Bundle-SymbolicName": "com.liferay.damascus.cli",
-            "Bundle-Version": "1.0.19",
+            "Bundle-Version": "1.0.20",
             "Bundle-Description": "Liferay extension tool for scaffolding service builder portlet",
             "Main-Class": "com.liferay.damascus.cli.Damascus",
             "JPM-Command": "damascus"
@@ -76,6 +76,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.7'
     compile 'org.apache.commons:commons-configuration2:2.1.+'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
+	compile 'com.jayway.jsonpath:json-path:2.4.+'
 
     compile 'org.freemarker:freemarker:2.3.28'
     compile 'com.liferay:com.liferay.project.templates:latest.integration'
@@ -109,7 +110,7 @@ dependencies {
     testCompile group: 'org.powermock', name: 'powermock-module-junit4-rule', version:'1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito-common', version: '1.6.6'
-    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
+    testCompile('org.spockframework:spock-core:1.2-groovy-2.4') {
         exclude module: 'groovy-all'
     }
 }

@@ -1,5 +1,7 @@
 package com.liferay.damascus.cli;
 
+import java.time.LocalDateTime;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParametersDelegate;
@@ -20,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 public class Damascus {
 
-    public final static String VERSION = "20190325";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20190411"; // + "_" + LocalDateTime.now().toString();
 
     @ParametersDelegate
     private InitCommand initCommand = new InitCommand();

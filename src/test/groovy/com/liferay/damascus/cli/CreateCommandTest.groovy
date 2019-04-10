@@ -1,13 +1,18 @@
 package com.liferay.damascus.cli
 
-import com.beust.jcommander.internal.Maps
-import com.liferay.damascus.cli.common.*
-import com.liferay.damascus.cli.json.DamascusBase
-import com.liferay.damascus.cli.test.tools.TestUtils
+import java.nio.charset.StandardCharsets
+import java.security.InvalidParameterException
+
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
 import org.apache.commons.lang3.StringUtils
+
+import com.beust.jcommander.internal.Maps
+import com.liferay.damascus.cli.common.*
+import com.liferay.damascus.cli.json.DamascusBase
+import com.liferay.damascus.cli.test.tools.TestUtils
+
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -468,4 +473,35 @@ class CreateCommandTest extends Specification {
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
     }
+
+	@Unroll("RelationValidator Test")
+	def "RelationValidator test"() {
+		when:
+		//Initialize
+		setupEx(version);
+
+		// Once clear _cfg to initialize with an actual test target template directory
+		TemplateUtil.getInstance().clear()
+
+		def buffer = new ByteArrayOutputStream()
+		System.err = new PrintStream(buffer)
+
+		// Read test base.json file
+		def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
+		def file_path = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
+		def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
+		FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
+
+		//Run damascus -create
+		String[] args = ["-create"]
+		Damascus.main(args)
+
+		then:
+        buffer.toString().contains("java.security.InvalidParameterException")
+
+		where:
+		projectName | version     			    | packageName        		| base_json_name
+		"Employee"  | DamascusProps.VERSION_71	| "com.liferay.sb.employee"	| "base_relation_fail.json"
+
+	}
 }

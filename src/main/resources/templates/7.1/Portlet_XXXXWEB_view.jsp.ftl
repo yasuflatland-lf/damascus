@@ -16,14 +16,14 @@
 
 <#list application.fields as field >
 	<#if field.validation?? && field.validation.className??>
-		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">		
-		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">		
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
 		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
 	${capFirstValidationModel}LocalService ${uncapFirstValidationModel}LocalService = (${capFirstValidationModel}LocalService) request
 			.getAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE);
 	</#if>
-</#list>  	
-			
+</#list>
+
 <#if advancedSearch>
 	Map<String, String> advSearchKeywords = ${uncapFirstModel}ViewHelper.getAdvSearchKeywords(renderRequest, dateFormat);
 
@@ -149,15 +149,6 @@
 			margin-bottom: 4px;
 		}
     </style>
-	<aui:script>
-		$('#advanceSearchPanel').on('click', function() {
-			if($('#advanceSearchPanel .icon-plus-sign').length) {
-				$('#advanceSearchPanel .icon-plus-sign').toggleClass('icon-plus-sign icon-minus-sign');
-			} else if($('#advanceSearchPanel .icon-minus-sign').length) {
-				$('#advanceSearchPanel .icon-minus-sign').toggleClass('icon-minus-sign icon-plus-sign');
-			}
-		});
-	</aui:script>
 	<aui:form action="<%=portletURL.toString()%>" name="advanceSearchForm">
 		<aui:container fluid="false">
 			<#-- ---------------- -->
@@ -348,20 +339,20 @@
 					field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" ||
 					field.type?string == "com.liferay.damascus.cli.json.fields.Integer"
 					>
-					
-						<#if field.validation?? && field.validation.className??>		
+
+						<#if field.validation?? && field.validation.className??>
 							<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
 							<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
-							
+
 							<#assign fieldName = "PrimaryKey">
 							<#if field.validation.fieldName??>
 								<#assign fieldName = "${field.validation.fieldName?cap_first}">
 							</#if>
-							
+
 							<#assign orderByField = "PrimaryKey">
 							<#if field.validation.orderByField??>
 								<#assign orderByField = "${field.validation.orderByField?cap_first}">
-							</#if>				
+							</#if>
 				<%
 				String ${field.name}Text = "";
 				try {
@@ -375,7 +366,7 @@
 				<liferay-ui:search-container-column-text name="${field.name?cap_first}"
 														 property="${field.name}" orderable="true" orderableProperty="${field.name}"
 														 align="left" />
-						</#if>				
+						</#if>
 					</#if>
 				<#-- ---------------- -->
 				<#--     Date         -->
