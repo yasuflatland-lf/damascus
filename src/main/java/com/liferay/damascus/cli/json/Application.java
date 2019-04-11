@@ -1,12 +1,18 @@
 package com.liferay.damascus.cli.json;
 
-import com.fasterxml.jackson.annotation.*;
-import com.liferay.damascus.cli.json.fields.*;
-import lombok.*;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
-import java.security.*;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.liferay.damascus.cli.json.fields.FieldBase;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * JSON structure POJO : Application
@@ -41,8 +47,6 @@ public class Application {
     @JsonProperty(required = true)
     public List<FieldBase> fields = null;
 
-    public List<Relation> relations = null;
-
     /**
      * Custom value map
      */
@@ -52,7 +56,6 @@ public class Application {
      * Replacement keywords map
      */
     public Map<String, String> replacements;
-
 
     /**
      * Has an asset configured?
@@ -67,7 +70,7 @@ public class Application {
     @JsonIgnore
     public boolean hasPrimary() {
 
-        //Primary key must be one. Throw exception to let user know to fix base.json
+        //Primary key must be unique. Throw exception in case it is not.
         if (1 != (getFields().stream().filter(f -> (true == f.primary)).count())) {
             throw new InvalidParameterException("Multiple primary keys have been detected in application<" + getTitle() + ">. Primary key should be only one.");
         }

@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/yasuflatland-lf/damascus/badge.svg?branch=master)](https://coveralls.io/github/yasuflatland-lf/damascus?branch=master)
 [![Build status](https://ci.appveyor.com/api/projects/status/qqpdw6drt8w07ljp?svg=true)](https://ci.appveyor.com/project/yasuflatland-lf/damascus)
 
-Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see https://github.com/yasuflatland-lf/damascus/wiki
+Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see [this official document](https://yasuflatland-lf.github.io/damascus-doc/)
 
 The list of what Damascus automatically generate is as follows
 * CRUD functionality with a model
@@ -20,6 +20,7 @@ The list of what Damascus automatically generate is as follows
 * Activities (The activities on the portlet will be recorded and visible on an activity portlet)
 * Multiple service builder portlets at once
 * Exporting entities by xls file format
+* 1..N Relations between models
 
 ### Required environment
 * Liferay 7.0 CE GA4 and Liferay DXP SP3 or higher versions.
@@ -48,7 +49,7 @@ curl https://raw.githubusercontent.com/yasuflatland-lf/damascus/master/installer
 Let's make a Todo app with damascus
 1. Create a Liferay workspace with Blade cli or Liferay IDE / Liferay Developer Studio. For more details, please see [this document](https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-1/blade-cli).
 2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus -init Todo -p com.liferay.sb.test -v 7.1```
-3. Navigate to ```todo``` folder. You'll see ```base.json``` file is created. For detailed configuration, please see [the official documentation](https://damascusweb.wedeploy.io). Just for demonstration now, we'll create a scaffolding as it is.
+3. Navigate to ```todo``` folder. You'll see ```base.json``` file is created. For detailed configuration, please see [the official documentation](https://yasuflatland-lf.github.io/damascus-doc/). Just for demonstration now, we'll create a scaffolding as it is.
 4. Type ```damascus -create``` and damascus will create a scaffolding service and portlet according to the base.json file.
 5. Start up your Liferay server and in the ```Todo``` folder, type ```blade deploy```. Blade will run properly and service and portlet will be deployed.
 
@@ -81,10 +82,10 @@ In terms of bugs, please post Github issues or send me a PR. To send me PR, plea
 ### Enhancement requests
 A contribution is always welcome! In terms of an Enhancement request, please follow the process below. If you wonder it's a complex feature, please create an issue first and let's discuss. In terms of simple enhancement, please follow steps below.
 
-1. After implementing your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes and in a test class, each test should be written each method basis.
+1. After implementing your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes, and in a test class, each test should be written each method basis.
 2. Run test locally with ```gradle clean test``` until your code pass all tests
 3. Send a PR to /development branch. According to the status of Travis CI / Appveyor, I may create a feature branch and request you to make it pass the test on Travis CI / Appveyor environment.
-4. After all tests pass on Travis CI / Appveyor, will merge into the development branch and relase into master at some points according to the impact of the code.
+4. After all tests pass on Travis CI / Appveyor, will merge into the development branch and release into master at some points according to the impact of the code.
 
 ### What does Damascus stand for?
-Damascus is named after "Damascus blade", which is a strong/sharp blade made out from Damascus steel and forged with lost technology. Liferay has it's an official development tool, "Blade", so I gave this name in hope of reinforcement or extension of Blade tool.
+Damascus is named after "Damascus blade", which is a strong/sharp blade made out from Damascus steel and forged with lost technology. Liferay has it's an official development tool, "Blade", so I gave this name in the hope of reinforcement or extension of Blade tool.

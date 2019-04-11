@@ -18,4 +18,12 @@ public class ${capFirstModel}WebKeys {
 
     public static final String ${uppercaseModel}_VIEW_HELPER =
         "${uppercaseModel}_VIEW_HELPER";
+        
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
+		public static final String ${uppercaseValidationModel}_LOCAL_SERVICE =
+            "${uppercaseValidationModel}_LOCAL_SERVICE";		
+	</#if>
+</#list>        
 }

@@ -1,29 +1,46 @@
 package com.liferay.damascus.cli.common;
 
-import com.google.common.collect.Maps;
-import com.google.common.io.Resources;
-import com.liferay.damascus.antlr.generator.TagsCleanup;
-import com.liferay.damascus.cli.Damascus;
-import freemarker.core.Configurable;
-import freemarker.core.Environment;
-import freemarker.template.*;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidParameterException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
+import com.liferay.damascus.antlr.generator.TagsCleanup;
+import com.liferay.damascus.cli.Damascus;
+
+import freemarker.core.Configurable;
+import freemarker.core.Environment;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateModel;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Freemarker Template Utility

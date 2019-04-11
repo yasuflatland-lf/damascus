@@ -9,6 +9,14 @@ import ${packageName}.constants.${capFirstModel}PortletKeys;
 import ${packageName}.web.constants.${capFirstModel}WebKeys;
 import ${packageName}.web.util.${capFirstModel}ViewHelper;
 
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+import ${packageName}.service.${capFirstValidationModel}LocalService;
+import ${packageName}.web.constants.${capFirstValidationModel}WebKeys;	
+	</#if>
+</#list>    
+
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -38,7 +46,16 @@ public class ${capFirstModel}ViewMVCRenderCommand implements MVCRenderCommand {
         throws PortletException {
 
         request.setAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER, _${uncapFirstModel}ViewHelper);
-
+		
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">		
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
+        request.setAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE, _${uncapFirstValidationModel}LocalService);
+	</#if>
+</#list>    		
+		
         return "/${snakecaseModel}/view.jsp";
     }
 
@@ -49,4 +66,13 @@ public class ${capFirstModel}ViewMVCRenderCommand implements MVCRenderCommand {
     }
 
     private ${capFirstModel}ViewHelper _${uncapFirstModel}ViewHelper;
+    
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">		
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+    @Reference
+    private ${capFirstValidationModel}LocalService _${uncapFirstValidationModel}LocalService;
+	</#if>
+</#list>  
 }
