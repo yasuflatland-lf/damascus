@@ -1,0 +1,3 @@
+com.liferay.damascus.cli.InitCommandExt
+com.liferay.damascus.cli.CreateCommandExt
+com.liferay.damascus.cli.TemplateGeneratorCommandExt
