@@ -18,8 +18,40 @@ import lombok.extern.slf4j.Slf4j;
     commandNames = "-generate"
 )
 @Slf4j
-@Data
 public class TemplateGeneratorArgs extends BaseArgs {
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public boolean isPickup() {
+        return pickup;
+    }
+
+    public void setPickup(boolean pickup) {
+        this.pickup = pickup;
+    }
+
+    public String getTemplateDirPath() {
+        return templateDirPath;
+    }
+
+    public void setTemplateDirPath(String templateDirPath) {
+        this.templateDirPath = templateDirPath;
+    }
+
+    public String getSourceRootPath() {
+        return sourceRootPath;
+    }
+
+    public void setSourceRootPath(String sourceRootPath) {
+        this.sourceRootPath = sourceRootPath;
+    }
+
     @Parameter(names = "-model", description = "Model to convert. -model (target model name, \"SampleSB\" e.g.) ", validateWith = ProjectNameValidator.class)
     private String model = "";
 

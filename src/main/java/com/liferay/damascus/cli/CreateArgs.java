@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
     commandNames = "-create"
 )
 @Slf4j
-@Data
 public class CreateArgs extends BaseArgs {
 
 }

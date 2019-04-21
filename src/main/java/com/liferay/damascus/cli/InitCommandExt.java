@@ -31,12 +31,13 @@ public class InitCommandExt extends BaseCommand<InitArgs> {
     public void execute() throws Exception {
         System.out.println("Creating base.json");
         Damascus damascus = getDamascus();
+        InitArgs args = getArgs();
 
         //Parse template and output
         TemplateUtil.getInstance()
             .process(
-                InitCommand.class,
-                damascus.getLiferayVersion(),
+                InitCommandExt.class,
+                args.getLiferayVersion(),
                 DamascusProps.BASE_JSON,
                 getParameters(damascus),
                 getTargetDir()
@@ -74,10 +75,11 @@ public class InitCommandExt extends BaseCommand<InitArgs> {
      */
     private Map getParameters(Damascus damascus) {
         Map params = new ConcurrentHashMap<>();
+        InitArgs args = getArgs();
 
         //Set parameters
         params.put(DamascusProps.BASE_PROJECT_NAME, getArgs().getProjectName());
-        params.put(DamascusProps.BASE_LIFERAY_VERSION, damascus.getLiferayVersion());
+        params.put(DamascusProps.BASE_LIFERAY_VERSION, args.getLiferayVersion());
         params.put(DamascusProps.BASE_PACKAGE_NAME, getArgs().getPackageName());
 
         String entityName = getArgs().getProjectName().replace("-", "");

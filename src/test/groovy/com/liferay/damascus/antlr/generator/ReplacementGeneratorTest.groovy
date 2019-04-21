@@ -2,7 +2,6 @@ package com.liferay.damascus.antlr.generator
 
 import com.beust.jcommander.JCommander
 import com.liferay.damascus.cli.Damascus
-import com.liferay.damascus.cli.InitCommand
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.common.JsonUtil
 import com.liferay.damascus.cli.common.TemplateUtil

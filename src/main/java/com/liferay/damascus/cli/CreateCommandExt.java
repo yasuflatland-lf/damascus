@@ -169,7 +169,7 @@ public class CreateCommandExt extends BaseCommand<CreateArgs> {
 
         //Parse template and output
         TemplateUtil.getInstance().process(
-            CreateCommand.class,
+            CreateCommandExt.class,
             damascusBase.getLiferayVersion(),
             templateFileName,
             params,

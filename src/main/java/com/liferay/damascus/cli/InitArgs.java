@@ -6,6 +6,7 @@ import com.liferay.damascus.cli.BaseArgs;
 import com.liferay.damascus.cli.validators.PackageNameValidator;
 import com.liferay.damascus.cli.validators.ProjectNameValidator;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,8 +19,23 @@ import lombok.extern.slf4j.Slf4j;
     commandNames = "-init"
 )
 @Slf4j
-@Data
 public class InitArgs extends BaseArgs {
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
     @Parameter(names = "-init", description = "Create damascus base file. -init (project name) ", validateWith = ProjectNameValidator.class)
     private String projectName = null;
