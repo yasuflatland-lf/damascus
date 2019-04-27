@@ -28,11 +28,11 @@ import java.util.*;
  * @author Sébastien Le Marchand
  */
 @Slf4j
-public class CreateCommandExt extends BaseCommand<CreateArgs> {
-    public CreateCommandExt() {
+public class CreateCommand extends BaseCommand<CreateArgs> {
+    public CreateCommand() {
     }
 
-    public CreateCommandExt(Damascus damascus) {
+    public CreateCommand(Damascus damascus) {
         super(damascus, null);
     }
 
@@ -169,7 +169,7 @@ public class CreateCommandExt extends BaseCommand<CreateArgs> {
 
         //Parse template and output
         TemplateUtil.getInstance().process(
-            CreateCommandExt.class,
+            CreateCommand.class,
             damascusBase.getLiferayVersion(),
             templateFileName,
             params,

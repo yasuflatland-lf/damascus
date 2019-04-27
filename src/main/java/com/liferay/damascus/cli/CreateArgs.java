@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Parameters(
     commandDescription = "Create service(s) according to base.json.",
-    commandNames = "-create"
+    commandNames = "create"
 )
 @Slf4j
 public class CreateArgs extends BaseArgs {

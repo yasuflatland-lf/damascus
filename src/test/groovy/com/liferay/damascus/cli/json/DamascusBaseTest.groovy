@@ -115,8 +115,8 @@ class DamascusBaseTest extends Specification {
             }
         }
 
-        //Run damascus -create
-        String[] args = ["-create"]
+        //Run damascus create
+        String[] args = ["create"]
         Damascus.main(args)
 
         //Target path map of a project

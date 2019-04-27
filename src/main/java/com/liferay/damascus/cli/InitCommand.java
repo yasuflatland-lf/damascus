@@ -19,11 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Sébastien Le Marchand
  */
 @Slf4j
-public class InitCommandExt extends BaseCommand<InitArgs> {
-    public InitCommandExt() {
+public class InitCommand extends BaseCommand<InitArgs> {
+    public InitCommand() {
     }
 
-    public InitCommandExt(Damascus damascus) {
+    public InitCommand(Damascus damascus) {
         super(damascus, null);
     }
 
@@ -36,7 +36,7 @@ public class InitCommandExt extends BaseCommand<InitArgs> {
         //Parse template and output
         TemplateUtil.getInstance()
             .process(
-                InitCommandExt.class,
+                InitCommand.class,
                 args.getLiferayVersion(),
                 DamascusProps.BASE_JSON,
                 getParameters(damascus),
@@ -58,7 +58,7 @@ public class InitCommandExt extends BaseCommand<InitArgs> {
             targetDir.append(DamascusProps.DS);
         }
 
-        String projectDirectoryName = CaseUtil.camelCaseToDashCase(getArgs().getPackageName());
+        String projectDirectoryName = CaseUtil.camelCaseToDashCase(getArgs().getProjectName());
 
         return targetDir
                    .append(projectDirectoryName)

@@ -4,7 +4,6 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -17,7 +16,6 @@ import java.util.*;
  * @author Yasuyuki Takeo
  */
 @Slf4j
-@Data
 public class Damascus {
 
     public final static String VERSION = "20190411"; // + "_" + LocalDateTime.now().toString();
@@ -123,33 +121,32 @@ public class Damascus {
      */
     protected boolean _runCommand(Map<String, BaseCommand<?>> commands, BaseArgs baseArgs, String commandName)
         throws Exception {
-        BaseCommand<?> command = null;
 
         if (!commands.containsKey(commandName)) {
             return false;
         }
 
-        command = commands.get(commandName);
+        _command = commands.get(commandName);
 
-        if (null == command) {
+        if (null == _command) {
             return false;
         }
 
         //
         // Store required objects for a command
         //
-        command.setArgs(baseArgs);
-        command.setDamascus(this);
+        _command.setArgs(baseArgs);
+        _command.setDamascus(this);
 
         try {
             // Execute command
-            command.execute();
+            _command.execute();
 
         } catch (Throwable th) {
             throw th;
         } finally {
-            if (command instanceof AutoCloseable) {
-                ((AutoCloseable) command).close();
+            if (_command instanceof AutoCloseable) {
+                ((AutoCloseable) _command).close();
             }
         }
 
@@ -198,7 +195,7 @@ public class Damascus {
             try {
                 BaseCommand<?> baseCommand = baseCommandIterator.next();
 
-                String commandName = _getCommandNames(baseCommand);
+                String commandName = _getCommandName(baseCommand);
 
                 allCommands.put(commandName, baseCommand);
             } catch (Throwable e) {
@@ -229,7 +226,7 @@ public class Damascus {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    protected String _getCommandNames(BaseCommand<?> baseCommand)
+    protected String _getCommandName(BaseCommand<?> baseCommand)
         throws IllegalAccessException, InstantiationException {
 
         Class<? extends BaseArgs> baseArgsClass = baseCommand.getArgsClass();
@@ -278,5 +275,16 @@ public class Damascus {
 
         return builder.build();
     }
+
+    /**
+     * Get Command
+     *
+     * @return Command object
+     */
+    public BaseCommand<?> getCommand() {
+        return _command;
+    }
+
+    private BaseCommand<?> _command = null;
 
 }

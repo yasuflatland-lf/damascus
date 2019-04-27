@@ -48,9 +48,9 @@ curl https://raw.githubusercontent.com/yasuflatland-lf/damascus/master/installer
 ### Getting started
 Let's make a Todo app with damascus
 1. Create a Liferay workspace with Blade cli or Liferay IDE / Liferay Developer Studio. For more details, please see [this document](https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-1/blade-cli).
-2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus -init Todo -p com.liferay.sb.test -v 7.1```
+2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus init Todo -p com.liferay.sb.test -v 7.1```
 3. Navigate to ```todo``` folder. You'll see ```base.json``` file is created. For detailed configuration, please see [the official documentation](https://yasuflatland-lf.github.io/damascus-doc/). Just for demonstration now, we'll create a scaffolding as it is.
-4. Type ```damascus -create``` and damascus will create a scaffolding service and portlet according to the base.json file.
+4. Type ```damascus create``` and damascus will create a scaffolding service and portlet according to the base.json file.
 5. Start up your Liferay server and in the ```Todo``` folder, type ```blade deploy```. Blade will run properly and service and portlet will be deployed.
 
 ### How to compile Damascus on your own?

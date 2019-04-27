@@ -4,7 +4,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.liferay.damascus.cli.common.DamascusProps;
 import com.liferay.damascus.cli.validators.ProjectNameValidator;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Parameters(
     commandDescription = "Generate mode. This can be template.",
-    commandNames = "-generate"
+    commandNames = "generate"
 )
 @Slf4j
 public class TemplateGeneratorArgs extends BaseArgs {

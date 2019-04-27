@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Parameters(
     commandDescription = "Initialize scaffolding generation configuration file",
-    commandNames = "-init"
+    commandNames = "init"
 )
 @Slf4j
 public class InitArgs extends BaseArgs {
@@ -37,7 +37,7 @@ public class InitArgs extends BaseArgs {
         this.packageName = packageName;
     }
 
-    @Parameter(names = "-init", description = "Create damascus base file. -init (project name) ", validateWith = ProjectNameValidator.class)
+    @Parameter(names = "-c", description = "Class name. E.g. ToDo ", validateWith = ProjectNameValidator.class)
     private String projectName = null;
 
     @Parameter(names = "-p", description = "Package name. (e.g. com.liferay.test)", validateWith = PackageNameValidator.class)

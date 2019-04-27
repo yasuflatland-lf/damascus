@@ -25,11 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Yasuyuki Takeo
  */
 @Slf4j
-public class TemplateGeneratorCommandExt extends BaseCommand<TemplateGeneratorArgs> {
-    public TemplateGeneratorCommandExt() {
+public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs> {
+    public TemplateGeneratorCommand() {
     }
 
-    public TemplateGeneratorCommandExt(Damascus damascus) {
+    public TemplateGeneratorCommand(Damascus damascus) {
         super(damascus, null);
     }
 
@@ -104,7 +104,7 @@ public class TemplateGeneratorCommandExt extends BaseCommand<TemplateGeneratorAr
 
     @Override
     public Class<TemplateGeneratorArgs> getArgsClass() {
-        return null;
+        return TemplateGeneratorArgs.class;
     }
 
 
