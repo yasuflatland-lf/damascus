@@ -1,61 +1,146 @@
 package com.liferay.damascus.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.io.FileUtils;
-
-import com.beust.jcommander.Parameter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.liferay.damascus.cli.common.CaseUtil;
-import com.liferay.damascus.cli.common.CommonUtil;
-import com.liferay.damascus.cli.common.DamascusProps;
-import com.liferay.damascus.cli.common.JsonUtil;
-import com.liferay.damascus.cli.common.PropertyContext;
-import com.liferay.damascus.cli.common.PropertyContextFactory;
-import com.liferay.damascus.cli.common.TemplateUtil;
+import com.liferay.damascus.cli.common.*;
 import com.liferay.damascus.cli.exception.DamascusProcessException;
 import com.liferay.damascus.cli.json.Application;
 import com.liferay.damascus.cli.json.DamascusBase;
 import com.liferay.damascus.cli.relation.validators.RelationValidator;
-
 import freemarker.template.TemplateException;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidParameterException;
+import java.util.*;
 
 /**
- * Create Service
+ * Create command
  * <p>
- * Damascus will create service according to the base.json
+ * Damascus creates service according to the base.json
  *
  * @author Yasuyuki Takeo
  * @author Sébastien Le Marchand
  */
 @Slf4j
-@Data
-public class CreateCommand implements ICommand {
-
+public class CreateCommand extends BaseCommand<CreateArgs> {
     public CreateCommand() {
     }
 
-    /**
-     * Runnable validation
-     *
-     * @return true if this command can be invoked
-     */
-    public boolean isRunnable(Damascus damascus) {
-        return isCreate();
+    public CreateCommand(Damascus damascus) {
+        super(damascus, null);
+    }
+
+    @Override
+    public void execute() throws Exception {
+        try {
+            System.out.println("Started creating service scaffolding. Fetching base.json");
+
+            // base.json validation
+            validation(CREATE_TARGET_PATH + DamascusProps.BASE_JSON);
+
+            // Mapping base.json into an object after parsing values
+            DamascusBase dmsb = JsonUtil.getObject(
+                CREATE_TARGET_PATH + DamascusProps.BASE_JSON,
+                DamascusBase.class
+            );
+
+            // Get root path to the templates
+            File resourceRoot = TemplateUtil
+                                    .getInstance()
+                                    .getResourceRootPath(dmsb.getLiferayVersion());
+
+            // Fetch all template file paths
+            Collection<File> templatePaths = TemplateUtil
+                                                 .getInstance()
+                                                 .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
+
+            String camelCaseProjectName = dmsb.getProjectName();
+
+            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(camelCaseProjectName);
+
+            //1. Generate skeleton of the project.
+            //2. Parse service.xml
+            //3. run gradle buildService
+            //4. generate corresponding files from templates
+            //5. run gradle buildService again.
+
+            // Get path to the service.xml
+            String serviceXmlPath = TemplateUtil.getInstance().getServiceXmlPath(
+                CREATE_TARGET_PATH,
+                dashCaseProjectName
+            );
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Generating *-api, *-service");
+            if (dmsb.isWebExist()) {
+                sb.append(", *-web");
+            }
+            sb.append(" skeletons for " + dashCaseProjectName);
+            System.out.println(sb.toString());
+
+            // Generate skeletons of the project
+            generateProjectSkeleton(
+                dmsb.getLiferayVersion(),
+                dashCaseProjectName,
+                dmsb.getPackageName(),
+                CREATE_TARGET_PATH,
+                dmsb.isWebExist()
+            );
+
+            System.out.println("Parsing " + serviceXmlPath);
+
+            // Generate service.xml based on base.json configurations and overwrite existing service.xml
+            generateScaffolding(dmsb, DamascusProps.SERVICE_XML, serviceXmlPath, null);
+
+            System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
+
+            // Run "gradle buildService" to generate the skeleton of services.
+            CommonUtil.runGradle(serviceXmlPath, "buildService");
+
+            //Parse all templates and generate scaffold files.
+            for (Application app : dmsb.getApplications()) {
+
+                System.out.print("Parsing templates");
+
+                // Process all templates
+                for (File template : templatePaths) {
+                    System.out.print(".");
+                    generateScaffolding(dmsb, template.getName(), null, app);
+                }
+
+                System.out.println(".");
+            }
+
+            System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
+
+            // Run "gradle buildService" to regenerate with added templates
+            CommonUtil.runGradle(serviceXmlPath, "buildService");
+
+            System.out.println("Moving all modules projects into the same directory");
+
+            // Finalize Project Directory: move modules directories into the current directory
+            finalizeProjects(dashCaseProjectName);
+
+            System.out.println("Done.");
+
+        } catch (DamascusProcessException e) {
+            // Damascus operation error
+            System.out.println(e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public Class<CreateArgs> getArgsClass() {
+        return CreateArgs.class;
     }
 
     /**
@@ -210,135 +295,20 @@ public class CreateCommand implements ICommand {
 
     /**
      * base.json validation
-     *
+     * <p>
      * Validation checking across multiple application definitions in base.json
      *
      * @param baseJsonPath
      * @throws IOException
      */
     public void validation(String baseJsonPath) throws IOException {
-    	String baseJson = FileUtils.readFileToString(new File(baseJsonPath), StandardCharsets.UTF_8);
-    	RelationValidator relationValidator = new RelationValidator();
-    	if(!relationValidator.check(baseJson)) {
-    		throw new InvalidParameterException("Validation mapping error");
-    	}
-    }
-
-    /**
-     * Execute create command
-     *
-     * @param damascus
-     * @param args
-     */
-    @Override
-    public void run(Damascus damascus, String... args) {
-        try {
-
-            System.out.println("Started creating service scaffolding. Fetching base.json");
-
-            // base.json validation
-            validation(CREATE_TARGET_PATH + DamascusProps.BASE_JSON);
-
-            // Mapping base.json into an object after parsing values
-            DamascusBase dmsb = JsonUtil.getObject(
-                CREATE_TARGET_PATH + DamascusProps.BASE_JSON,
-                DamascusBase.class
-            );
-
-            // Get root path to the templates
-            File resourceRoot = TemplateUtil
-                .getInstance()
-                .getResourceRootPath(dmsb.getLiferayVersion());
-
-            // Fetch all template file paths
-            Collection<File> templatePaths = TemplateUtil
-                .getInstance()
-                .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
-
-            String camelCaseProjectName = dmsb.getProjectName();
-
-            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(camelCaseProjectName);
-
-            //1. Generate skeleton of the project.
-            //2. Parse service.xml
-            //3. run gradle buildService
-            //4. generate corresponding files from templates
-            //5. run gradle buildService again.
-
-            // Get path to the service.xml
-            String serviceXmlPath = TemplateUtil.getInstance().getServiceXmlPath(
-                CREATE_TARGET_PATH,
-                dashCaseProjectName
-            );
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("Generating *-api, *-service");
-            if (dmsb.isWebExist()) {
-                sb.append(", *-web");
-            }
-            sb.append(" skeletons for " + dashCaseProjectName);
-            System.out.println(sb.toString());
-
-            // Generate skeletons of the project
-            generateProjectSkeleton(
-                dmsb.getLiferayVersion(),
-                dashCaseProjectName,
-                dmsb.getPackageName(),
-                CREATE_TARGET_PATH,
-                dmsb.isWebExist()
-            );
-
-            System.out.println("Parsing " + serviceXmlPath);
-
-            // Generate service.xml based on base.json configurations and overwrite existing service.xml
-            generateScaffolding(dmsb, DamascusProps.SERVICE_XML, serviceXmlPath, null);
-
-            System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
-
-            // Run "gradle buildService" to generate the skeleton of services.
-            CommonUtil.runGradle(serviceXmlPath, "buildService");
-
-            //Parse all templates and generate scaffold files.
-            for (Application app : dmsb.getApplications()) {
-
-                System.out.print("Parsing templates");
-
-                // Process all templates
-                for (File template : templatePaths) {
-                    System.out.print(".");
-                    generateScaffolding(dmsb, template.getName(), null, app);
-                }
-
-                System.out.println(".");
-            }
-
-            System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
-
-            // Run "gradle buildService" to regenerate with added templates
-            CommonUtil.runGradle(serviceXmlPath, "buildService");
-
-            System.out.println("Moving all modules projects into the same directory");
-
-            // Finalize Project Directory: move modules directories into the current directory
-            finalizeProjects(dashCaseProjectName);
-
-            System.out.println("Done.");
-
-        } catch (DamascusProcessException e) {
-            // Damascus operation error
-            log.error(e.getMessage());
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        String baseJson = FileUtils.readFileToString(new File(baseJsonPath), StandardCharsets.UTF_8);
+        RelationValidator relationValidator = new RelationValidator();
+        if (!relationValidator.check(baseJson)) {
+            throw new InvalidParameterException("Validation mapping error");
         }
     }
 
     private static final String CREATE_TARGET_PATH = "." + DamascusProps.DS;
-
-    /**
-     * Command Parameters
-     */
-    @Parameter(names = "-create", description = "Create service according to base.json.")
-    private boolean create = false;
 
 }

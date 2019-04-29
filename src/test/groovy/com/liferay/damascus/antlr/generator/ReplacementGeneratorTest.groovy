@@ -2,7 +2,6 @@ package com.liferay.damascus.antlr.generator
 
 import com.beust.jcommander.JCommander
 import com.liferay.damascus.cli.Damascus
-import com.liferay.damascus.cli.InitCommand
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.common.JsonUtil
 import com.liferay.damascus.cli.common.TemplateUtil
@@ -27,22 +26,17 @@ class ReplacementGeneratorTest extends Specification {
     ]
 
     def setup() {
-        Spy(Damascus)
         FileUtils.deleteDirectory(new File(workTempDir));
         TemplateUtil.getInstance().clear();
         TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
-
-        initCommand = Spy(InitCommand)
     }
 
     @Unroll("ReplacementGenerator smoke test")
     def "ReplacementGenerator smoke test"() {
         when:
-        String[] args = [argv1, argv2, argv3, argv4]
-        new JCommander(initCommand, args)
+        String[] args = garvs
         def dms = Spy(Damascus)
-        dms.setLiferayVersion(argv6)
-        initCommand.run(dms, args)
+        dms.main(args)
 
         def tmpBaseJsonDir = workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON
         def f = new File(tmpBaseJsonDir)
@@ -68,19 +62,17 @@ class ReplacementGeneratorTest extends Specification {
         }
 
         where:
-        argv1   | argv2  | argv3 | argv4              | argv5 | argv6                    | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | DamascusProps.VERSION_70 | "to-do"
+        garvs                                                                             | expectedProjectDirName
+        ["init", "-c", "ToDo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_70] | "to-do"
 
     }
 
     @Unroll("ReplacementGenerator do not override test")
     def "ReplacementGenerator do not override test"() {
         when:
-        String[] args = [argv1, argv2, argv3, argv4]
-        new JCommander(initCommand, args)
+        String[] args = garvs
         def dms = Spy(Damascus)
-        dms.setLiferayVersion(argv6)
-        initCommand.run(dms, args)
+        dms.main(args)
 
         def tmpBaseJsonDir = workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON
         def f = new File(tmpBaseJsonDir)
@@ -109,19 +101,17 @@ class ReplacementGeneratorTest extends Specification {
         }
 
         where:
-        argv1   | argv2  | argv3 | argv4              | argv5 | argv6                    | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | DamascusProps.VERSION_70 | "to-do"
+        garvs                                                                             | expectedProjectDirName
+        ["init", "-c", "ToDo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_70] | "to-do"
 
     }
 
     @Unroll("writeToString smoke test")
     def "writeToString smoke test"() {
         when:
-        String[] args = [argv1, argv2, argv3, argv4]
-        new JCommander(initCommand, args)
+        String[] args = garvs
         def dms = Spy(Damascus)
-        dms.setLiferayVersion(argv6)
-        initCommand.run(dms, args)
+        dms.main(args)
 
         def tmpBaseJsonDir = workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON
         def f = new File(tmpBaseJsonDir)
@@ -136,8 +126,8 @@ class ReplacementGeneratorTest extends Specification {
         }
 
         where:
-        argv1   | argv2  | argv3 | argv4              | argv5 | argv6                    | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay.test" | "-v"  | DamascusProps.VERSION_70 | "to-do"
+        garvs                                                                             | expectedProjectDirName
+        ["init", "-c", "ToDo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_70] | "to-do"
 
     }
 }

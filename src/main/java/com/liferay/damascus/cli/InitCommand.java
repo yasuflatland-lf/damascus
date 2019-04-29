@@ -1,12 +1,8 @@
 package com.liferay.damascus.cli;
 
-import com.beust.jcommander.Parameter;
 import com.liferay.damascus.cli.common.CaseUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
 import com.liferay.damascus.cli.common.TemplateUtil;
-import com.liferay.damascus.cli.validators.PackageNameValidator;
-import com.liferay.damascus.cli.validators.ProjectNameValidator;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,47 +19,31 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Sébastien Le Marchand
  */
 @Slf4j
-@Data
-public class InitCommand implements ICommand {
-
+public class InitCommand extends BaseCommand<InitArgs> {
     public InitCommand() {
     }
 
-    /**
-     * Judge if Init is runnable
-     *
-     * @return true if it's runnable or false
-     */
-    public boolean isRunnable(Damascus damascus) {
-
-        return ((null != getProjectName()) && (null != getPackageName()));
+    public InitCommand(Damascus damascus) {
+        super(damascus, null);
     }
 
-    /**
-     * Invoke actual command
-     *
-     * @param damascus
-     * @param args
-     */
-    public void run(Damascus damascus, String... args) {
-        try {
-            System.out.println("Creating base.json");
+    @Override
+    public void execute() throws Exception {
+        System.out.println("Creating base.json");
+        Damascus damascus = getDamascus();
+        InitArgs args = getArgs();
 
-            //Parse template and output
-            TemplateUtil.getInstance()
-                .process(
-                    InitCommand.class,
-                    damascus.getLiferayVersion(),
-                    DamascusProps.BASE_JSON,
-                    getParameters(damascus),
-                    getTargetDir()
-                );
+        //Parse template and output
+        TemplateUtil.getInstance()
+            .process(
+                InitCommand.class,
+                args.getLiferayVersion(),
+                DamascusProps.BASE_JSON,
+                getParameters(damascus),
+                getTargetDir()
+            );
 
-            System.out.println("Done.");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        System.out.println("Done.");
     }
 
     /**
@@ -78,13 +58,13 @@ public class InitCommand implements ICommand {
             targetDir.append(DamascusProps.DS);
         }
 
-        String projectDirectoryName = CaseUtil.camelCaseToDashCase(getProjectName());
+        String projectDirectoryName = CaseUtil.camelCaseToDashCase(getArgs().getProjectName());
 
         return targetDir
-            .append(projectDirectoryName)
-            .append(DamascusProps.DS)
-            .append(DamascusProps.BASE_JSON)
-            .toString();
+                   .append(projectDirectoryName)
+                   .append(DamascusProps.DS)
+                   .append(DamascusProps.BASE_JSON)
+                   .toString();
     }
 
     /**
@@ -95,13 +75,14 @@ public class InitCommand implements ICommand {
      */
     private Map getParameters(Damascus damascus) {
         Map params = new ConcurrentHashMap<>();
+        InitArgs args = getArgs();
 
         //Set parameters
-        params.put(DamascusProps.BASE_PROJECT_NAME, getProjectName());
-        params.put(DamascusProps.BASE_LIFERAY_VERSION, damascus.getLiferayVersion());
-        params.put(DamascusProps.BASE_PACKAGE_NAME, getPackageName());
+        params.put(DamascusProps.BASE_PROJECT_NAME, getArgs().getProjectName());
+        params.put(DamascusProps.BASE_LIFERAY_VERSION, args.getLiferayVersion());
+        params.put(DamascusProps.BASE_PACKAGE_NAME, getArgs().getPackageName());
 
-        String entityName = getProjectName().replace("-", "");
+        String entityName = getArgs().getProjectName().replace("-", "");
         params.put(DamascusProps.BASE_ENTITY_NAME, entityName);
         params.put(DamascusProps.BASE_ENTITY_NAME_LOWER, StringUtils.lowerCase(entityName));
 
@@ -111,10 +92,8 @@ public class InitCommand implements ICommand {
         return damascusMap;
     }
 
-    @Parameter(names = "-init", description = "Create damascus base file. -init (project name) ", validateWith = ProjectNameValidator.class)
-    private String projectName = null;
-
-    @Parameter(names = "-p", description = "Package name. (e.g. com.liferay.test)", validateWith = PackageNameValidator.class)
-    private String packageName = null;
-
+    @Override
+    public Class<InitArgs> getArgsClass() {
+        return InitArgs.class;
+    }
 }
