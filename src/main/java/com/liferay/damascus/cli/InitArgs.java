@@ -37,10 +37,10 @@ public class InitArgs extends BaseArgs {
         this.packageName = packageName;
     }
 
-    @Parameter(names = "-c", description = "Class name. E.g. ToDo ", validateWith = ProjectNameValidator.class)
+    @Parameter(names = "-c", description = "Class name. E.g. ToDo ", validateWith = ProjectNameValidator.class, required = true)
     private String projectName = null;
 
-    @Parameter(names = "-p", description = "Package name. (e.g. com.liferay.test)", validateWith = PackageNameValidator.class)
+    @Parameter(names = "-p", description = "Package name. (e.g. com.liferay.test)", validateWith = PackageNameValidator.class, required = true)
     private String packageName = null;
 
 }

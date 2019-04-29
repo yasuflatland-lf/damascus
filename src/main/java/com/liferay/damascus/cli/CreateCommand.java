@@ -13,6 +13,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -131,7 +132,9 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         } catch (DamascusProcessException e) {
             // Damascus operation error
-            log.error(e.getMessage());
+            System.out.println(e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
