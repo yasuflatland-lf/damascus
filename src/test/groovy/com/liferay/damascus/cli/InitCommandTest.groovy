@@ -14,103 +14,92 @@ class InitCommandTest extends Specification {
     def workTempDir = TestUtils.getTempPath() + "damascustest";
     def initCommand;
 
+    protected final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    protected final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
     def setup() {
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
         Spy(Damascus)
         FileUtils.deleteDirectory(new File(workTempDir));
         TemplateUtil.getInstance().clear();
         TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
+    }
 
-        initCommand = Spy(InitCommand)
+    def cleanup() {
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err)));
     }
 
     //TODO: Write inititialize parameter combination error vailidation
 
-    @Unroll("Smoke test for -init Success Pattern(#argv1 #argv2)")
+    @Unroll("Smoke test for init Success Pattern(#garvs #result)")
     def "Smoke test for Init Command Success Pattern"() {
         when:
-        String[] args = [argv1, argv2]
-        new JCommander(initCommand, args);
+        String[] args = garvs
+        Damascus dmsc = Spy(Damascus);
+        dmsc.run(args);
+        InitArgs cargs = dmsc.getCommand().getArgs();
 
         then:
-        result == initCommand.getProjectName()
+        result.equals(cargs.getProjectName())
 
         where:
-        argv1   | argv2     | result
-        "-init" | "Foo"     | "Foo"
-        "-init" | "Bar"     | "Bar"
-        "-init" | "BarFoo"  | "BarFoo"
-        "-init" | "Bar-Foo" | "Bar-Foo"
+        garvs                                                                               | result
+        ["init", "-c", "Foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]     | "Foo"
+        ["init", "-c", "Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]     | "Bar"
+        ["init", "-c", "BarFoo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]  | "BarFoo"
+        ["init", "-c", "Bar-Foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71] | "Bar-Foo"
     }
 
-    @Unroll("Smoke test for -init Error Pattern(#argv1 #argv2)")
+    @Unroll("Smoke test for init Error Pattern(#garvs)")
     def "Smoke test for Init Command Error Pattern"() {
         when:
-        String[] args = [argv1, argv2]
-        new JCommander(initCommand, args)
+        String[] args = garvs
+        Damascus dmsc = Spy(Damascus);
+        dmsc.run(args);
 
         then:
-        thrown(ParameterException.class)
+        errContent.toString().contains("Parameter -c should only use alphabetic")
 
         where:
-        argv1   | argv2
-        "-init" | "foo@"
-        "-init" | "foo^"
-        "-init" | "^foo"
-        "-init" | "foo%"
-        "-init" | "fooあ"
-        "-init" | "foo_Bar"
-        "-init" | "_Bar"
-        "-init" | "Bar_"
+        garvs                                                                               | _
+        ["init", "-c", "foo@", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "foo^", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "^foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "foo%", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "fooあ", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "foo_Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71] | _
+        ["init", "-c", "_Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "Bar_", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
     }
 
-    @Unroll("Smoke test for -p Success Pattern(#argv1 #argv2)")
-    def "Package name test for Success Pattern"() {
-        when:
-        String[] args = [argv1, argv2]
-        new JCommander(initCommand, args)
-
-        then:
-        null != initCommand.getPackageName()
-
-        where:
-        argv1 | argv2                      | argv3 | argv4
-        "-p"  | "com.liferay"              | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "com.liferay.damascus.cli" | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "com.a"                    | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "com"                      | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "com.liferay"              | "-v"  | DamascusProps.VERSION_70
-        "-p"  | "com.liferay.damascus.cli" | "-v"  | DamascusProps.VERSION_70
-        "-p"  | "com.a"                    | "-v"  | DamascusProps.VERSION_70
-        "-p"  | "com"                      | "-v"  | DamascusProps.VERSION_70
-    }
-
-    @Unroll("Smoke test for -init Error Pattern(#argv1 #argv2)")
+    @Unroll("Smoke test for init Error Pattern(#argv1 #argv2)")
     def "Package name test for Error Pattern"() {
         when:
-        String[] args = [argv1, argv2, argv3, argv4]
-        new JCommander(initCommand, args)
+        String[] args = garvs
+        Damascus dmsc = Spy(Damascus);
+        dmsc.run(args);
 
         then:
-        thrown(ParameterException.class)
+        errContent.toString().contains("Parameter -p should be appropriate package name")
 
         where:
-        argv1 | argv2     | argv3 | argv4
-        "-p"  | "999.aaa" | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "9.aaa"   | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "aaa.9aa" | "-v"  | DamascusProps.VERSION_71
-        "-p"  | "999.aaa" | "-v"  | DamascusProps.VERSION_70
-        "-p"  | "9.aaa"   | "-v"  | DamascusProps.VERSION_70
-        "-p"  | "aaa.9aa" | "-v"  | DamascusProps.VERSION_70
+        garvs                                                                  | _
+        ["init", "-c", "Foo", "-p", "999.aaa", "-v", DamascusProps.VERSION_71] | _
+        ["init", "-c", "Foo", "-p", "9.aaa", "-v", DamascusProps.VERSION_71]   | _
+        ["init", "-c", "Foo", "-p", "aaa.9aa", "-v", DamascusProps.VERSION_71] | _
+        ["init", "-c", "Foo", "-p", "999.aaa", "-v", DamascusProps.VERSION_71] | _
+        ["init", "-c", "Foo", "-p", "9.aaa", "-v", DamascusProps.VERSION_71]   | _
+        ["init", "-c", "Foo", "-p", "aaa.9aa", "-v", DamascusProps.VERSION_71] | _
+
     }
 
     @Unroll("Init run from main method test")
     def "Init run from main method test"() {
         when:
-        String[] args = [argv1, argv2, argv3, argv4]
-        new JCommander(initCommand, args)
-        def dms = Spy(Damascus)
-        dms.setLiferayVersion(argv6)
-        initCommand.run(dms, args)
+        String[] args = garvs
+        Damascus.main(args);
         def f = new File(workTempDir + DS + expectedProjectDirName + DS + DamascusProps.BASE_JSON)
 
         then:
@@ -118,8 +107,8 @@ class InitCommandTest extends Specification {
         //Other detailed test to confirm if the json is parsed correctly has been done in JsonUtilTest
 
         where:
-        argv1   | argv2  | argv3 | argv4         | argv5 | argv6                    | expectedProjectDirName
-        "-init" | "ToDo" | "-p"  | "com.liferay" | "-v"  | DamascusProps.VERSION_71 | "to-do"
-        "-init" | "ToDo" | "-p"  | "com.liferay" | "-v"  | DamascusProps.VERSION_70 | "to-do"
+        garvs                                                                       | expectedProjectDirName
+        ["init", "-c", "ToDo", "-p", "com.liferay", "-v", DamascusProps.VERSION_70] | "to-do"
+        ["init", "-c", "ToDo", "-p", "com.liferay", "-v", DamascusProps.VERSION_71] | "to-do"
     }
 }

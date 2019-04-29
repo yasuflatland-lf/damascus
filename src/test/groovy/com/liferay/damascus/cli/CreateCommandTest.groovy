@@ -186,8 +186,8 @@ class CreateCommandTest extends Specification {
                 damascus,
                 workTempDir + DS + DamascusProps.BASE_JSON)
 
-        //Run damascus -create
-        String[] args = ["-create"]
+        //Run damascus create
+        String[] args = ["create"]
         Damascus.main(args)
 
         //Test files / directories are property generated
@@ -338,8 +338,8 @@ class CreateCommandTest extends Specification {
                 damascus,
                 workTempDir + DS + DamascusProps.BASE_JSON)
 
-        //Run damascus -create
-        String[] args = ["-create"]
+        //Run damascus create
+        String[] args = ["create"]
         Damascus.main(args)
 
         then:
@@ -395,8 +395,8 @@ class CreateCommandTest extends Specification {
                 damascus,
                 workTempDir + DS + DamascusProps.BASE_JSON)
 
-        //Run damascus -create
-        String[] args = ["-create"]
+        //Run damascus create
+        String[] args = ["create"]
         Damascus.main(args)
 
         then:
@@ -455,8 +455,8 @@ class CreateCommandTest extends Specification {
         dmsb.applications.get(0).web = false
         JsonUtil.writer(target_file_path, dmsb)
 
-        //Run damascus -create
-        String[] args = ["-create"]
+        //Run damascus create
+        String[] args = ["create"]
         Damascus.main(args)
 
         def fpath = TestUtils.getPathMap(expectedProjectDirName)
@@ -492,8 +492,8 @@ class CreateCommandTest extends Specification {
 		def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
 		FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
 
-		//Run damascus -create
-		String[] args = ["-create"]
+		//Run damascus create
+		String[] args = ["create"]
 		Damascus.main(args)
 
 		then:
