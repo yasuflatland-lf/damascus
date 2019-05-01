@@ -20,7 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class InitCommand extends BaseCommand<InitArgs> {
+    private TemplateUtil _templateUtil;
+
     public InitCommand() {
+        _templateUtil = new TemplateUtil();
     }
 
     public InitCommand(Damascus damascus) {
@@ -34,8 +37,7 @@ public class InitCommand extends BaseCommand<InitArgs> {
         InitArgs args = getArgs();
 
         //Parse template and output
-        TemplateUtil.getInstance()
-            .process(
+        _templateUtil.process(
                 InitCommand.class,
                 args.getLiferayVersion(),
                 DamascusProps.BASE_JSON,

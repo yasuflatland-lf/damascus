@@ -28,7 +28,8 @@ class ApplicationTest extends Specification {
     def setupEx(version) {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
 
         //Create Workspace
         CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);

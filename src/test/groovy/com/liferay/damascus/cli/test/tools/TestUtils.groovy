@@ -78,7 +78,8 @@ class TestUtils {
         damascus.put('damascus', params)
 
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, output_file_path)
+        def templateUtil = new TemplateUtil()
+        templateUtil.process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, output_file_path)
 
         //Load into object
         def retrivedObj = JsonUtil.getObject(output_file_path, DamascusBase.class)

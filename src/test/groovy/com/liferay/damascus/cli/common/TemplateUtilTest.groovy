@@ -6,12 +6,8 @@ import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.apache.commons.lang3.StringUtils
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.reflect.Whitebox
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import static org.mockito.Matchers.anyString
 
 class TemplateUtilTest extends Specification {
     static def DS = DamascusProps.DS;
@@ -23,7 +19,8 @@ class TemplateUtilTest extends Specification {
     def setup() {
         FileUtils.deleteDirectory(new File(workTempDir));
         FileUtils.deleteDirectory(new File(targetTempDir));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
     }
 
     /**
@@ -56,7 +53,8 @@ class TemplateUtilTest extends Specification {
         damascus.put('damascus', params);
 
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, output_file_path)
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.process(TemplateUtilTest.class, liferayVersion, DamascusProps.BASE_JSON, damascus, output_file_path)
 
         //Load into object
         def retrivedObj = JsonUtil.getObject(output_file_path, DamascusBase.class)
@@ -85,21 +83,22 @@ class TemplateUtilTest extends Specification {
     def "process test fetching output file path from a template"() {
 
         when:
+        def templateUtil = Spy(TemplateUtil)
         def targetFile = "Portlet_XXXXSVC_Validator.java.ftl";
-        def paramFilePath = TestUtils.getTempPath() + filepath + DS + TemplateUtil.getInstance().getOutputFilename(targetFile)
+        def paramFilePath = TestUtils.getTempPath() + filepath + DS + templateUtil.getOutputFilename(targetFile)
 
         //Set parameters
         Map params = Maps.newHashMap();
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath)
         params.put(DamascusProps.BASE_DAMASCUS_OBJ, dmsb);
-        params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
+        params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, templateUtil);
         params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, dmsb.applications[0]);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, paramFilePath);
         params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), "TEST");
 
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(TemplateUtilTest.class, DamascusProps.VERSION_70, targetFile, params, paramFilePath)
+        templateUtil.process(TemplateUtilTest.class, DamascusProps.VERSION_70, targetFile, params, paramFilePath)
 
         File f = new File(paramFilePath);
 
@@ -121,7 +120,8 @@ class TemplateUtilTest extends Specification {
         fileCreate(file2)
         fileCreate(file3)
         fileCreate(file4)
-        def resultFiles = TemplateUtil.getInstance().getTargetTemplates(CDIR, new File(workTempDir));
+        def templateUtil = Spy(TemplateUtil)
+        def resultFiles = templateUtil.getTargetTemplates(CDIR, new File(workTempDir));
 
         then:
         totalCount == resultFiles.size()
@@ -141,7 +141,9 @@ class TemplateUtilTest extends Specification {
         // Resource root path and initialize Freemarker configration with the path
         String resourceRootPath = DamascusProps.DS + DamascusProps.TEMPLATE_FOLDER_NAME + DamascusProps.DS + DamascusProps.VERSION_70
         URL url = CommonUtil.getResource(TemplateUtilTest.class, resourceRootPath);
-        def resultFiles = TemplateUtil.getInstance().getTargetTemplates(target_fetch_file, new File(url.toURI()));
+        def templateUtil = Spy(TemplateUtil)
+
+        def resultFiles = templateUtil.getTargetTemplates(target_fetch_file, new File(url.toURI()));
 
         then:
         0 <= resultFiles.size()
@@ -156,7 +158,9 @@ class TemplateUtilTest extends Specification {
 
         when:
         fileCreate("File1.java")
-        def resultFiles = TemplateUtil.getInstance().getTargetTemplates(CDIR, new File(workTempDir));
+        def templateUtil = Spy(TemplateUtil)
+
+        def resultFiles = templateUtil.getTargetTemplates(CDIR, new File(workTempDir));
 
         then:
         null == resultFiles
@@ -166,8 +170,9 @@ class TemplateUtilTest extends Specification {
     @Unroll("GetOutputFilename Test filename<#filename> result<#resulttype>")
     def "GetOutputFilename Test"() {
         when:
+        def templateUtil = Spy(TemplateUtil)
         def tempName = DamascusProps.TARGET_TEMPLATE_PREFIX + filename + DamascusProps.TARGET_TEMPLATE_SUFFIX;
-        def result = TemplateUtil.getInstance().getOutputFilename(tempName)
+        def result = templateUtil.getOutputFilename(tempName)
 
         then:
         if (resulttype.equals("SUCCESS")) {
@@ -192,7 +197,9 @@ class TemplateUtilTest extends Specification {
     @Unroll("is this inside jar test")
     def "is this inside jar test"() {
         when:
-        def result = TemplateUtil.getInstance().isInsideJar(TemplateUtilTest.class)
+        def templateUtil = Spy(TemplateUtil)
+
+        def result = templateUtil.isInsideJar(TemplateUtilTest.class)
 
         then:
         //While test, this should be false
@@ -204,7 +211,9 @@ class TemplateUtilTest extends Specification {
         when:
         def resourceDir = DS + DamascusProps.TEMPLATE_FOLDER_NAME;
         def outputDir = targetTempDir + DS + DamascusProps.TEMPLATE_FOLDER_NAME
-        TemplateUtil.getInstance().copyTemplatesToCache(TemplateUtilTest.class, resourceDir, outputDir)
+        def templateUtil = Spy(TemplateUtil)
+
+        templateUtil.copyTemplatesToCache(TemplateUtilTest.class, resourceDir, outputDir)
 
         File f = new File(outputDir + DS + DamascusProps.VERSION_70 + DS + DamascusProps.BASE_JSON)
 
@@ -224,8 +233,9 @@ class TemplateUtilTest extends Specification {
             def pathc = it.toURI().toString().substring(it.toURI().toString().lastIndexOf(SEP + DamascusProps.TEMPLATE_FOLDER_NAME))
             fl.add(pathc.replace(SEP + SEP, SEP))
         }
+        def templateUtil = Spy(TemplateUtil)
 
-        TemplateUtil.getInstance().copyTemplatesToCache(
+        templateUtil.copyTemplatesToCache(
                 TemplateUtilTest.class,
                 fl,
                 outputDir)

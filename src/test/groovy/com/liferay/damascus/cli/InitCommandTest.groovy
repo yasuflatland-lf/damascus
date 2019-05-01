@@ -22,7 +22,8 @@ class InitCommandTest extends Specification {
         System.setErr(new PrintStream(errContent));
         Spy(Damascus)
         FileUtils.deleteDirectory(new File(workTempDir));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
         TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
     }
 

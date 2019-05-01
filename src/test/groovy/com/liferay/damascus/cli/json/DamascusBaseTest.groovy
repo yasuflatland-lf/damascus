@@ -24,7 +24,9 @@ class DamascusBaseTest extends Specification {
     def setupEx(version) {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+
+        templateUtil.clear();
 
         //Create Workspace
         CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);
@@ -82,9 +84,6 @@ class DamascusBaseTest extends Specification {
         def projectName = "Todo"
         def expectedProjectDirName = "todo"
         def packageName = "com.liferay.test.foo.bar"
-
-        // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil.getInstance().clear()
 
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath, false)
 
@@ -153,9 +152,6 @@ class DamascusBaseTest extends Specification {
         def projectName = "Todo"
         def expectedProjectDirName = "todo"
         def packageName = "com.liferay.test.foo.bar"
-
-        // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil.getInstance().clear()
 
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath, false)
 
