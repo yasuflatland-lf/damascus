@@ -1,4 +1,4 @@
-// Generated from DmscSrcParser.g4 by ANTLR 4.7.1
+// Generated from DmscSrcParser.g4 by ANTLR 4.7.2
 package com.liferay.damascus.antlr.template;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 

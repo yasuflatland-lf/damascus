@@ -14,6 +14,16 @@
 	${capFirstModel}ViewHelper ${uncapFirstModel}ViewHelper = (${capFirstModel}ViewHelper) request
 			.getAttribute(${capFirstModel}WebKeys.${uppercaseModel}_VIEW_HELPER);
 
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
+	${capFirstValidationModel}LocalService ${uncapFirstValidationModel}LocalService = (${capFirstValidationModel}LocalService) request
+			.getAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE);
+	</#if>
+</#list>
+
 <#if advancedSearch>
 	Map<String, String> advSearchKeywords = ${uncapFirstModel}ViewHelper.getAdvSearchKeywords(renderRequest, dateFormat);
 
@@ -329,9 +339,34 @@
 					field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" ||
 					field.type?string == "com.liferay.damascus.cli.json.fields.Integer"
 					>
+
+						<#if field.validation?? && field.validation.className??>
+							<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+							<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+
+							<#assign fieldName = "PrimaryKey">
+							<#if field.validation.fieldName??>
+								<#assign fieldName = "${field.validation.fieldName?cap_first}">
+							</#if>
+
+							<#assign orderByField = "PrimaryKey">
+							<#if field.validation.orderByField??>
+								<#assign orderByField = "${field.validation.orderByField?cap_first}">
+							</#if>
+				<%
+				String ${field.name}Text = "";
+				try {
+					${capFirstValidationModel} ${uncapFirstValidationModel} = ${uncapFirstValidationModel}LocalService.get${capFirstValidationModel}(GetterUtil.getLong(${uncapFirstModel}.get${field.name?cap_first}()));
+					${field.name}Text = ${uncapFirstValidationModel}.get${orderByField}();
+				} catch(Exception e) {}
+				%>
+				<liferay-ui:search-container-column-text name="${field.name?cap_first}"
+														 align="center" value="<%= ${field.name}Text %>" />
+						<#else>
 				<liferay-ui:search-container-column-text name="${field.name?cap_first}"
 														 property="${field.name}" orderable="true" orderableProperty="${field.name}"
 														 align="left" />
+						</#if>
 					</#if>
 				<#-- ---------------- -->
 				<#--     Date         -->

@@ -6,6 +6,7 @@ import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.Parameters;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -18,7 +19,7 @@ import java.util.*;
 @Slf4j
 public class Damascus {
 
-    public final static String VERSION = "20190429"; // + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "20190708" + "_" + LocalDateTime.now().toString();
 
     /**
      * Main
