@@ -15,7 +15,8 @@ class TemplateGeneratorCommandTest extends AntlrTestBase {
 
     def setup() {
         FileUtils.deleteDirectory(new File(SRC_DIR));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
         TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), SRC_DIR + DS);
     }
 

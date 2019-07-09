@@ -30,7 +30,10 @@ import java.util.*;
  */
 @Slf4j
 public class CreateCommand extends BaseCommand<CreateArgs> {
+    private TemplateUtil _templateUtil;
+
     public CreateCommand() {
+        _templateUtil = new TemplateUtil();
     }
 
     public CreateCommand(Damascus damascus) {
@@ -52,14 +55,10 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             );
 
             // Get root path to the templates
-            File resourceRoot = TemplateUtil
-                                    .getInstance()
-                                    .getResourceRootPath(dmsb.getLiferayVersion());
+            File resourceRoot = _templateUtil.getResourceRootPath(dmsb.getLiferayVersion());
 
             // Fetch all template file paths
-            Collection<File> templatePaths = TemplateUtil
-                                                 .getInstance()
-                                                 .getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
+            Collection<File> templatePaths = _templateUtil.getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
 
             String camelCaseProjectName = dmsb.getProjectName();
 
@@ -72,7 +71,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             //5. run gradle buildService again.
 
             // Get path to the service.xml
-            String serviceXmlPath = TemplateUtil.getInstance().getServiceXmlPath(
+            String serviceXmlPath = _templateUtil.getServiceXmlPath(
                 CREATE_TARGET_PATH,
                 dashCaseProjectName
             );
@@ -161,7 +160,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         //Mapping values used in templates
         params.put(DamascusProps.BASE_DAMASCUS_OBJ, damascusBase);
-        params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, TemplateUtil.getInstance());
+        params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, _templateUtil);
         params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
         params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
@@ -171,7 +170,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         params.put(DamascusProps.PROP_AUTHOR.replace(".", "_"), author);
 
         //Parse template and output
-        TemplateUtil.getInstance().process(
+        _templateUtil.process(
             CreateCommand.class,
             damascusBase.getLiferayVersion(),
             templateFileName,

@@ -58,7 +58,7 @@ jar {
     manifest {
         attributes(
             "Bundle-SymbolicName": "com.liferay.damascus.cli",
-            "Bundle-Version": "1.0.22",
+            "Bundle-Version": "1.0.23",
             "Bundle-Description": "Liferay extension tool for scaffolding service builder portlet",
             "Main-Class": "com.liferay.damascus.cli.Damascus",
             "JPM-Command": "damascus"
@@ -94,7 +94,7 @@ dependencies {
     compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
     compile group: 'org.antlr', name: 'antlr4-annotations', version: '4.3'
 
-    antlr 'org.antlr:antlr4:4.7.1'
+    antlr 'org.antlr:antlr4:4.7.2'
 
     testCompile group: 'org.antlr', name: 'antlr4-runtime-testsuite', version: '4.7.1'
     testCompile group: 'cglib', name: 'cglib-nodep', version:'3.2.5'

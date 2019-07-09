@@ -51,29 +51,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TemplateUtil {
 
-    private static Configuration _cfg = null;
+    private Configuration _cfg = null;
 
-    private static Map<String, String> _typeParams = null;
+    private Map<String, String> _typeParams = null;
 
-    private static PropertyContext _propertyContext = null;
+    private PropertyContext _propertyContext = null;
 
     /**
      * Constructor
      */
-    protected TemplateUtil() {
-    }
-
-    /**
-     * Get Instance
-     *
-     * @return this instance
-     */
-    public static TemplateUtil getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-
-    private static class SingletonHolder {
-        private static final TemplateUtil INSTANCE = new TemplateUtil();
+    public TemplateUtil() {
     }
 
     /**
@@ -265,7 +252,7 @@ public class TemplateUtil {
      * @throws TemplateException  Template processing error
      * @throws URISyntaxException Freemarker configuration initialize error
      */
-    private void process(Configuration cfg, String templateFileName, Map params, String outputFilePath)
+    protected void process(Configuration cfg, String templateFileName, Map params, String outputFilePath)
         throws IOException, TemplateException, URISyntaxException {
 
         /* Get the template (uses cache internally) */

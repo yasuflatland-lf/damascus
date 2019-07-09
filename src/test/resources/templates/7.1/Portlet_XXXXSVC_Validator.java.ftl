@@ -9,6 +9,14 @@ import com.liferay.portal.kernel.repository.model.ModelValidator;
 import ${packageName}.exception.${capFirstModel}ValidateException;
 import ${packageName}.model.${capFirstModel};
 
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+import ${packageName}.service.${capFirstValidationModel}LocalServiceUtil;		
+	</#if>
+</#list> 
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +57,29 @@ implements ModelValidator<${capFirstModel}> {
             _errors.add("${lowercaseModel}-${field.name?lower_case}-required");
         }
                 </#if>
+                <#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Long" ||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Integer"
+				>
+	                <#if field.validation?? && field.validation.className??>		
+						<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+						<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+		if(field <= 0) {
+    		_errors.add("${lowercaseModel}-${field.name?lower_case}-required");
+    	} 
+					</#if>
+				</#if>	
             </#if>
+                        
+            <#if field.validation?? && field.validation.className??>		
+				<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+				<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">		
+    	try {
+    		${capFirstValidationModel}LocalServiceUtil.get${capFirstValidationModel}(field);
+    	} catch(PortalException e) {
+    		_errors.add("${lowercaseModel}-${field.name?lower_case}-not-found");
+    	}
+			</#if>
         </#if>
     }
 

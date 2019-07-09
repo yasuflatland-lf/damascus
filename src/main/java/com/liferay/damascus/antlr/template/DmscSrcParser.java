@@ -1,4 +1,4 @@
-// Generated from DmscSrcParser.g4 by ANTLR 4.7.1
+// Generated from DmscSrcParser.g4 by ANTLR 4.7.2
 package com.liferay.damascus.antlr.template;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class DmscSrcParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -23,18 +23,27 @@ public class DmscSrcParser extends Parser {
 		RULE_file = 0, RULE_dmsctags = 1, RULE_syncelementStart = 2, RULE_syncelementEnd = 3, 
 		RULE_rootelement = 4, RULE_attribute = 5, RULE_alldata = 6, RULE_savedata = 7, 
 		RULE_endoffile = 8;
-	public static final String[] ruleNames = {
-		"file", "dmsctags", "syncelementStart", "syncelementEnd", "rootelement", 
-		"attribute", "alldata", "savedata", "endoffile"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"file", "dmsctags", "syncelementStart", "syncelementEnd", "rootelement", 
+			"attribute", "alldata", "savedata", "endoffile"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, null, "'<'", "'</'", null, null, null, "'>'", "'/>'", "'/'", "'='"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "SEA_WS", "OPEN", "SLASH_OPEN", "TEXT", "RootDecl", "SyncDecl", 
-		"CLOSE", "SLASH_CLOSE", "SLASH", "EQUALS", "STRING", "Name", "S"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, "'<'", "'</'", null, null, null, "'>'", "'/>'", "'/'", "'='"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "SEA_WS", "OPEN", "SLASH_OPEN", "TEXT", "RootDecl", "SyncDecl", 
+			"CLOSE", "SLASH_CLOSE", "SLASH", "EQUALS", "STRING", "Name", "S"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -90,6 +99,7 @@ public class DmscSrcParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class FileContext extends ParserRuleContext {
 		public List<AlldataContext> alldata() {
 			return getRuleContexts(AlldataContext.class);
@@ -436,6 +446,7 @@ public class DmscSrcParser extends Parser {
 
 	public static class AttributeContext extends ParserRuleContext {
 		public TerminalNode Name() { return getToken(DmscSrcParser.Name, 0); }
+		public TerminalNode EQUALS() { return getToken(DmscSrcParser.EQUALS, 0); }
 		public TerminalNode STRING() { return getToken(DmscSrcParser.STRING, 0); }
 		public AttributeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);

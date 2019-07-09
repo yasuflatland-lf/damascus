@@ -1,4 +1,4 @@
-// Generated from DmscSrcLexer.g4 by ANTLR 4.7.1
+// Generated from DmscSrcLexer.g4 by ANTLR 4.7.2
 package com.liferay.damascus.antlr.template;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -11,7 +11,7 @@ import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class DmscSrcLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -29,19 +29,28 @@ public class DmscSrcLexer extends Lexer {
 		"DEFAULT_MODE", "CHECK_DAMASCUS_TAG", "INSIDE_TAG"
 	};
 
-	public static final String[] ruleNames = {
-		"SEA_WS", "OPEN", "SLASH_OPEN", "TEXT", "RootDecl", "SyncDecl", "OTHER_TEXT", 
-		"CLOSE", "SLASH_CLOSE", "SLASH", "EQUALS", "STRING", "Name", "S", "HEXDIGIT", 
-		"DIGIT", "NameChar", "NameStartChar"
-	};
+	private static String[] makeRuleNames() {
+		return new String[] {
+			"SEA_WS", "OPEN", "SLASH_OPEN", "TEXT", "RootDecl", "SyncDecl", "OTHER_TEXT", 
+			"CLOSE", "SLASH_CLOSE", "SLASH", "EQUALS", "STRING", "Name", "S", "HEXDIGIT", 
+			"DIGIT", "NameChar", "NameStartChar"
+		};
+	}
+	public static final String[] ruleNames = makeRuleNames();
 
-	private static final String[] _LITERAL_NAMES = {
-		null, null, "'<'", "'</'", null, null, null, "'>'", "'/>'", "'/'", "'='"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, "SEA_WS", "OPEN", "SLASH_OPEN", "TEXT", "RootDecl", "SyncDecl", 
-		"CLOSE", "SLASH_CLOSE", "SLASH", "EQUALS", "STRING", "Name", "S"
-	};
+	private static String[] makeLiteralNames() {
+		return new String[] {
+			null, null, "'<'", "'</'", null, null, null, "'>'", "'/>'", "'/'", "'='"
+		};
+	}
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+	private static String[] makeSymbolicNames() {
+		return new String[] {
+			null, "SEA_WS", "OPEN", "SLASH_OPEN", "TEXT", "RootDecl", "SyncDecl", 
+			"CLOSE", "SLASH_CLOSE", "SLASH", "EQUALS", "STRING", "Name", "S"
+		};
+	}
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**

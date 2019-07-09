@@ -27,7 +27,8 @@ class CreateCommandTest extends Specification {
     def setupEx(version) {
         //Cleanup enviroment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
 
         //Create Workspace
         CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);
@@ -57,9 +58,10 @@ class CreateCommandTest extends Specification {
         params.put("entityNameLower", StringUtils.lowerCase(entityName))
         Map damascus = Maps.newHashMap();
         damascus.put('damascus', params);
+        def templateUtil = Spy(TemplateUtil)
 
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(
+        templateUtil.process(
                 TemplateUtilTest.class,
                 liferayVersion,
                 DamascusProps.BASE_JSON,
@@ -176,10 +178,11 @@ class CreateCommandTest extends Specification {
         damascus.put('damascus', params);
 
         // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil.getInstance().clear()
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
 
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(
+        templateUtil.process(
                 TemplateUtilTest.class,
                 liferayVersion,
                 DamascusProps.BASE_JSON,
@@ -310,7 +313,9 @@ class CreateCommandTest extends Specification {
         damascus.put('damascus', params);
 
         //Output base.json with parameters and create the default templates
-        TemplateUtil.getInstance().process(
+        def templateUtil = Spy(TemplateUtil)
+
+        templateUtil.process(
                 TemplateUtilTest.class,
                 liferayVersion,
                 DamascusProps.BASE_JSON,
@@ -328,10 +333,10 @@ class CreateCommandTest extends Specification {
 
         when:
         // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil.getInstance().clear()
+        templateUtil.clear()
 
         //Output base.json with parameters and create the default templates
-        TemplateUtil.getInstance().process(
+        templateUtil.process(
                 TemplateUtilTest.class,
                 liferayVersion,
                 DamascusProps.BASE_JSON,
@@ -384,11 +389,9 @@ class CreateCommandTest extends Specification {
         when:
         FileUtils.deleteQuietly(new File(DamascusProps.CACHE_DIR_PATH))
 
-        // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil.getInstance().clear()
-
         //Output base.json with parameters.
-        TemplateUtil.getInstance().process(
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.process(
                 TemplateUtilTest.class,
                 liferayVersion,
                 baseFilename,
@@ -447,9 +450,6 @@ class CreateCommandTest extends Specification {
         //Initialize
         setupEx(liferayVersion);
 
-        // Once clear _cfg to initialize with an actual test target template directory
-        TemplateUtil.getInstance().clear()
-
         def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
         def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
         dmsb.applications.get(0).web = false
@@ -479,9 +479,6 @@ class CreateCommandTest extends Specification {
 		when:
 		//Initialize
 		setupEx(version);
-
-		// Once clear _cfg to initialize with an actual test target template directory
-		TemplateUtil.getInstance().clear()
 
 		def buffer = new ByteArrayOutputStream()
 		System.err = new PrintStream(buffer)

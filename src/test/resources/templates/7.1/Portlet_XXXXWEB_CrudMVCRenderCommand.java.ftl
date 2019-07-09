@@ -24,6 +24,15 @@ import ${packageName}.service.permission.${capFirstModel}ResourcePermissionCheck
 import ${packageName}.web.constants.${capFirstModel}WebKeys;
 import ${packageName}.web.upload.${capFirstModel}ItemSelectorHelper;
 
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+import ${packageName}.service.${capFirstValidationModel}LocalService;
+import ${packageName}.web.constants.${capFirstValidationModel}WebKeys;
+import ${packageName}.web.util.${capFirstValidationModel}ViewHelper;		
+	</#if>
+</#list> 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +117,18 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
         }
 
         request.setAttribute(${capFirstModel}WebKeys.${uppercaseModel}_ITEM_SELECTOR_HELPER, _${uncapFirstModel}ItemSelectorHelper);
-
+		
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">		
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
+		
+		request.setAttribute(${capFirstValidationModel}WebKeys.${uppercaseValidationModel}_VIEW_HELPER, _${uncapFirstValidationModel}ViewHelper);
+        request.setAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE, _${uncapFirstValidationModel}LocalService);
+	</#if>
+</#list>    
+		
         return renderJSP;
     }
 
@@ -118,4 +138,16 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
     @Reference
     private ${capFirstModel}ItemSelectorHelper _${uncapFirstModel}ItemSelectorHelper;
 
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">		
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+	
+	@Reference    
+    private ${capFirstValidationModel}ViewHelper _${uncapFirstValidationModel}ViewHelper;    
+
+    @Reference
+    private ${capFirstValidationModel}LocalService _${uncapFirstValidationModel}LocalService;
+	</#if>
+</#list>    
 }

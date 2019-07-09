@@ -27,7 +27,8 @@ class ReplacementGeneratorTest extends Specification {
 
     def setup() {
         FileUtils.deleteDirectory(new File(workTempDir));
-        TemplateUtil.getInstance().clear();
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
         TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
     }
 
