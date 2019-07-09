@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 public class Damascus {
 
-    public final static String VERSION = "1.0.22"; //"20190708" + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "1.0.23"; //"20190708" + "_" + LocalDateTime.now().toString();
 
     /**
      * Main
