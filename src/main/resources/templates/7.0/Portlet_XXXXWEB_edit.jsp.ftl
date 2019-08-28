@@ -122,7 +122,7 @@
 		<#-- field loop ends  -->
 		<#-- ---------------- -->
 
-<#if ratings > 
+<#if ratings >
 		<%
 			if (${uncapFirstModel}.getPrimaryKey() != 0) {
 		%>
@@ -165,7 +165,7 @@
 		<%
 		}
 		%>
-		<aui:button-row>
+		<aui:button-row cssClass="pull-right">
 			<%
 				String publishButtonLabel = "submit";
 			%>
@@ -178,7 +178,7 @@
 						publishButtonLabel = "submit-for-publication";
 				}
 			%>
-            <aui:button cssClass="btn-lg" type="submit" primary="<%= false %>"
+            <aui:button primary="<%= true %>"
 				onClick='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEditors();" %>'
 				value="<%=publishButtonLabel%>" />
 			<%
@@ -191,7 +191,7 @@
 			%>
 		</aui:button-row>
 	</aui:form>
-<#if discussion >	
+<#if discussion >
 	<%
     if (${uncapFirstModel}.getPrimaryKey() != 0 && false == fromAsset) {
 	%>
@@ -214,7 +214,7 @@
 	<%
 	}
 	%>
-</#if>	
+</#if>
 </div>
 
 <#list application.fields as field >

@@ -86,16 +86,16 @@
 				field.type?string == "com.liferay.damascus.cli.json.fields.Integer"  ||
 				field.type?string == "com.liferay.damascus.cli.json.fields.Text"
 			>
-				<#if field.validation?? && field.validation.className??>		
+				<#if field.validation?? && field.validation.className??>
 					<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
 					<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
 					<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
-					
+
 					<#assign fieldName = "PrimaryKey">
 					<#if field.validation.fieldName??>
 						<#assign fieldName = "${field.validation.fieldName?cap_first}">
 					</#if>
-					
+
 					<#assign orderByField = "PrimaryKey">
 					<#if field.validation.orderByField??>
 						<#assign orderByField = "${field.validation.orderByField?uncap_first}">
@@ -103,14 +103,14 @@
 		<%
 		${capFirstValidationModel}ViewHelper ${uncapFirstValidationModel}ViewHelper = (${capFirstValidationModel}ViewHelper) request
 				.getAttribute(${capFirstValidationModel}WebKeys.${uppercaseValidationModel}_VIEW_HELPER);
-		
+
 		SearchContainerResults<${capFirstValidationModel}> ${uncapFirstValidationModel}Results = ${uncapFirstValidationModel}ViewHelper.getListFromDB(
 				renderRequest, -1, -1, "${orderByField?uncap_first}", "asc", new int[] {WorkflowConstants.STATUS_APPROVED});
-		%>		
+		%>
 		<liferay-ui:error key="${lowercaseModel}-${field.name?lower_case}-not-found"
 						  message="${lowercaseModel}-${field.name?lower_case}-not-found" />
-						  
-		<aui:select name="${field.name}" 
+
+		<aui:select name="${field.name}"
 			label='<%=LanguageUtil.get(request, "${lowercaseModel}-${field.name?lower_case}")
 					+ requiredLabel%>'>
 			<aui:option value=""><%=LanguageUtil.get(request, "please-select") %></aui:option>
@@ -118,12 +118,12 @@
 			<aui:option value="<%= ${uncapFirstValidationModel}.get${fieldName}() %>"><%=${uncapFirstValidationModel}.get${orderByField?cap_first}() %></aui:option>
 			<% } %>
 		</aui:select>
-		
+
 				<#else>
 		<aui:input name="${field.name}" disabled="false"
 				   label='<%=LanguageUtil.get(request, "${lowercaseModel}-${field.name?lower_case}")
 					+ requiredLabel%>' />
-				</#if>	
+				</#if>
 			</#if>
 		<#-- ---------------- -->
 		<#-- Document Library -->
@@ -157,7 +157,7 @@
 		<#-- field loop ends  -->
 		<#-- ---------------- -->
 
-<#if ratings > 
+<#if ratings >
 		<%
 			if (${uncapFirstModel}.getPrimaryKey() != 0) {
 		%>
@@ -200,7 +200,7 @@
 		<%
 		}
 		%>
-		<aui:button-row>
+		<aui:button-row cssClass="pull-right">
 			<%
 				String publishButtonLabel = "submit";
 			%>
@@ -213,20 +213,19 @@
 						publishButtonLabel = "submit-for-publication";
 				}
 			%>
-            <aui:button cssClass="btn-lg" type="submit" primary="<%= false %>"
-				onClick='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEditors();" %>'
-				value="<%=publishButtonLabel%>" />
 			<%
 				if (!fromAsset) {
 			%>
-            &nbsp;&nbsp;&minus; <liferay-ui:message key="or"/> &minus;
-			<aui:button onClick="<%=redirect%>" type="cancel" />
+			    <aui:button onClick="<%=redirect%>" type="cancel" />
 			<%
 				}
 			%>
+		        <aui:button primary="<%= true %>"
+		      onClick='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveEditors();" %>'
+		      value="<%=publishButtonLabel%>" />
 		</aui:button-row>
 	</aui:form>
-<#if discussion >	
+<#if discussion >
 	<%
     if (${uncapFirstModel}.getPrimaryKey() != 0 && false == fromAsset) {
 	%>
@@ -249,7 +248,7 @@
 	<%
 	}
 	%>
-</#if>	
+</#if>
 </div>
 
 <#list application.fields as field >
