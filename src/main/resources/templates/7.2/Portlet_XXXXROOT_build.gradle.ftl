@@ -1,0 +1,1 @@
+// <dmsc:root templateName="Portlet_XXXXROOT_build.gradle.ftl"  />

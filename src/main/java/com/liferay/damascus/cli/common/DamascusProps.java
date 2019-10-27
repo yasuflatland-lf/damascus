@@ -68,6 +68,7 @@ public class DamascusProps {
      */
     public static final String VERSION_70 = "7.0";
     public static final String VERSION_71 = "7.1";
+    public static final String VERSION_71 = "7.2";
 
     /**
      * Service Builder command
