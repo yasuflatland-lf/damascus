@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_FriendlyURLMapper.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/route/${capFirstModel}FriendlyURLMapper.java">
+// </dmsc:sync> //
 package ${packageName}.web.portlet.route;
 
 import com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper;

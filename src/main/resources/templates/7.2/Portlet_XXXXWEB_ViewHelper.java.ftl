@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_ViewHelper.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/util/${capFirstModel}ViewHelper.java">
+// </dmsc:sync> //
 package ${packageName}.web.util;
 
 import com.liferay.portal.kernel.dao.search.DisplayTerms;

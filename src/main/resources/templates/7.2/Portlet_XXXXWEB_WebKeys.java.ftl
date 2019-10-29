@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_WebKeys.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/constants/${capFirstModel}WebKeys.java">
+// </dmsc:sync> //
 package ${packageName}.web.constants;
 
 /**

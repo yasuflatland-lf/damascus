@@ -1,5 +1,8 @@
 <%-- <dmsc:root  templateName="Portlet_XXXXWEB_admin_view.jsp.ftl" /> --%>
-
+<%-- <dmsc:sync id="head-common" > --%>
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/sample_sb_admin/view.jsp">
+<%-- </dmsc:sync> --%>
 <%@ include file="./init.jsp" %>
 
 <%

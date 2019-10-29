@@ -1,4 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXSVC_PortletResourcePermissionRegistrar.java.ftl"  />
+/* <dmsc:sync id="head-common" >  */ 
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/internal/security/permission/resource/${capFirstModel}PortletResourcePermissionRegistrar.java">
+/* </dmsc:sync> */ 
 
 package ${packageName}.internal.security.permission.resource;
 

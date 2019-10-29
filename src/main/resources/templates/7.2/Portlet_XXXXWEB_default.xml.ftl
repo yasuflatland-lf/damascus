@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE resource-action-mapping PUBLIC "-//Liferay//DTD Resource Action Mapping 7.0.0//EN" "http://www.liferay.com/dtd/liferay-resource-action-mapping_7_0_0.dtd">
 <!-- <dmsc:root templateName="Portlet_XXXXWEB_default.xml.ftl"  /> -->
-
+<!-- <dmsc:sync id="head-common" > -->
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/resources/resource-actions/default.xml">
+<!-- </dmsc:sync> -->
 <resource-action-mapping>
 	<portlet-resource>
 		<portlet-name>com_liferay_sb_test_web_${capFirstModel}Portlet</portlet-name>

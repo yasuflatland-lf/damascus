@@ -1,4 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXAPI_ValidateException.java.ftl"  />
+/* <dmsc:sync id="head-common" > */
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${apiModulePath}/src/main/java/${packagePath}/exception/${capFirstModel}ValidateException.java">
+/* </dmsc:sync> */
 
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -13,6 +18,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 
 package ${packageName}.exception;
 

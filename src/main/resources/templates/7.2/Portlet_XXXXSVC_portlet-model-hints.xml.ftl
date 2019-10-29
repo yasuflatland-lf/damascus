@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 
 <!-- <dmsc:root templateName="Portlet_XXXXSVC_portlet-model-hints.xml.ftl"  /> -->
+<!-- <dmsc:sync id="head-common" >  -->
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/resources/META-INF/portlet-model-hints.xml">
+<!-- </dmsc:sync> -->
+
 <model-hints>
 	<model name="${packageName}.model.${capFirstModel}">
 		<field name="uuid" type="String" />

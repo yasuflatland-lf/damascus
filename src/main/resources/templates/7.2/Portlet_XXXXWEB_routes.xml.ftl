@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 7.0.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_7_0_0.dtd">
 <!-- <dmsc:root templateName="Portlet_XXXXWEB_routes.xml.ftl"  /> -->
-
+<!-- <dmsc:sync id="head-common" > -->
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/friendly-url-routes/routes.xml">
+<!-- </dmsc:sync> -->
 <routes>
 	<route>
 		<pattern></pattern>

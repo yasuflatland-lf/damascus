@@ -1,3 +1,7 @@
+/* <dmsc:sync id="head-common" >  */ 
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/build.gradle">
+/* </dmsc:sync> */ 
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'idea'

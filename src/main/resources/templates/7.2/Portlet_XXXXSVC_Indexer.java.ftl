@@ -1,4 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXSVC_Indexer.java.ftl"  />
+/* <dmsc:sync id="head-common" >  */ 
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/internal/search/${capFirstModel}Indexer.java">
+/* </dmsc:sync> */ 
 
 package ${packageName}.internal.search;
 

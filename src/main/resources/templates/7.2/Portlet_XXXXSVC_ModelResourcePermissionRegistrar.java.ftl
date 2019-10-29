@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXSVC_ModelResourcePermissionRegistrar.java.ftl"  />
-
+/* <dmsc:sync id="head-common" >  */ 
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/internal/security/permission/resource/${capFirstModel}ModelResourcePermissionRegistrar.java">
+/* </dmsc:sync> */ 
 package ${packageName}.internal.security.permission.resource;
 
 import com.liferay.exportimport.kernel.staging.permission.StagingPermission;

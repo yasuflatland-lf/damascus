@@ -1,4 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXSVC_TrashHandler.java.ftl"  />
+/* <dmsc:sync id="head-common" >  */ 
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/internal/trash/${capFirstModel}TrashHandler.java">
+/* </dmsc:sync> */ 
 
 package ${packageName}.internal.trash;
 

@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_ManagementToolbarDisplayContext.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/internal/display/context/${capFirstModel}ManagementToolbarDisplayContext.java">
+// </dmsc:sync> //
 package ${packageName}.web.internal.display.context;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchContainerManagementToolbarDisplayContext;

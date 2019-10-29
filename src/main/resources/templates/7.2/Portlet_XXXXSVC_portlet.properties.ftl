@@ -1,4 +1,8 @@
 # <dmsc:root templateName="Portlet_XXXXSVC_portlet.properties.ftl"  />
+# <dmsc:sync id="head-common" >  #
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/resources/portlet.properties">
+# </dmsc:sync> #
 
 include-and-override=portlet-ext.properties
 

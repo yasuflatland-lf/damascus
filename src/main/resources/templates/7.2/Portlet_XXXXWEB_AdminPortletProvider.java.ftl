@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_AdminPortletProvider.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}AdminPortletProvider.java">
+// </dmsc:sync> //
 package ${packageName}.web.portlet;
 
 import com.liferay.portal.kernel.portlet.BasePortletProvider;

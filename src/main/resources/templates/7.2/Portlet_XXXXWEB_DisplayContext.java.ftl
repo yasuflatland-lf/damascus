@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_DisplayContext.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/internal/display/context/${capFirstModel}DisplayContext.java">
+// </dmsc:sync> //
 package ${packageName}.web.internal.display.context;
 
 import com.liferay.portal.kernel.dao.search.DisplayTerms;

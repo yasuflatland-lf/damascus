@@ -1,4 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXSVC_Validator.java.ftl"  />
+/* <dmsc:sync id="head-common" >  */ 
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/service/util/${capFirstModel}Validator.java">
+/* </dmsc:sync> */ 
 
 package ${packageName}.service.util;
 

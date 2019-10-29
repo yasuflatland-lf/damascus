@@ -1,6 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_PanelApp.java.ftl"  />
-
-package ${packageName}.web.portlet;
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}PanelApp.java">
+// </dmsc:sync> //package ${packageName}.web.portlet;
 
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;

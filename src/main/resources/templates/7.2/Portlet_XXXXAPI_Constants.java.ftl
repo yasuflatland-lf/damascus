@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXAPI_Constants.java.ftl"  />
-
+/* <dmsc:sync id="head-common" > */
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${apiModulePath}/src/main/java/${packagePath}/constants/${capFirstModel}Constants.java">
+/* </dmsc:sync> */
 package ${packageName}.constants;
 
 /**

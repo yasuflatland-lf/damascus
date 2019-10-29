@@ -1,4 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_AssetInfoDisplayContributor.java.ftl"  />
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/info/display/contributor/${capFirstModel}AssetInfoDisplayContributor.java">
+// </dmsc:sync> //
 package ${packageName}.web.info.display.contributor;
 
 import com.liferay.asset.info.display.contributor.BaseAssetInfoDisplayContributor;

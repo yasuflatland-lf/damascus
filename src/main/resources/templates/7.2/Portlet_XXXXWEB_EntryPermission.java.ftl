@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_EntryPermission.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/internal/security/permission/resource/${capFirstModel}EntryPermission.java">
+// </dmsc:sync> //
 package ${packageName}.web.internal.security.permission.resource;
 
 import com.liferay.portal.kernel.exception.PortalException;

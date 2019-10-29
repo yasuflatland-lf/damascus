@@ -1,5 +1,9 @@
 // <dmsc:root templateName="Portlet_XXXXWEB_ViewMVCRenderCommand.java.ftl"  />
-
+// <dmsc:sync id="head-common" > //
+<#include "./license.ftl">
+<#include "./valuables.ftl">
+<#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ViewMVCRenderCommand.java">
+// </dmsc:sync> //
 package ${packageName}.web.portlet.action;
 
 import com.liferay.asset.util.AssetHelper;
