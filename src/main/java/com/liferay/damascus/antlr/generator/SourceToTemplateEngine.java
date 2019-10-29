@@ -72,18 +72,18 @@ public class SourceToTemplateEngine {
             }
 
             // Scan the template file and fetch contents to replace
-            String templateName     = sourceTemplateContext.getRootAttribute(DamascusProps.ATTR_TEMPLATE_NAME);
-            File   templateFullPath = new File(templateDirPath + templateName);
+            String templateName = sourceTemplateContext.getRootAttribute(DamascusProps.ATTR_TEMPLATE_NAME);
+            File templateFullPath = new File(templateDirPath + templateName);
 
             TemplateContext targetTemplateContext = null;
             if (templateFullPath.exists()) {
 
                 targetTemplateContext
                     = TemplateScanner
-                    .builder()
-                    .contentsFile(templateFullPath)
-                    .build()
-                    .getTargetTemplateContext();
+                          .builder()
+                          .contentsFile(templateFullPath)
+                          .build()
+                          .getTargetTemplateContext();
             }
 
             // Rescan the source file and replace contents if the template file has already exist.
@@ -94,6 +94,11 @@ public class SourceToTemplateEngine {
                     .targetTemplateContext(targetTemplateContext)
                     .build()
                     .process();
+
+            // If insertPathTag is defined, add target full path into replacement map.
+            if(null != insertPathTag) {
+                replacements.put(insertPathTag, target.getAbsolutePath());
+            }
 
             // Replace keywords
             processedContents =
@@ -186,4 +191,13 @@ public class SourceToTemplateEngine {
      */
     @Builder.Default
     private boolean pickup = false;
+
+    /**
+     * Target path replacement TAG definition
+     * <p>
+     * For the initial template generation, creating the target path for all templates is tedious. This option defines the tag to be replaced to the target path (the original source's full path)
+     * OPTIONAL
+     */
+    @Builder.Default
+    private String insertPathTag = null;
 }

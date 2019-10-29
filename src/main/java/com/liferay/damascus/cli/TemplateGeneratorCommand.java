@@ -83,13 +83,16 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
                     processedSourceRootPath
                 )
                 .templateDirPath(
-                    processedTemplateDir + args.getLiferayVersion()
+                    processedTemplateDir
                 )
                 .replacements(
                     replacementPattern
                 )
                 .extentionPatterns(
                     extensionPatterns
+                )
+                .insertPathTag (
+                    args.getInsertPathTag()
                 )
                 .build()
                 .process();
