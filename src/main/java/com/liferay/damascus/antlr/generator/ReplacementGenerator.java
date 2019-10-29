@@ -123,8 +123,8 @@ public class ReplacementGenerator {
      * @param application Application object
      * @return
      */
-    static private Map<String, String> initializeReplacement(DamascusBase dmsb, Application application) {
-        Map<String, String> replacement = new LinkedHashMap<>();
+    static private LinkedHashMap<String, String> initializeReplacement(DamascusBase dmsb, Application application) {
+        LinkedHashMap<String, String> replacement = new LinkedHashMap<>();
 
         // The order of replacements below is important.
         // When you add default replacements,

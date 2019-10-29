@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -95,9 +96,14 @@ public class SourceToTemplateEngine {
                     .build()
                     .process();
 
-            // If insertPathTag is defined, add target full path into replacement map.
+            // If insertPathTag is defined, replace the tag to the target full path.
             if(null != insertPathTag) {
-                replacements.put(insertPathTag, target.getAbsolutePath());
+                LinkedHashMap<String, String> pathReplacement = new LinkedHashMap<>();
+                pathReplacement.put(insertPathTag, target.getAbsolutePath());
+                processedContents =
+                    CommonUtil.replaceKeywords(
+                        processedContents,
+                        pathReplacement);
             }
 
             // Replace keywords
@@ -181,7 +187,7 @@ public class SourceToTemplateEngine {
      * Replacement keywords map from base.json
      */
     @Builder.Default
-    private Map<String, String> replacements = new ConcurrentHashMap<>();
+    private Map<String, String> replacements = new LinkedHashMap<>();
 
     /**
      * Pick up flag
