@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 public class Damascus {
 
-    public final static String VERSION = "1.0.23"; //"20190708" + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "1.0.23" ;//+ "_" + LocalDateTime.now().toString();
 
     /**
      * Main
@@ -30,7 +30,7 @@ public class Damascus {
         try {
             damascus.run(args);
         } catch (Exception e) {
-            System.err.println("Unexpected error occured.");
+            System.err.println("Unexpected error occurred.");
             e.printStackTrace();
         }
     }
