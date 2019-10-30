@@ -3,7 +3,7 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${apiModulePath}/bnd.bnd">
 #</dmsc:sync> #
-Bundle-Name: ${snakecaseModel}-api
+Bundle-Name: ${dashcaseProjectName}-api
 Bundle-SymbolicName: ${packageName}.api
 Bundle-Version: 1.0.0
 Export-Package:\
@@ -13,4 +13,4 @@ Export-Package:\
 	${packageName}.service.persistence,\
 	${packageName}.constants
 -check: EXPORTS
--includeresource: META-INF/service.xml=../${snakecaseModel}-service/service.xml
+-includeresource: META-INF/service.xml=../${dashcaseProjectName}-service/service.xml

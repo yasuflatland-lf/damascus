@@ -4,7 +4,7 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${serviceModulePath}/bnd.bnd">
 #</dmsc:sync> #
-Bundle-Name: ${snakecaseModel}-service
+Bundle-Name: ${dashcaseProjectName}-service
 Bundle-SymbolicName: ${packageName}.service
 Bundle-Version: 1.0.0
 Import-Package:\

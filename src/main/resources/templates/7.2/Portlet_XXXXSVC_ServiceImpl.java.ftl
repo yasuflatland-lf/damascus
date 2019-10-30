@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
- * The implementation of the sample sb remote service.
+ * The implementation of the ${capFirstModel} remote service.
  *
  * <p>
  * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the <code>${packageName}.service.${capFirstModel}Service</code> interface.

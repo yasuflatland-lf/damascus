@@ -1,7 +1,7 @@
 <%-- <dmsc:root  templateName="Portlet_XXXXWEB_admin_view_record.jsp.ftl" /> --%>
 <%-- <dmsc:sync id="head-common" > --%>
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/sample_sb_admin/view_record.jsp">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}_admin/view_record.jsp">
 <%-- </dmsc:sync> --%>
 <%@ include file="./init.jsp" %>
 
@@ -21,13 +21,13 @@ portletDisplay.setURLBack(redirect);
 					<div class="form-group">
 						<h3><liferay-ui:message key="asset-title" /></h3>
 
-						<p class="form-control"><%= ${uncapFirstModel}.getSamplesbTitleName() %></p>
+						<p class="form-control"><%= ${uncapFirstModel}.get${application.asset.assetTitleFieldName?cap_first}() %></p>
 					</div>
 
 					<div class="form-group">
 						<h3><liferay-ui:message key="summary" /></h3>
 
-						<p class="form-control"><%= ${uncapFirstModel}.getSamplesbSummaryName() %></p>
+						<p class="form-control"><%= ${uncapFirstModel}.get${application.asset.assetSummaryFieldName?cap_first}() %></p>
 					</div>
 
 					<div class="form-group">

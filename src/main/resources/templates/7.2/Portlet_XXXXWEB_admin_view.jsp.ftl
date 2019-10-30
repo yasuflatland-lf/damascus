@@ -1,7 +1,7 @@
 <%-- <dmsc:root  templateName="Portlet_XXXXWEB_admin_view.jsp.ftl" /> --%>
 <%-- <dmsc:sync id="head-common" > --%>
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/sample_sb_admin/view.jsp">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}_admin/view.jsp">
 <%-- </dmsc:sync> --%>
 <%@ include file="./init.jsp" %>
 
@@ -177,7 +177,7 @@ ${capFirstModel}ManagementToolbarDisplayContext ${uncapFirstModel}ManagementTool
 
 				<liferay-ui:search-container-column-jsp
 					align="right"
-					path="/sample_sb/edit_actions.jsp"
+					path="/${snakecaseModel}/edit_actions.jsp"
 				/>
 			</liferay-ui:search-container-row>
 

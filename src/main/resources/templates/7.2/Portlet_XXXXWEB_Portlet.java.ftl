@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.application-type=widget",
 		"com.liferay.portlet.css-class-wrapper=portlet-${lowercaseModel}",
 		"com.liferay.portlet.display-category=category.sample",
-		"com.liferay.portlet.header-portlet-css=/sample_sb/css/main.css",
+		"com.liferay.portlet.header-portlet-css=/${snakecaseModel}/css/main.css",
 		"com.liferay.portlet.layout-cacheable=true",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.private-request-attributes=false",

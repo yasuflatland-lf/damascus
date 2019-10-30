@@ -1,7 +1,7 @@
 <%-- <dmsc:root templateName="Portlet_XXXXWEB_init.jsp.ftl"  /> --%>
 <%-- <dmsc:sync id="head-common" > --%>
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/sample_sb/init.jsp">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}/init.jsp">
 <%-- </dmsc:sync> --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 

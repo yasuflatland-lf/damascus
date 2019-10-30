@@ -1,7 +1,7 @@
 <%-- <dmsc:root  templateName="Portlet_XXXXWEB_admin_abstract.jsp.ftl" /> --%>
 <%-- <dmsc:sync id="head-common" > --%>
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/sample_sb_admin/asset/abstract.jsp">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}_admin/asset/abstract.jsp">
 <%-- </dmsc:sync> --%>
 <%@ include file="../init.jsp" %>
 
@@ -9,4 +9,4 @@
 
 <portlet:defineObjects />
 
-<%= ${uncapFirstModel}.getSamplesbTitleName() %>
+<%= ${uncapFirstModel}.get${application.asset.assetTitleFieldName?cap_first}() %>

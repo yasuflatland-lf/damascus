@@ -18,6 +18,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * ${capFirstModel} Validator 
+ * 
+ * @author ${damascus_author}
+ *
+ */
 public class ${capFirstModel}Validator implements ModelValidator<${capFirstModel}> {
 
 	@Override

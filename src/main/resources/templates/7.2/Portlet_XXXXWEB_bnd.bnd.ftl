@@ -3,8 +3,7 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/bnd.bnd">
 # </dmsc:sync> #
-
-Bundle-Name: ${snakecaseModel}-web
+Bundle-Name: ${dashcaseProjectName}-web
 Bundle-SymbolicName: ${packageName}.web
 Bundle-Version: 1.0.0
 Import-Package:\
@@ -16,7 +15,7 @@ Import-Package:\
 	!org.etsi.uri.*,\
 	!org.openxmlformats.*,\
 	*
-Web-ContextPath: /${snakecaseModel}-web
+Web-ContextPath: /${dashcaseProjectName}-web
 -dsannotations-options: inherit
 -includeresource:\
 	@poi-*.jar,\

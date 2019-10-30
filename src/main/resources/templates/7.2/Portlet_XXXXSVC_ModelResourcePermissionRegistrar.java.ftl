@@ -30,7 +30,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Model Resource Permission Registrar
+ * ${capFirstModel} Model Resource Permission Registrar
  *
  * @author ${damascus_author}
  *

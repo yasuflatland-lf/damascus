@@ -38,7 +38,7 @@ import javax.portlet.ResourceURL;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Management Toolbar Display Context
+ * ${capFirstModel} Management Toolbar Display Context
  *
  * @author ${damascus_author}
  */

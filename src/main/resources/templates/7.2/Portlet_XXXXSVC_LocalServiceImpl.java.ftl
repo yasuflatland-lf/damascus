@@ -73,7 +73,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * The implementation of the sample sb local service.
+ * The implementation of the ${capFirstModel} local service.
  *
  * <p>
  * All custom service methods should be put in this class. Whenever methods are
@@ -544,8 +544,8 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		entry.setSamplesbInteger(0);
 		entry.setSamplesbRichText("");
 		entry.setSamplesbText("");
-		entry.setSamplesbTitleName("");
-		entry.setSamplesbSummaryName("");
+		entry.set${application.asset.assetTitleFieldName?cap_first}("");
+		entry.set${application.asset.assetSummaryFieldName?cap_first}("");
 
 		entry.setCompanyId(themeDisplay.getCompanyId());
 		entry.setGroupId(themeDisplay.getScopeGroupId());
@@ -634,9 +634,9 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 				ParamUtil.getString(request, "${lowercaseModel}RichText"));
 			entry.setSamplesbText(ParamUtil.getString(request, "${lowercaseModel}Text"));
 
-			entry.setSamplesbTitleName(
+			entry.set${application.asset.assetTitleFieldName?cap_first}(
 				ParamUtil.getString(request, "${lowercaseModel}TitleName"));
-			entry.setSamplesbSummaryName(
+			entry.set${application.asset.assetSummaryFieldName?cap_first}(
 				ParamUtil.getString(request, "${lowercaseModel}SummaryName"));
 
 			entry.setCompanyId(themeDisplay.getCompanyId());
@@ -761,14 +761,14 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		}
 
 		String summary = HtmlUtil.extractText(
-			StringUtil.shorten(entry.getSamplesbSummaryName(), 500));
+			StringUtil.shorten(entry.get${application.asset.assetSummaryFieldName?cap_first}(), 500));
 
 		AssetEntry assetEntry = assetEntryLocalService.updateEntry(
 			userId, entry.getGroupId(), entry.getCreateDate(),
 			entry.getModifiedDate(), ${capFirstModel}.class.getName(),
 			entry.getPrimaryKey(), entry.getUuid(), 0, assetCategoryIds,
 			assetTagNames, true, visible, null, null, null, null,
-			ContentTypes.TEXT_HTML, entry.getSamplesbTitleName(), null, summary,
+			ContentTypes.TEXT_HTML, entry.get${application.asset.assetTitleFieldName?cap_first}(), null, summary,
 			null, null, 0, 0, priority);
 
 		assetLinkLocalService.updateLinks(
@@ -870,7 +870,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 
 		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
 
-		extraDataJSONObject.put("title", entry.getSamplesbTitleName());
+		extraDataJSONObject.put("title", entry.get${application.asset.assetTitleFieldName?cap_first}());
 
 		if (status == WorkflowConstants.STATUS_APPROVED) {
 
@@ -950,8 +950,8 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		newEntry.setUuid(serviceContext.getUuid());
 		newEntry.setUrlTitle(getUniqueUrlTitle(entry, entry.getTitle()));
 
-		newEntry.setSamplesbTitleName(entry.getSamplesbTitleName());
-		newEntry.setSamplesbSummaryName(entry.getSamplesbSummaryName());
+		newEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
+		newEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
 
 		newEntry.setTitle(entry.getTitle());
 		newEntry.setSamplesbBooleanStat(entry.getSamplesbBooleanStat());
@@ -997,8 +997,8 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		updateEntry.setUrlTitle(
 			getUniqueUrlTitle(updateEntry, updateEntry.getTitle()));
 
-		updateEntry.setSamplesbTitleName(entry.getSamplesbTitleName());
-		updateEntry.setSamplesbSummaryName(entry.getSamplesbSummaryName());
+		updateEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
+		updateEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
 
 		updateEntry.setSamplesbId(entry.getSamplesbId());
 		updateEntry.setTitle(entry.getTitle());

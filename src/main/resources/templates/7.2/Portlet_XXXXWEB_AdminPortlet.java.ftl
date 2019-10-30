@@ -25,7 +25,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Admin Portlet
+ * ${capFirstModel} Admin Portlet
  *
  * @author ${damascus_author}
  */
@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"com.liferay.portlet.css-class-wrapper=portlet-${lowercaseModel}",
 		"com.liferay.portlet.display-category=category.hidden",
-		"com.liferay.portlet.header-portlet-css=/sample_sb_admin/css/main.css",
+		"com.liferay.portlet.header-portlet-css=/${snakecaseModel}_admin/css/main.css",
 		"com.liferay.portlet.preferences-unique-per-layout=true",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.private-request-attributes=false",
@@ -48,7 +48,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.init-param.portlet-title-based-navigation=true",
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.template-path=/META-INF/resources/",
-		"javax.portlet.init-param.view-template=/sample_sb_admin/view.jsp",
+		"javax.portlet.init-param.view-template=/${snakecaseModel}_admin/view.jsp",
 		"javax.portlet.name=" + ${capFirstModel}PortletKeys.${uppercaseModel}_ADMIN,
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=administrator"

@@ -42,7 +42,7 @@ import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Display Context
+ * ${capFirstModel} Display Context
  *
  * @author ${damascus_author}
  */

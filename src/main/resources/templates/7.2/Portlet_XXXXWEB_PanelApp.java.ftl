@@ -3,7 +3,8 @@
 <#include "./license.ftl">
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/${capFirstModel}PanelApp.java">
-// </dmsc:sync> //package ${packageName}.web.portlet;
+// </dmsc:sync> //
+package ${packageName}.web.portlet;
 
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;

@@ -92,7 +92,7 @@ public class ${capFirstModel}AssetRenderer
 
 			request.setAttribute("${uncapFirstModel}", _entry);
 
-			return "/sample_sb/asset/" + template + ".jsp";
+			return "/${snakecaseModel}/asset/" + template + ".jsp";
 		}
 
 		return null;
@@ -115,12 +115,12 @@ public class ${capFirstModel}AssetRenderer
 	public String getSummary(
 		PortletRequest portletRequest, PortletResponse portletResponse) {
 
-		return HtmlUtil.stripHtml(_entry.getSamplesbSummaryName());
+		return HtmlUtil.stripHtml(_entry.get${application.asset.assetSummaryFieldName?cap_first}());
 	}
 
 	@Override
 	public String getTitle(Locale locale) {
-		return _entry.getSamplesbTitleName();
+		return _entry.get${application.asset.assetTitleFieldName?cap_first}();
 	}
 
 	@Override

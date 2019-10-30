@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Workflow Utility class
+ * ${capFirstModel} Workflow Utility class
  * <p>
  * TODO: This class has been generated as a model specific for convenience of code generation.
  * Please feel free to refactor this as a common library according to your requirements.

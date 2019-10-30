@@ -4,7 +4,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}AdminCrudMVCActionCommand.java">
 // </dmsc:sync> //
-
 package ${packageName}.web.portlet.action;
 
 import com.liferay.asset.display.page.portlet.AssetDisplayPageEntryFormProcessor;

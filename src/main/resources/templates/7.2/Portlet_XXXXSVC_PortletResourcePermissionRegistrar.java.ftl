@@ -25,7 +25,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Portlet Resource Permission Regsitra
+ * ${capFirstModel} Portlet Resource Permission Regsitra
  *
  * @author ${damascus_author}
  */

@@ -4,7 +4,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${serviceModulePath}/src/main/java/${packagePath}/internal/search/${capFirstModel}Indexer.java">
 /* </dmsc:sync> */ 
-
 package ${packageName}.internal.search;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -43,7 +42,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Indexer
+ * ${capFirstModel} Indexer
  *
  * This class is used to index model records. Indexer way is still valid for
  * 7.2, but recommend to use composition way. For more details, please refer to
@@ -140,13 +139,13 @@ public class ${capFirstModel}Indexer extends BaseIndexer<${capFirstModel}> {
 
 		Document document = getBaseModelDocument(CLASS_NAME, entry);
 
-		document.addText(Field.CAPTION, entry.getSamplesbTitleName());
+		document.addText(Field.CAPTION, entry.get${application.asset.assetTitleFieldName?cap_first}());
 		document.addText(
 			Field.CONTENT,
-			HtmlUtil.extractText(entry.getSamplesbSummaryName()));
-		document.addText(Field.DESCRIPTION, entry.getSamplesbTitleName());
-		document.addText(Field.SUBTITLE, entry.getSamplesbTitleName());
-		document.addText(Field.TITLE, entry.getSamplesbTitleName());
+			HtmlUtil.extractText(entry.get${application.asset.assetSummaryFieldName?cap_first}()));
+		document.addText(Field.DESCRIPTION, entry.get${application.asset.assetTitleFieldName?cap_first}());
+		document.addText(Field.SUBTITLE, entry.get${application.asset.assetTitleFieldName?cap_first}());
+		document.addText(Field.TITLE, entry.get${application.asset.assetTitleFieldName?cap_first}());
 
 		document.addDate(Field.MODIFIED_DATE, entry.getModifiedDate());
 

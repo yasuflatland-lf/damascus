@@ -1,10 +1,10 @@
 <%-- <dmsc:root  templateName="Portlet_XXXXWEB_preview.jsp.ftl" /> --%>
 <%-- <dmsc:sync id="head-common" > --%>
 <#include "./valuables.ftl">
-<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/sample_sb/asset/preview.jsp">
+<#assign createPath = "${webModulePath}/src/main/resources/META-INF/resources/${snakecaseModel}/asset/preview.jsp">
 <%-- </dmsc:sync> --%>
-<%@ include file="/sample_sb/init.jsp" %>
+<%@ include file="/${snakecaseModel}/init.jsp" %>
 
 <jsp:useBean id="${uncapFirstModel}" scope="request" type="${packageName}.model.${capFirstModel}" />
 
-<%= ${uncapFirstModel}.getSamplesbTitleName() %>
+<%= ${uncapFirstModel}.get${application.asset.assetTitleFieldName?cap_first}() %>

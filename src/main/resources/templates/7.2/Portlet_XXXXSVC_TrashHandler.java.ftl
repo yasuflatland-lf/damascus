@@ -52,7 +52,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Trash handler
+ * ${capFirstModel} Trash handler
  *
  * @author ${damascus_author}
  */

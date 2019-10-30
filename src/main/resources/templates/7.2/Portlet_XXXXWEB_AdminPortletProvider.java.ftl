@@ -15,7 +15,7 @@ import ${packageName}.constants.${capFirstModel}PortletKeys;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * Portlet Provider
+ * ${capFirstModel} Portlet Provider
  *
  * This class returns Portlet ID for PortletProviderUtil which is used in TrashHandler.
  * This Portlet ID is used to create a restore URL.

@@ -4,8 +4,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/asset/${capFirstModel}AssetRendererFactory.java">
 // </dmsc:sync> //
-
-
 package ${packageName}.web.asset;
 
 import com.liferay.asset.kernel.model.AssetRenderer;

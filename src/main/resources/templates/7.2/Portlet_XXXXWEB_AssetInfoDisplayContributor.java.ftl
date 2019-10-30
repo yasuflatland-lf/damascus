@@ -16,6 +16,12 @@ import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 
+/**
+ * ${capFirstModel} Asset Info Display Contributor
+ * 
+ * @author ${damascus_author}
+ *
+ */
 @Component(immediate = true, service = InfoDisplayContributor.class)
 public class ${capFirstModel}AssetInfoDisplayContributor extends BaseAssetInfoDisplayContributor<${capFirstModel}> {
 

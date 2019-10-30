@@ -4,7 +4,6 @@
 <#include "./valuables.ftl">
 <#assign createPath = "${webModulePath}/src/main/java/${packagePath}/web/portlet/action/${capFirstModel}ConfigurationAction.java">
 // </dmsc:sync> //
-
 package ${packageName}.web.portlet.action;
 
 import aQute.bnd.annotation.metatype.Configurable;
@@ -62,7 +61,7 @@ public class ${capFirstModel}ConfigurationAction extends DefaultConfigurationAct
 
 	@Override
 	public String getJspPath(HttpServletRequest httpServletRequest) {
-		return "/sample_sb/configuration.jsp";
+		return "/${snakecaseModel}/configuration.jsp";
 	}
 
 	@Override

@@ -2,6 +2,7 @@
 /* <dmsc:sync id="head-common" > */
 <#include "./license.ftl">
 <#include "./valuables.ftl">
-<#assign createPath = "${snakecaseModel}/build.gradle">
+<#assign createPath = "${createPath_val}/${dashcaseProjectName}/build.gradle">
 /* </dmsc:sync> */
+
 

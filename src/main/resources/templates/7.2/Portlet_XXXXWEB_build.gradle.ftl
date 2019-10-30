@@ -1,3 +1,4 @@
+// <dmsc:root templateName="Portlet_XXXXWEB_build.gradle.ftl"  />
 /* <dmsc:sync id="head-common" >  */ 
 <#include "./valuables.ftl">
 <#assign createPath = "${serviceModulePath}/build.gradle">
@@ -7,7 +8,6 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'java'
 
-// <dmsc:root templateName="Portlet_XXXXWEB_build.gradle.ftl"  />
 
 //Need for Windows
 def defaultEncoding = 'UTF-8'
@@ -34,11 +34,11 @@ dependencies {
 	compile group: "org.osgi", name: "org.osgi.service.cm", version: "1.5.0"
 	compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
 	compile group: "org.osgi", name: "osgi.core", version: "6.0.0"
-	compile project(":modules:${snakecaseModel}:${snakecaseModel}-api")
+	compile project(":modules:${dashcaseProjectName}:${dashcaseProjectName}-api")
 }
 
 buildService {
-	apiDir = "../${snakecaseModel}-api/src/main/java"
+	apiDir = "../${dashcaseProjectName}-api/src/main/java"
 }
 
 group = "${packageName}"
