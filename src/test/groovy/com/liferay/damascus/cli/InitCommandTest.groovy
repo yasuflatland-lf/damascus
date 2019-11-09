@@ -47,6 +47,8 @@ class InitCommandTest extends Specification {
 
         where:
         garvs                                                                               | result
+        ["init", "-c", "Foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]     | "Foo"
+        ["init", "-c", "Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]     | "Bar"
         ["init", "-c", "Foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]     | "Foo"
         ["init", "-c", "Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]     | "Bar"
         ["init", "-c", "BarFoo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]  | "BarFoo"
@@ -65,14 +67,14 @@ class InitCommandTest extends Specification {
 
         where:
         garvs                                                                               | _
-        ["init", "-c", "foo@", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
-        ["init", "-c", "foo^", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
-        ["init", "-c", "^foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
-        ["init", "-c", "foo%", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
-        ["init", "-c", "fooあ", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
-        ["init", "-c", "foo_Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71] | _
-        ["init", "-c", "_Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
-        ["init", "-c", "Bar_", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71]    | _
+        ["init", "-c", "foo@", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
+        ["init", "-c", "foo^", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
+        ["init", "-c", "^foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
+        ["init", "-c", "foo%", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
+        ["init", "-c", "fooあ", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
+        ["init", "-c", "foo_Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72] | _
+        ["init", "-c", "_Bar", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
+        ["init", "-c", "Bar_", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
     }
 
     @Unroll("Smoke test for init Error Pattern(#argv1 #argv2)")
@@ -87,12 +89,12 @@ class InitCommandTest extends Specification {
 
         where:
         garvs                                                                  | _
-        ["init", "-c", "Foo", "-p", "999.aaa", "-v", DamascusProps.VERSION_71] | _
-        ["init", "-c", "Foo", "-p", "9.aaa", "-v", DamascusProps.VERSION_71]   | _
-        ["init", "-c", "Foo", "-p", "aaa.9aa", "-v", DamascusProps.VERSION_71] | _
-        ["init", "-c", "Foo", "-p", "999.aaa", "-v", DamascusProps.VERSION_71] | _
-        ["init", "-c", "Foo", "-p", "9.aaa", "-v", DamascusProps.VERSION_71]   | _
-        ["init", "-c", "Foo", "-p", "aaa.9aa", "-v", DamascusProps.VERSION_71] | _
+        ["init", "-c", "Foo", "-p", "999.aaa", "-v", DamascusProps.VERSION_72] | _
+        ["init", "-c", "Foo", "-p", "9.aaa", "-v", DamascusProps.VERSION_72]   | _
+        ["init", "-c", "Foo", "-p", "aaa.9aa", "-v", DamascusProps.VERSION_72] | _
+        ["init", "-c", "Foo", "-p", "999.aaa", "-v", DamascusProps.VERSION_72] | _
+        ["init", "-c", "Foo", "-p", "9.aaa", "-v", DamascusProps.VERSION_72]   | _
+        ["init", "-c", "Foo", "-p", "aaa.9aa", "-v", DamascusProps.VERSION_72] | _
 
     }
 
@@ -111,5 +113,6 @@ class InitCommandTest extends Specification {
         garvs                                                                       | expectedProjectDirName
         ["init", "-c", "ToDo", "-p", "com.liferay", "-v", DamascusProps.VERSION_70] | "to-do"
         ["init", "-c", "ToDo", "-p", "com.liferay", "-v", DamascusProps.VERSION_71] | "to-do"
+        ["init", "-c", "ToDo", "-p", "com.liferay", "-v", DamascusProps.VERSION_72] | "to-do"
     }
 }

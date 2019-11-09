@@ -220,6 +220,8 @@ public class ${capFirstModel}AdminCrudMVCRenderCommand implements MVCRenderComma
 
 		return getViewRecordPageJSP();
 	}
+	@Reference
+	private ${capFirstModel}Service _${uncapFirstModel}Service;
 
 // <dmsc:sync id="service-references" > //
 <#list application.fields as field >

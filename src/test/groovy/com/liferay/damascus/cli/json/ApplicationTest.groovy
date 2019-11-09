@@ -71,6 +71,9 @@ class ApplicationTest extends Specification {
         true  | false | false | DamascusProps.VERSION_71
         false | true  | false | DamascusProps.VERSION_71
         false | false | true  | DamascusProps.VERSION_71
+        true  | false | false | DamascusProps.VERSION_72
+        false | true  | false | DamascusProps.VERSION_72
+        false | false | true  | DamascusProps.VERSION_72
     }
 
     @Unroll("Applications has hasPrimary Fail test var1<#var1> var2<#var2> var3<#var3>")
@@ -104,6 +107,10 @@ class ApplicationTest extends Specification {
         false | true  | true  | DamascusProps.VERSION_71
         true  | true  | true  | DamascusProps.VERSION_71
         false | false | false | DamascusProps.VERSION_71
+        true  | true  | false | DamascusProps.VERSION_72
+        false | true  | true  | DamascusProps.VERSION_72
+        true  | true  | true  | DamascusProps.VERSION_72
+        false | false | false | DamascusProps.VERSION_72
     }
 
 }

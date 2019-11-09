@@ -45,7 +45,7 @@ class CommonUtilTest extends Specification {
     @Unroll("Correct path given")
     def "Correct path given"() {
         when:
-        def file_path = SEP + template_path + SEP + DamascusProps.VERSION_70 + SEP + DamascusProps.BASE_JSON;
+        def file_path = SEP + template_path + SEP + DamascusProps.VERSION_72 + SEP + DamascusProps.BASE_JSON;
         def result = CommonUtil.readResource(CommonUtilTest.class, file_path);
 
         then:
@@ -111,8 +111,8 @@ class CommonUtilTest extends Specification {
 
         where:
         name   | packageName                               | liferayVersion
-        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_70
-        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_70
+        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_72
+        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_71
         "Task" | "jp.co.liferay.test.longpackage.namehere" | DamascusProps.VERSION_70
     }
 
@@ -206,7 +206,8 @@ class CommonUtilTest extends Specification {
 
         where:
         name        | packageName        | liferayVersion
-        "Todo"      | "com.liferay.test" | DamascusProps.VERSION_70
+        "Todo"      | "com.liferay.test" | DamascusProps.VERSION_72
+        "Todo"      | "com.liferay.test" | DamascusProps.VERSION_71
         "Todo_Dada" | "c.aaa"            | DamascusProps.VERSION_70
     }
 
@@ -236,8 +237,8 @@ class CommonUtilTest extends Specification {
 
         where:
         name       | packageName        | liferayVersion
-        "Hoge"     | "com.liferay.test" | DamascusProps.VERSION_70
-        "Hoge-web" | "com.liferay"      | DamascusProps.VERSION_70
+        "Hoge"     | "com.liferay.test" | DamascusProps.VERSION_71
+        "Hoge-web" | "com.liferay"      | DamascusProps.VERSION_72
     }
 
     @Unroll("Smoke test for Create workspace name<#name>")
@@ -261,8 +262,8 @@ class CommonUtilTest extends Specification {
         where:
         name      | liferayVersion
         "Foo"     | DamascusProps.VERSION_70
-        "Foo-web" | DamascusProps.VERSION_70
-        "Bar_web" | DamascusProps.VERSION_70
+        "Foo-web" | DamascusProps.VERSION_71
+        "Bar_web" | DamascusProps.VERSION_72
     }
 
     void dummyWriter(file, dummy_text) {

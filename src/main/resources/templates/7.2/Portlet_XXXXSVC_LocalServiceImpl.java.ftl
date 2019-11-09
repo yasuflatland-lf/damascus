@@ -263,11 +263,6 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 
 		deleteDiscussion(entry);
 
-		// Ratings
-
-		ratingsStatsLocalService.deleteStats(
-			${capFirstModel}.class.getName(), entry.getPrimaryKey());
-
 		// Trash
 
 		_trashEntryLocalService.deleteEntry(

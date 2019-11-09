@@ -6,7 +6,7 @@
 <#assign createPath = "${createPath_val}/service.xml">
 <!--  </dmsc:sync> -->
 <!--  <dmsc:sync id="service-builder" >  -->
-<service-builder package-path="${packageName}">
+<service-builder dependency-injector="ds" mvcc-enabled="true" package-path="${packageName}">
     <author>"${damascus_author}"</author>
     <namespace>${camelcaseProjectName}</namespace>
 

@@ -221,6 +221,9 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
 		return getViewRecordPageJSP();
 	}
 
+	@Reference
+	private ${capFirstModel}Service _${uncapFirstModel}Service;
+
 // <dmsc:sync id="service-references" > //
 <#list application.fields as field >
 	<#if field.validation?? && field.validation.className??>
