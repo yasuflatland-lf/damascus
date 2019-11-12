@@ -21,9 +21,10 @@ The list of what Damascus automatically generate is as follows
 * Multiple service builder portlets at once
 * Exporting entities by xls file format
 * 1..N Relations between models
+* Template generation
 
 ### Required environment
-* Liferay 7.0 CE GA4 and Liferay DXP SP3 or higher versions.
+* Liferay 7.0 CE GA7 and Liferay DXP SP11 or higher versions.
 * Liferay 7.1 CE GA1 and higher.
 * Liferay 7.2 CE GA1 and higher.
 * Java 1.8 or above
