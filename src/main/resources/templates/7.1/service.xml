@@ -169,7 +169,7 @@
     <exceptions>
     	<#list damascus.applications as app >
         <exception>NoSuch${app.model}</exception>
-        <exception>${app.model?cap_first}ValidateException</exception>
+        <exception>${app.model?cap_first}Validate</exception>
         </#list>
     </exceptions>
 
