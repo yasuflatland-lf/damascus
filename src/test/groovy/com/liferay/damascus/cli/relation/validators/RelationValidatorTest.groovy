@@ -4,7 +4,6 @@ import com.jayway.jsonpath.JsonPath
 import com.jayway.jsonpath.ReadContext
 import com.liferay.damascus.cli.common.CommonUtil
 import com.liferay.damascus.cli.common.DamascusProps
-
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -30,9 +29,9 @@ class RelationValidatorTest extends Specification {
 		stat == statusFlag
 
 		where:
-		version | base_json_name				| caseName			| statusFlag
-		7.1	 	| "base_relation_success.json"	| "success pattern"	| true
-		7.1	 	| "base_activity_false.json"	| "fail pattern"	| false
+		version 					| base_json_name				| caseName			| statusFlag
+		DamascusProps.VERSION_71	| "base_relation_success.json"	| "success pattern"	| true
+		DamascusProps.VERSION_71	| "base_activity_false.json"	| "fail pattern"	| false
 	}
 
 	@Unroll("getModelWithField Test <#version> <#base_json_name> <#modelName>")
@@ -48,11 +47,11 @@ class RelationValidatorTest extends Specification {
 		list.size() == retSize
 
 		where:
-		version | base_json_name				| modelName		| fieldName		| retSize
-		7.1	 	| "base_relation_success.json"	| "Position"	| "positionId"	| 1
-		7.1	 	| "base_relation_success.json"	| "Employee"	| "name"		| 1
-		7.1	 	| "base_relation_success.json"	| "Position"	| "hoge"		| 0
-		7.1	 	| "base_relation_success.json"	| "Employee"	| "hoge"		| 0
+		version 					| base_json_name				| modelName		| fieldName		| retSize
+		DamascusProps.VERSION_71	| "base_relation_success.json"	| "Position"	| "positionId"	| 1
+		DamascusProps.VERSION_71	| "base_relation_success.json"	| "Employee"	| "name"		| 1
+		DamascusProps.VERSION_71	| "base_relation_success.json"	| "Position"	| "hoge"		| 0
+		DamascusProps.VERSION_71	| "base_relation_success.json"	| "Employee"	| "hoge"		| 0
 
 	}
 
@@ -68,10 +67,9 @@ class RelationValidatorTest extends Specification {
 		stat == statusFlag
 
 		where:
-		version | base_json_name				| statusFlag
-		7.1	 	| "base_activity_false.json"	| true
-		7.1	 	| "base_relation_success.json"	| true
-		7.1		| "base_relation_fail.json"		| false
+		version 					| base_json_name				| statusFlag
+		DamascusProps.VERSION_71	| "base_activity_false.json"	| true
+		DamascusProps.VERSION_71	| "base_relation_success.json"	| true
+		DamascusProps.VERSION_71	| "base_relation_fail.json"		| false
 	}
-
 }

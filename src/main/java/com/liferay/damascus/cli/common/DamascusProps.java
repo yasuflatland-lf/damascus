@@ -61,13 +61,14 @@ public class DamascusProps {
 
     public static final String PROPERTY_FILE_PATH = CACHE_DIR_PATH + DS + PROPERTY_FILE_NAME;
 
-	public static final String TEMPLATE_FILE_PATH = CACHE_DIR_PATH + DS + TEMPLATE_FOLDER_NAME;
+	  public static final String TEMPLATE_FILE_PATH = CACHE_DIR_PATH + DS + TEMPLATE_FOLDER_NAME;
 
     /**
      * Liferay Version
      */
     public static final String VERSION_70 = "7.0";
     public static final String VERSION_71 = "7.1";
+    public static final String VERSION_72 = "7.2";
 
     /**
      * Service Builder command
@@ -166,7 +167,7 @@ public class DamascusProps {
     /**
      * Attribute keys for dmsc tags (dmsc:root, dmsc:sync)
      */
-    static public final String ATTR_ID = "id";
-    static public final String ATTR_TEMPLATE_NAME = "templateName";
-    static public final String ATTR_PICKUP = "pickup";
+    public static final String ATTR_ID = "id";
+    public static final String ATTR_TEMPLATE_NAME = "templateName";
+    public static final String ATTR_PICKUP = "pickup";
 }

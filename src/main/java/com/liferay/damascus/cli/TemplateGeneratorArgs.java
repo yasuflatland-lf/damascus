@@ -51,10 +51,18 @@ public class TemplateGeneratorArgs extends BaseArgs {
         this.sourceRootPath = sourceRootPath;
     }
 
+    public String getInsertPathTag() {
+        return insertPathTag;
+    }
+
+    public void setInsertPathTag(String insertPathTag) {
+        this.insertPathTag = insertPathTag;
+    }
+
     @Parameter(names = "-model", description = "Model to convert. -model (target model name, \"SampleSB\" e.g.) ", validateWith = ProjectNameValidator.class)
     private String model = "";
 
-    @Parameter(names = "-pickup", description = "Only processing pickup flag is on. Default is false.")
+    @Parameter(names = "-pickup", description = "Remove pick up flags from dmsc tags at template generation if this is true. Default is false.")
     private boolean pickup = false;
 
     /**
@@ -77,4 +85,12 @@ public class TemplateGeneratorArgs extends BaseArgs {
     @Parameter(names = "-sourcerootdir", description = "The base directory where base.json exists. The default directory will be used if this value is not configured. Default is current directory.")
     private String sourceRootPath = DamascusProps.CURRENT_DIR;
 
+    /**
+     * Target path replacement TAG definition
+     * <p>
+     * For the initial template generation, creating the target path for all templates is tedious. This option defines the tag to be replaced to the target path (the original source's full path)
+     * OPTIONAL
+     */
+    @Parameter(names = "-insertpathtag", description = "Template target path tag for initial template generation. Define the tag name here that you want to replace to the Template target path in your templates.")
+    private String insertPathTag = null;
 }

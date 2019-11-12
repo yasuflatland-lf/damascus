@@ -15,7 +15,7 @@ class JsonUtilTest extends Specification {
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
 
     def template_path = DamascusProps.TEMPLATE_FOLDER_NAME;
-    def resource_path = SEP + template_path + SEP + DamascusProps.VERSION_71 + SEP
+    def resource_path = SEP + template_path + SEP + DamascusProps.VERSION_72 + SEP
     def base_json_path = resource_path + DamascusProps.BASE_JSON;
 
     def setup() {

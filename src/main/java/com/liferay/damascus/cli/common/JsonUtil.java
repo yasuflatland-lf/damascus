@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.liferay.project.templates.internal.util.Validator;
+import com.liferay.project.templates.extensions.util.Validator;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

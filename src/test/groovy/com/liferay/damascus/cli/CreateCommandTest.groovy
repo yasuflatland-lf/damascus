@@ -1,21 +1,18 @@
 package com.liferay.damascus.cli
 
-import java.nio.charset.StandardCharsets
-import java.security.InvalidParameterException
-
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.filefilter.RegexFileFilter
-import org.apache.commons.io.filefilter.TrueFileFilter
-import org.apache.commons.lang3.StringUtils
-
 import com.beust.jcommander.internal.Maps
 import com.liferay.damascus.cli.common.*
 import com.liferay.damascus.cli.json.DamascusBase
 import com.liferay.damascus.cli.test.tools.TestUtils
-
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.filefilter.RegexFileFilter
+import org.apache.commons.io.filefilter.TrueFileFilter
+import org.apache.commons.lang3.StringUtils
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import java.nio.charset.StandardCharsets
 
 class CreateCommandTest extends Specification {
     static def DS = DamascusProps.DS;
@@ -94,11 +91,12 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName
+        "ToDo"      | DamascusProps.VERSION_72 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_71 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_70 | "com.liferay.test"
     }
 
-    @Unroll("Smoke test for generating Project Project<#projectName> Package<#packageName>")
+    @Unroll("Smoke test for generating Project Version<#liferayVersion> Project<#projectName> Package<#packageName>")
     def "Smoke test for generating Project"() {
 
         when:
@@ -151,9 +149,10 @@ class CreateCommandTest extends Specification {
 
         where:
         liferayVersion           | projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
+        DamascusProps.VERSION_72 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
+        DamascusProps.VERSION_72 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
-        DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
-        DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
+        DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_70 | "To-Do"     | "com.bar.foo.packeage.long" | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_70 | "T_Ask"     | "com.foo.bar"               | true      | true      | true          | false             | false                | true
     }
@@ -238,7 +237,6 @@ class CreateCommandTest extends Specification {
         def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
         return [
-                [path: pathMap["apiPath"], target: ".*ActivityKeys.java", amount: 1],
                 [path: pathMap["apiPath"], target: ".*bnd.bnd", amount: 1],
                 [path: pathMap["apiPath"], target: ".*build.gradle", amount: 1],
                 [path: pathMap["apiPath"], target: ".*PortletKeys.java", amount: 1],
@@ -256,7 +254,6 @@ class CreateCommandTest extends Specification {
                 [path: pathMap["servicePath"], target: ".*Validator.java", amount: 1],
                 [path: pathMap["servicePath"], target: ".*WorkflowHandler.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*abstract.jsp", amount: 1],
-                [path: pathMap["webPath"], target: ".*ActivityInterpreter.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*AssetRenderer.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*AssetRendererFactory.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*bnd.bnd", amount: 1],
