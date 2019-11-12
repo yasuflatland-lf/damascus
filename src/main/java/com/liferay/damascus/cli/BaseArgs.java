@@ -15,7 +15,7 @@ public class BaseArgs {
     @Parameter(description = "Get help on a specific command.", help = true, names = "--help")
     private boolean _help;
 
-    @Parameter(names = "-v", description = "Target Liferay Version. (e.g. 7.1)", validateWith = VersionValidator.class)
-    private String liferayVersion = DamascusProps.VERSION_71;
+    @Parameter(names = "-v", description = "Target Liferay Version. (e.g. 7.2)", validateWith = VersionValidator.class)
+    private String liferayVersion = DamascusProps.VERSION_72;
 
 }

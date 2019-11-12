@@ -145,10 +145,16 @@ public class CommonUtil {
                     .newConnector()
                     .forProjectDirectory(filePath)
                     .connect();
-            connection.newBuild().forTasks(task).run();
+            connection
+                .newBuild()
+                .forTasks(task)
+                .setStandardOutput(System.out)
+                .run();
         } finally {
             if (null != connection) {
                 connection.close();
+            } else {
+                System.out.println("Fail to run task <" + task + ">");
             }
         }
     }

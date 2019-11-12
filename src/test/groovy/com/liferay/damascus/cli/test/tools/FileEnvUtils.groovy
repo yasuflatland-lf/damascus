@@ -56,6 +56,14 @@ class FileEnvUtils {
         )
     }
 
+    static def createInsertTagTemplate(String rootPath, String fileName, String templateName) {
+        sourceEnvCreate(
+                rootPath,
+                fileName,
+                getInsertTagContents(templateName)
+        )
+    }
+
     static def sourceEnvCreate(String rootPath, String fileName, String contents) {
 
         FileUtils.forceMkdir(new File(rootPath));
@@ -291,6 +299,28 @@ include-and-override=portlet-ext.properties
 # <dmsc:sync id="propstat1">
 language.bundle=content.Language
 # </dmsc:sync>
+
+#
+# Input a list of comma delimited resource action configurations that will be
+# read from the class path.
+#
+# <dmsc:sync id="propstat2">
+resource.actions.configs=resource-actions/default.xml
+# </dmsc:sync>
+/$;
+        return retVal;
+
+    }
+
+    static def getInsertTagContents(String templateName) {
+        def rootTag = getPropertyComment(getRootTag(templateName))
+        def retVal = $/
+${rootTag}
+include-and-override=portlet-ext.properties
+# <dmsc:sync id="propstat1"> #
+language.bundle=content.Language
+<#assign createPath = "DMSC_INSERT_FULLPATH_TAG">
+# </dmsc:sync> #
 
 #
 # Input a list of comma delimited resource action configurations that will be

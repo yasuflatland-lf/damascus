@@ -1,6 +1,7 @@
 package com.liferay.damascus.cli.json;
 
 import java.security.InvalidParameterException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,7 @@ public class Application {
     /**
      * Replacement keywords map
      */
-    public Map<String, String> replacements;
+    public LinkedHashMap<String, String> replacements;
 
     /**
      * Has an asset configured?

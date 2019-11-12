@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'io.franzbecker.gradle-lombok' version '3.2.0'
     id 'java'
     id 'groovy'
     id 'eclipse'
@@ -21,7 +21,7 @@ plugins {
 apply plugin: 'com.github.kt3k.coveralls'
 
 lombok { // optional: values below are the defaults
-    version = "1.18.6"
+    version = "1.18.10"
     sha256 = ""
 }
 
@@ -58,7 +58,7 @@ jar {
     manifest {
         attributes(
             "Bundle-SymbolicName": "com.liferay.damascus.cli",
-            "Bundle-Version": "1.0.23",
+            "Bundle-Version": "1.1.0",
             "Bundle-Description": "Liferay extension tool for scaffolding service builder portlet",
             "Main-Class": "com.liferay.damascus.cli.Damascus",
             "JPM-Command": "damascus"
@@ -71,15 +71,15 @@ jar {
 
 dependencies {
     compile 'com.beust:jcommander:1.72'
-    compile 'com.google.guava:guava:27.0.1-jre'
+    compile 'com.google.guava:guava:28.1-jre'
     compile 'commons-io:commons-io:2.6'
     compile 'org.apache.commons:commons-lang3:3.7'
-    compile 'org.apache.commons:commons-configuration2:2.1.+'
-    compile 'commons-beanutils:commons-beanutils:1.9.3'
+    compile 'org.apache.commons:commons-configuration2:2.6'
+    compile 'commons-beanutils:commons-beanutils:1.9.+'
 	compile 'com.jayway.jsonpath:json-path:2.4.+'
 
     compile 'org.freemarker:freemarker:2.3.28'
-    compile 'com.liferay:com.liferay.project.templates:latest.integration'
+    compile 'com.liferay:com.liferay.project.templates:5.0.2'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'org.slf4j:slf4j-log4j12:1.7.25'
     compile 'com.fasterxml.jackson.core:jackson-core:2.9.+'
@@ -87,8 +87,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.+'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.+'
     compile 'joda-time:joda-time:2.9.+'
-    compile 'org.gradle:gradle-tooling-api:4.0.+'
-    compile 'org.codehaus.groovy:groovy-all:2.4.16'
+    compile 'org.gradle:gradle-tooling-api:4.3'
+    compile 'org.codehaus.groovy:groovy-all:2.5.8'
 
     compile group: 'org.antlr', name: 'antlr4', version: '4.7.2'
     compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
@@ -110,7 +110,7 @@ dependencies {
     testCompile group: 'org.powermock', name: 'powermock-module-junit4-rule', version:'1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito-common', version: '1.6.6'
-    testCompile('org.spockframework:spock-core:1.2-groovy-2.4') {
+    testCompile('org.spockframework:spock-core:1.3-groovy-2.5') {
         exclude module: 'groovy-all'
     }
 }
