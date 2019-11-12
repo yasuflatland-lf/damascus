@@ -78,6 +78,9 @@
       ],
       "customValue" : {
         "your_own_id" : "your_custom_value_for_template_here"
+      },
+      "replacements" : {
+        "original_string_to_be_replaced" : "replacement_string"
       }
     }
   ]

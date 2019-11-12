@@ -466,7 +466,6 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | expectedProjectDirName
-        "SampleSB"  | DamascusProps.VERSION_72 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
