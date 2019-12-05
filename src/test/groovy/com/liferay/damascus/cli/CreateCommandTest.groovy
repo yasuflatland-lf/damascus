@@ -466,6 +466,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_72 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
@@ -495,7 +496,34 @@ class CreateCommandTest extends Specification {
 
 		where:
 		projectName | version     			    | packageName        		| base_json_name
+        "Employee"  | DamascusProps.VERSION_72	| "com.liferay.sb.employee"	| "base_relation_fail.json"
 		"Employee"  | DamascusProps.VERSION_71	| "com.liferay.sb.employee"	| "base_relation_fail.json"
-
 	}
+
+    @Unroll("Relation Create Test <#projectName> <#version> <#packageName> <#base_json_name>")
+    def "Relation Create Test"() {
+        when:
+        //Initialize
+        setupEx(version);
+
+        def buffer = new ByteArrayOutputStream()
+        System.err = new PrintStream(buffer)
+
+        // Read test base.json file
+        def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
+        def file_path = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
+        def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
+        FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
+
+        //Run damascus create
+        String[] args = ["create"]
+        Damascus.main(args)
+
+        then:
+        buffer.toString() == ""
+
+        where:
+        projectName | version     			    | packageName        		| base_json_name
+        "Employee"  | DamascusProps.VERSION_72	| "com.liferay.sb.employee"	| "base_relation_success.json"
+    }
 }

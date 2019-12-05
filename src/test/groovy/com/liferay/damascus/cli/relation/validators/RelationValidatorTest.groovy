@@ -30,6 +30,7 @@ class RelationValidatorTest extends Specification {
 
 		where:
 		version 					| base_json_name				| caseName			| statusFlag
+		DamascusProps.VERSION_72	| "base_relation_success.json"	| "success pattern"	| true
 		DamascusProps.VERSION_71	| "base_relation_success.json"	| "success pattern"	| true
 		DamascusProps.VERSION_71	| "base_activity_false.json"	| "fail pattern"	| false
 	}
