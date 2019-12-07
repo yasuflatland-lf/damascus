@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
 [![Coverage Status](https://coveralls.io/repos/github/yasuflatland-lf/damascus/badge.svg?branch=master)](https://coveralls.io/github/yasuflatland-lf/damascus?branch=master)
 [![Build status](https://ci.appveyor.com/api/projects/status/qqpdw6drt8w07ljp?svg=true)](https://ci.appveyor.com/project/yasuflatland-lf/damascus)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/liferay-damascus/community)
 
 Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see [this official document](https://yasuflatland-lf.github.io/damascus-doc/)
 
@@ -14,9 +15,9 @@ The list of what Damascus automatically generate is as follows
 * Workflow
 * Trashbox
 * Search (Including Advanced search for individual fields)
-* Comments
+* Comments (Deprecated in 7.2 templates)
 * Related assets
-* Ratings
+* Ratings (Deprecated in 7.2 templates)
 * Activities (The activities on the portlet will be recorded and visible on an activity portlet)
 * Multiple service builder portlets at once
 * Exporting entities by xls file format
@@ -65,7 +66,7 @@ Please see more detailed settings [here](https://github.com/yasuflatland-lf/dama
 
 ### IDE settings
 Damascus is including lombok library, so annotation library for lombok needs to be properly installed on IDEs. Here are how to apply lombok to Eclipse / IntelliJ
-##### Eclipse
+##### Eclipse (Not Liferay Developer Studio)
 1. Download lombok https://projectlombok.org/download
 2. double click ```lombok.jar``` and select the directory where ```eclipse.exe``` exist
 3. Run ```gradle eclipse``` at the project directory and restart IDE, and right click on the project and display context name, and choose ```gradle > Refresh gradle project```

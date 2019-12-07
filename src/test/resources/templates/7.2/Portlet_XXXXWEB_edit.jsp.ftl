@@ -100,10 +100,45 @@
 				field.type?string == "com.liferay.damascus.cli.json.fields.Integer"  ||
 				field.type?string == "com.liferay.damascus.cli.json.fields.Text"
 			>
+				<#if field.validation?? && field.validation.className??>
+					<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+					<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+					<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
+
+					<#assign fieldName = "PrimaryKey">
+					<#if field.validation.fieldName??>
+						<#assign fieldName = "${field.validation.fieldName?cap_first}">
+					</#if>
+
+					<#assign orderByField = "PrimaryKey">
+					<#if field.validation.orderByField??>
+						<#assign orderByField = "${field.validation.orderByField?uncap_first}">
+					</#if>
+					<%
+					${capFirstValidationModel}ViewHelper ${uncapFirstValidationModel}ViewHelper = (${capFirstValidationModel}ViewHelper) request
+							.getAttribute(${capFirstValidationModel}WebKeys.${uppercaseValidationModel}_VIEW_HELPER);
+
+					SearchContainerResults<${capFirstValidationModel}> ${uncapFirstValidationModel}Results = ${uncapFirstValidationModel}ViewHelper.getListFromDB(
+							renderRequest, -1, -1, "${orderByField?uncap_first}", "asc", new int[] {WorkflowConstants.STATUS_APPROVED});
+					%>
+					<liferay-ui:error key="${lowercaseModel}-${field.name?lower_case}-not-found"
+									  message="${lowercaseModel}-${field.name?lower_case}-not-found" />
+
+					<aui:select name="${field.name}"
+						label='<%=LanguageUtil.get(request, "${lowercaseModel}-${field.name?lower_case}")
+								+ requiredLabel%>'>
+						<aui:option value=""><%=LanguageUtil.get(request, "please-select") %></aui:option>
+						<% for(${capFirstValidationModel} ${uncapFirstValidationModel} : ${uncapFirstValidationModel}Results.getResults()) { %>
+						<aui:option value="<%= ${uncapFirstValidationModel}.get${fieldName}() %>"><%=${uncapFirstValidationModel}.get${orderByField?cap_first}() %></aui:option>
+						<% } %>
+					</aui:select>
+
+				<#else>
 					<aui:input name="${field.name}" disabled="false"
 						label='<%=LanguageUtil.get(request, "${lowercaseModel}-${field.name?lower_case}")
 						+ requiredLabel%>'
 					/>
+				</#if>
 			</#if>
 			<#-- ---------------- -->
 			<#-- Document Library -->
