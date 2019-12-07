@@ -125,44 +125,16 @@
         <finder name="${field.name?cap_first}" return-type="Collection">
             <finder-column name="${field.name}" />
         </finder>
-
         </#list>
-        <#-- ---------------- -->
-        <#-- / Fields Finders -->
-        <#-- ---------------- -->
-        <#-- TODO: Relations need to be implimented -->
-        <#if false >
-            <#list app.relations as relation >
-        <!-- Finder Methods when Detail Files -->
-        <finder name="${relation.detailFileClassName?cap_first}" return-type="Collection">
-            <finder-column name="${relation.connectionFieldName}" />
-        </finder>
-        <finder name="${relation.detailFileClassName?cap_first}GroupId" return-type="Collection">
-            <finder-column name="${relation.connectionFieldName}" />
-            <finder-column name="groupId" />
-        </finder>
-            </#list>
-        </#if>
-        <#-- TODO: Validations need to be implimented -->
-        <#if false >
-            <#list app.fields as field >
-                <#list field.validations as validation >
-        <!-- Finder Methods when Detail Files -->
-        <finder name="${validation.fieldName?cap_first}" return-type="Collection">
-            <finder-column name="${validation.fieldName}" />
-        </finder>
-                </#list>
-            </#list>
-        </#if>
-		<reference entity="User" package-path="com.liferay.portal" />
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
-		<reference entity="DLFolder" package-path="com.liferay.portlet.documentlibrary" />
-		<reference entity="PortletPreferences" package-path="com.liferay.portal" />
-		<reference entity="Resource" package-path="com.liferay.portal" />
-		<reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
+        <reference entity="User" package-path="com.liferay.portal" />
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+        <reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
+        <reference entity="DLFolder" package-path="com.liferay.portlet.documentlibrary" />
+        <reference entity="PortletPreferences" package-path="com.liferay.portal" />
+        <reference entity="Resource" package-path="com.liferay.portal" />
+        <reference entity="WorkflowInstanceLink" package-path="com.liferay.portal" />
+        <reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+        <reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
     </entity>
     </#list>
     <exceptions>

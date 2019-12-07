@@ -30,6 +30,7 @@ import ${packageName}.web.upload.${capFirstModel}ItemSelectorHelper;
 		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
 import ${packageName}.service.${capFirstValidationModel}LocalService;
 import ${packageName}.web.constants.${capFirstValidationModel}WebKeys;
+import ${packageName}.web.util.${capFirstValidationModel}ViewHelper;
 	</#if>
 </#list>
 // </dmsc:sync> //
@@ -114,9 +115,11 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
 // <dmsc:sync id="render-attributes" > //
 <#list application.fields as field >
 	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
 		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
 		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
 
+		request.setAttribute(${capFirstValidationModel}WebKeys.${uppercaseValidationModel}_VIEW_HELPER, _${uncapFirstValidationModel}ViewHelper);
         request.setAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE, _${uncapFirstValidationModel}LocalService);
 	</#if>
 </#list>
@@ -230,7 +233,10 @@ public class ${capFirstModel}CrudMVCRenderCommand implements MVCRenderCommand {
 		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
 		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
 
-    @Reference
+	@Reference
+	private ${capFirstValidationModel}ViewHelper _${uncapFirstValidationModel}ViewHelper;
+
+	@Reference
     private ${capFirstValidationModel}LocalService _${uncapFirstValidationModel}LocalService;
 	</#if>
 </#list>

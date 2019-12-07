@@ -55,10 +55,10 @@ page import="com.liferay.trash.util.TrashWebKeys" %>
     <#if field.validation?? && field.validation.className??>
 <%@page import="${packageName}.model.${field.validation.className}"%>
 <%@page import="${packageName}.web.constants.${field.validation.className}WebKeys"%>
+<%@page import="${packageName}.web.util.${field.validation.className}ViewHelper"%>
 <%@page import="${packageName}.service.${field.validation.className}LocalService"%>
     </#if>
 </#list>
-
 <%-- </dmsc:sync> --%>
 
 <liferay-frontend:defineObjects />
