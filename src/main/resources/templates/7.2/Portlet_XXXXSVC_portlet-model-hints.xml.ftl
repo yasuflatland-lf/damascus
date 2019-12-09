@@ -1,52 +1,95 @@
-<?xml version="1.0"?>
-<!-- <dmsc:root templateName="Portlet_XXXXSVC_portlet-model-hints.xml.ftl"  /> -->
-<!-- <dmsc:sync id="head-common" >  -->
 <#include "./valuables.ftl">
 <#assign createPath = "${serviceModulePath}/src/main/resources/META-INF/portlet-model-hints.xml">
-<!-- </dmsc:sync> -->
+<?xml version="1.0"?>
+
 <model-hints>
-<!-- <dmsc:sync id="model-definitions" >  -->
-	<model name="${packageName}.model.${capFirstModel}">
-		<field name="uuid" type="String" />
-		<field name="${lowercaseModel}Id" type="long" />
-		<field name="title" type="String">
-			<hint name="max-length">80</hint>
-		</field>
-		<field name="${lowercaseModel}BooleanStat" type="boolean" />
-		<field name="${lowercaseModel}DateTime" type="Date" />
-		<field name="${lowercaseModel}DocumentLibrary" type="String">
-			<hint name="display-width">60</hint>
-			<hint name="max-length">512</hint>
-		</field>
-		<field name="${lowercaseModel}Double" type="double" />
-		<field name="${lowercaseModel}Integer" type="int" />
-		<field name="${lowercaseModel}RichText" type="String">
-			<hint-collection name="TEXTAREA" />
-			<hint name="max-length">4001</hint>
-		</field>
-		<field name="${lowercaseModel}Text" type="String">
-			<hint-collection name="TEXTAREA" />
-			<hint name="max-length">4001</hint>
-		</field>
-		<field name="groupId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
-		<field name="createDate" type="Date" />
-		<field name="modifiedDate" type="Date" />
-		<field name="urlTitle" type="String" />
-		<field name="${lowercaseModel}TitleName" type="String">
-			<hint name="display-width">200</hint>
-			<hint name="max-length">255</hint>
-		</field>
-		<field name="${lowercaseModel}SummaryName" type="String">
-			<hint-collection name="TEXTAREA" />
-			<hint name="max-length">4001</hint>
-		</field>
-		<field name="status" type="int" />
-		<field name="statusByUserId" type="long" />
-		<field name="statusByUserName" type="String" />
-		<field name="statusDate" type="Date" />
-	</model>
-<!-- </dmsc:sync> -->
+<#list damascus.applications as application>
+    <model name="${packageName}.model.${application.model}">
+        <field name="uuid" type="String" />
+
+        <#-- ---------------- -->
+        <#-- field loop start -->
+        <#-- ---------------- -->
+        <#list application.fields as field >
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" />
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Varchar" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" >
+            <hint name="max-length">${field.length}</hint>
+        </field>
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Date" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}">
+            <hint name="show-time">false</hint>
+            <hint name="year-range-delta">80</hint>
+        </field>
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.DateTime" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}">
+            <hint name="show-time">true</hint>
+            <hint name="year-range-delta">80</hint>
+        </field>
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Boolean" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" />
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}">
+            <hint name="display-width">60</hint>
+            <hint name="max-length">512</hint>
+        </field>
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Double" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" />
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Integer" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}" />
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.RichText" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}">
+            <hint-collection name="TEXTAREA" />
+            <hint name="max-length">4001</hint>
+        </field>
+            </#if>
+            <#if field.type?string == "com.liferay.damascus.cli.json.fields.Text" >
+        <field name="${field.name}" type="${templateUtil?api.getTypeParameter(field.type?string)}">
+            <hint-collection name="TEXTAREA" />
+            <hint name="max-length">4001</hint>
+        </field>
+            </#if>
+        </#list>
+        <#-- ---------------- -->
+        <#-- field loop ends  -->
+        <#-- ---------------- -->
+
+        <#-- ---------------- -->
+        <#--      Assets      -->
+        <#-- ---------------- -->
+        <#if application.asset.assetTitleFieldName?? && application.asset.assetTitleFieldName != "" >
+            <field name="${application.asset.assetTitleFieldName}" type="String">
+                <hint name="display-width">200</hint>
+                <hint name="max-length">255</hint>
+            </field>
+        </#if>
+        <#if application.asset.assetSummaryFieldName?? && application.asset.assetSummaryFieldName != "" >
+            <field name="${application.asset.assetSummaryFieldName}" type="String">
+                <hint-collection name="TEXTAREA" />
+                <hint name="max-length">4001</hint>
+            </field>
+        </#if>
+
+        <field name="groupId" type="long" />
+        <field name="companyId" type="long" />
+        <field name="userId" type="long" />
+        <field name="userName" type="String" />
+        <field name="createDate" type="Date" />
+        <field name="modifiedDate" type="Date" />
+        <field name="urlTitle" type="String" />
+        <field name="status" type="int" />
+        <field name="statusByUserId" type="long" />
+        <field name="statusByUserName" type="String" />
+        <field name="statusDate" type="Date" />
+    </model>
+</#list>
 </model-hints>
