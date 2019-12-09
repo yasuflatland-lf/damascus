@@ -29,6 +29,7 @@ page import="com.liferay.portal.kernel.portlet.*" %><%@
 page import="com.liferay.portal.kernel.security.permission.ActionKeys" %><%@
 page import="com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.util.*" %><%@
+page import="com.liferay.portal.kernel.workflow.*" %><%@
 page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPNavigationItemList" %><%@
 page import="${packageName}.model.${capFirstModel}" %><%@
 page import="${packageName}.web.constants.*" %><%@
