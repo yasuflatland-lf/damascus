@@ -694,9 +694,9 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 /* </dmsc:sync> */		
 
 			entry.set${application.asset.assetTitleFieldName?cap_first}(
-				ParamUtil.getString(request, "${lowercaseModel}TitleName"));
+				ParamUtil.getString(request, "${application.asset.assetTitleFieldName}"));
 			entry.set${application.asset.assetSummaryFieldName?cap_first}(
-				ParamUtil.getString(request, "${lowercaseModel}SummaryName"));
+				ParamUtil.getString(request, "${application.asset.assetSummaryFieldName}"));
 
 			entry.setCompanyId(themeDisplay.getCompanyId());
 			entry.setGroupId(themeDisplay.getScopeGroupId());

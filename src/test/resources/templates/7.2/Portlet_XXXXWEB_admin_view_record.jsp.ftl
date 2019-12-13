@@ -12,6 +12,16 @@ String redirect = ParamUtil.getString(request, "redirect");
 boolean fromAsset = ParamUtil.getBoolean(request, "fromAsset", false);
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
+
+<#list application.fields as field >
+	<#if field.validation?? && field.validation.className??>
+		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
+		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
+		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
+${capFirstValidationModel}LocalService ${uncapFirstValidationModel}LocalService = (${capFirstValidationModel}LocalService) request
+.getAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE);
+	</#if>
+</#list>
 %>
 
 <div class="container-fluid-1280 entry-body">
