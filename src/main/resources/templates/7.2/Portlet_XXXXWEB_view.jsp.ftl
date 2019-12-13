@@ -17,8 +17,8 @@ SimpleDateFormat dateTimeFormat = new SimpleDateFormat(datetimeFormatVal);
 		<#assign capFirstValidationModel = "${field.validation.className?cap_first}">
 		<#assign uncapFirstValidationModel = "${field.validation.className?uncap_first}">
 		<#assign uppercaseValidationModel = "${field.validation.className?upper_case}">
-		${capFirstValidationModel}LocalService ${uncapFirstValidationModel}LocalService = (${capFirstValidationModel}LocalService) request
-		.getAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE);
+${capFirstValidationModel}LocalService ${uncapFirstValidationModel}LocalService = (${capFirstValidationModel}LocalService) request
+.getAttribute(${capFirstModel}WebKeys.${uppercaseValidationModel}_LOCAL_SERVICE);
 	</#if>
 </#list>
 
