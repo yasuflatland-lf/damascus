@@ -1007,7 +1007,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		newEntry.setModifiedDate(now);
 
 		newEntry.setUuid(serviceContext.getUuid());
-		newEntry.setUrlTitle(getUniqueUrlTitle(entry, entry.get${application.asset.assetTitleFieldName?cap_first}()));
+		newEntry.setUrlTitle(getUniqueUrlTitle(newEntry, entry.get${application.asset.assetTitleFieldName?cap_first}()));
 
 		newEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
 		newEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
@@ -1099,7 +1099,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 
 		String urlTitle = null;
 
-		if (newTitle == null) {
+		if (newTitle == null || newTitle.equals("")) {
 			urlTitle = String.valueOf(entryId);
 		}
 		else {
