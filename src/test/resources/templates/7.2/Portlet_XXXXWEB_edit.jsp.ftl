@@ -12,6 +12,8 @@
 	String CMD = ParamUtil.getString(request, Constants.CMD, Constants.UPDATE);
 	${capFirstModel} ${uncapFirstModel} = (${capFirstModel})request.getAttribute("${uncapFirstModel}");
 	String redirect = ParamUtil.getString(request, "redirect");
+	portletDisplay.setShowBackIcon(true);
+	portletDisplay.setURLBack(redirect);
 %>
 
 <portlet:actionURL name="/${lowercaseModel}/crud" var="${lowercaseModel}EditURL">
@@ -49,6 +51,8 @@
 					<#--      Assets      -->
 					<#-- ---------------- -->
 					<#if application.asset.assetTitleFieldName?? && application.asset.assetTitleFieldName != "" >
+						<liferay-ui:error key="duplicated-url-title"
+												  message="duplicated-url-title" />
 						<aui:input name="${application.asset.assetTitleFieldName}" label="title" />
 					</#if>
 					<#if application.asset.assetSummaryFieldName?? && application.asset.assetSummaryFieldName != "" >
