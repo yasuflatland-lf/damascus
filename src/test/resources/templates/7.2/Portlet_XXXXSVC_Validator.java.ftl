@@ -8,7 +8,9 @@
 package ${packageName}.service.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.repository.model.ModelValidator;
+import com.liferay.portal.kernel.util.Validator;
 import ${packageName}.exception.${capFirstModel}ValidateException;
 import ${packageName}.model.${capFirstModel};
 
@@ -49,12 +51,31 @@ public class ${capFirstModel}Validator implements ModelValidator<${capFirstModel
     <#-- ---------------- -->
     <#-- field loop ends  -->
     <#-- ---------------- -->
-/* </dmsc:sync> */ 	
+/* </dmsc:sync> */
+        validate${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
+
 		if (0 < _errors.size()) {
 			throw new ${capFirstModel}ValidateException(_errors);
 		}
 		
 	}
+
+    /**
+    * ${application.asset.assetTitleFieldName} field Validation
+    *
+    * @param ${application.asset.assetTitleFieldName}
+    */
+    protected void validate${application.asset.assetTitleFieldName?cap_first}(String ${application.asset.assetTitleFieldName}) {
+        if (Validator.isNotNull(${application.asset.assetTitleFieldName})) {
+            int ${application.asset.assetTitleFieldName}MaxLength = ModelHintsUtil.getMaxLength(
+                ${capFirstModel}.class.getName(), "${application.asset.assetTitleFieldName}");
+
+            if (${application.asset.assetTitleFieldName}.length() > ${application.asset.assetTitleFieldName}MaxLength) {
+                _errors.add("${application.asset.assetTitleFieldName} has more than " + ${application.asset.assetTitleFieldName}MaxLength +
+                " characters");
+            }
+        }
+    }
 
 /* <dmsc:sync id="validate-methods" >  */
     <#-- ---------------- -->
