@@ -7,6 +7,7 @@
 <#assign skipTemplate = !generateWeb>
 <!-- </dmsc:sync> -->
 <routes>
+<!--
 	<route>
 		<pattern></pattern>
 		<implicit-parameter name="mvcRenderCommandName">/${lowercaseModel}/view</implicit-parameter>
@@ -49,4 +50,5 @@
 		<implicit-parameter name="p_p_lifecycle">0</implicit-parameter>
 		<implicit-parameter name="tag"></implicit-parameter>
 	</route>
+-->
 </routes>
