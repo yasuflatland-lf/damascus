@@ -9,6 +9,8 @@ package ${packageName}.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.friendly.url.exception.DuplicateFriendlyURLEntryException;
 import com.liferay.friendly.url.model.FriendlyURLEntry;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.petra.string.StringPool;
@@ -16,6 +18,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -262,6 +265,11 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		// Comment
 
 		deleteDiscussion(entry);
+
+		// Friendly URL
+
+		_friendlyURLEntryLocalService.deleteFriendlyURLEntry(
+			entry.getGroupId(), ${capFirstModel}.class, entry.getPrimaryKey());	
 
 		// Trash
 
@@ -862,9 +870,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		${capFirstModel} entry = _updateEntry(
 			orgEntry.getPrimaryKey(), orgEntry, serviceContext);
 
-		if (entry.isPending() || entry.isDraft()) {
-		}
-		else {
+		if (!entry.isPending() && !entry.isDraft()) {
 			entry.setStatus(WorkflowConstants.STATUS_DRAFT);
 		}
 
@@ -1007,7 +1013,11 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		newEntry.setModifiedDate(now);
 
 		newEntry.setUuid(serviceContext.getUuid());
-		newEntry.setUrlTitle(getUniqueUrlTitle(entry, entry.get${application.asset.assetTitleFieldName?cap_first}()));
+
+		// Friendly URLs
+		String urlTitle = getUniqueUrlTitle(newEntry, entry.get${application.asset.assetTitleFieldName?cap_first}());
+		urlTitle = updateFriendlyURLs(newEntry, urlTitle, serviceContext);
+		newEntry.setUrlTitle(urlTitle);
 
 		newEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
 		newEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
@@ -1059,8 +1069,30 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		updateEntry.setModifiedDate(now);
 
 		updateEntry.setUuid(entry.getUuid());
+		String urlTitle = entry.get${application.asset.assetTitleFieldName?cap_first}();
+		if (Validator.isNotNull(urlTitle)) {
+			long classNameId = _classNameLocalService.getClassNameId(
+				${capFirstModel}.class);
+
+			try{
+				_friendlyURLEntryLocalService.validate(
+				entry.getGroupId(), classNameId, primaryKey, entry.get${application.asset.assetTitleFieldName?cap_first}());
+			} catch(DuplicateFriendlyURLEntryException e) {
+				List<String> error = new ArrayList<String>();
+				error.add("duplicated-url-title");
+				throw new ${capFirstModel}ValidateException(error);
+			}
+		}
+		else {
+			urlTitle = getUniqueUrlTitle(entry, urlTitle);
+		}
+
+		if (!urlTitle.equals(entry.getUrlTitle())) {
+			urlTitle = updateFriendlyURLs(entry, urlTitle, serviceContext);
+		}
+
 		updateEntry.setUrlTitle(
-			getUniqueUrlTitle(updateEntry, updateEntry.getUrlTitle()));
+			getUniqueUrlTitle(updateEntry, urlTitle));
 
 		updateEntry.set${application.asset.assetTitleFieldName?cap_first}(entry.get${application.asset.assetTitleFieldName?cap_first}());
 		updateEntry.set${application.asset.assetSummaryFieldName?cap_first}(entry.get${application.asset.assetSummaryFieldName?cap_first}());
@@ -1078,6 +1110,51 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 /* </dmsc:sync> */ 
 
 		return updateEntry;
+	}
+
+	/**
+	* Update Friendly URLs
+	*
+	* @param entry ${capFirstModel}
+	* @param urlTitle
+	* @param serviceContext
+	* @return string
+	* @throws PortalException
+	*/
+	protected String updateFriendlyURLs(
+		${capFirstModel} entry, String urlTitle,
+		ServiceContext serviceContext)
+		throws PortalException {
+
+		if (ExportImportThreadLocal.isImportInProcess() ||
+			ExportImportThreadLocal.isStagingInProcess()) {
+
+			return urlTitle;
+		}
+
+		List<FriendlyURLEntry> friendlyURLEntries =
+		_friendlyURLEntryLocalService.getFriendlyURLEntries(
+			entry.getGroupId(),
+			classNameLocalService.getClassNameId(${capFirstModel}.class),
+			entry.getPrimaryKey());
+
+		FriendlyURLEntry newFriendlyURLEntry =
+			_friendlyURLEntryLocalService.addFriendlyURLEntry(
+				entry.getGroupId(),
+				classNameLocalService.getClassNameId(${capFirstModel}.class),
+				entry.getPrimaryKey(), urlTitle, serviceContext);
+
+		for (FriendlyURLEntry friendlyURLEntry : friendlyURLEntries) {
+			if (newFriendlyURLEntry.getFriendlyURLEntryId() ==
+				friendlyURLEntry.getFriendlyURLEntryId()) {
+
+				continue;
+			}
+
+			_friendlyURLEntryLocalService.deleteFriendlyURLEntry(friendlyURLEntry);
+		}
+
+		return newFriendlyURLEntry.getUrlTitle();
 	}
 
 	/**
@@ -1099,7 +1176,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 
 		String urlTitle = null;
 
-		if (newTitle == null) {
+		if (newTitle == null || newTitle.equals("")) {
 			urlTitle = String.valueOf(entryId);
 		}
 		else {
