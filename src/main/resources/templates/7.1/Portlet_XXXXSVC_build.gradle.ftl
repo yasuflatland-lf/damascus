@@ -27,10 +27,10 @@ repositories {
 
 dependencies {
 	compile 'com.google.errorprone:error_prone_annotations:2.0.19'
-	compile 'commons-digester:commons-digester:1.8.1'
-	compile "com.google.guava:guava:21.0"
+	compile 'commons-digester:commons-digester<#if useTP?? && false == useTP>:1.8.1</#if>'
+	compile "com.google.guava:guava<#if useTP?? && false == useTP>:21.0</#if>"
 	compile "commons-io:commons-io<#if useTP?? && false == useTP>:2.5</#if>"
-	compile "commons-validator:commons-validator:1.6"
+	compile "commons-validator:commons-validator<#if useTP?? && false == useTP>:1.6</#if>"
 	compile "org.apache.commons:commons-lang3:3.5"
 
 	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
