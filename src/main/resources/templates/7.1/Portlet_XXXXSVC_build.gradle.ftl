@@ -29,17 +29,19 @@ dependencies {
 	compile 'com.google.errorprone:error_prone_annotations:2.0.19'
 	compile 'commons-digester:commons-digester:1.8.1'
 	compile "com.google.guava:guava:21.0"
-	compile "commons-io:commons-io:2.5"
+	compile "commons-io:commons-io<#if useTP?? && false == useTP>:2.5</#if>"
 	compile "commons-validator:commons-validator:1.6"
 	compile "org.apache.commons:commons-lang3:3.5"
 
-	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
-	compile group: "com.liferay", name: "com.liferay.portal.spring.extender.api", version: "3.0.0"
-	compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "3.0.0"
-	compile group: "com.liferay", name: "com.liferay.osgi.util", version: "3.0.0"
-	compile group: "javax.portlet", name: "portlet-api", version: "3.0.0"
-	compile group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1"
-	compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
+	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.spring.extender.api"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
+	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.osgi.util"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.petra.lang"<#if useTP?? && false == useTP>, version: "1.0.0"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.petra.string"<#if useTP?? && false == useTP>, version: "1.0.0"</#if>
+	compileOnly group: "javax.portlet", name: "portlet-api"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
+	compileOnly group: "javax.servlet", name: "javax.servlet-api"<#if useTP?? && false == useTP>, version: "3.0.1"</#if>
+	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"<#if useTP?? && false == useTP>, version: "1.3.0"</#if>
 	compile project(":${dashcaseProjectName}-api")
 }
 
