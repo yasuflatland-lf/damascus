@@ -41,10 +41,10 @@ dependencies {
 
     </#if>
     compile 'com.google.errorprone:error_prone_annotations:2.0.19'
-    compile 'commons-digester:commons-digester:1.8.1'
-    compile "com.google.guava:guava:21.0"
+    compile 'commons-digester:commons-digester<#if useTP?? && false == useTP>:1.8.1</#if>'
+    compile "com.google.guava:guava<#if useTP?? && false == useTP>:21.0</#if>"
     compile "commons-io:commons-io<#if useTP?? && false == useTP>:2.5</#if>"
-    compile "commons-validator:commons-validator:1.6"
+    compile "commons-validator:commons-validator<#if useTP?? && false == useTP>:1.6</#if>"
     compile "org.apache.commons:commons-lang3:3.5"
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	compile group: "com.liferay", name: "com.liferay.portal.spring.extender.api"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
@@ -62,12 +62,12 @@ dependencies {
     compile group: "jstl", name: "jstl"<#if useTP?? && false == useTP>, version: "1.2"</#if>
     compile group: "org.osgi", name: "osgi.cmpn"<#if useTP?? && false == useTP>, version: "6.0.0"</#if>
     compile group: "org.osgi", name: "org.osgi.service.component.annotations"<#if useTP?? && false == useTP>, version: "1.3.0"</#if>
-	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.0.1'
-	compile group: 'org.apache.poi', name: 'poi', version: '4.0.1'
-	compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '4.0.1'	
-	compile group: 'org.apache.xmlbeans', name: 'xmlbeans', version: '3.0.2'
-	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.2'
-	compile group: 'org.apache.commons', name: 'commons-compress', version: '1.18'
+	compile group: 'org.apache.poi', name: 'poi-ooxml'<#if useTP?? && false == useTP>, version: '4.0.1'</#if>
+	compile group: 'org.apache.poi', name: 'poi'<#if useTP?? && false == useTP>, version: '4.0.1'</#if>
+	compile group: 'org.apache.poi', name: 'poi-ooxml-schemas'<#if useTP?? && false == useTP>, version: '4.0.1'</#if>
+	compile group: 'org.apache.xmlbeans', name: 'xmlbeans'<#if useTP?? && false == useTP>, version: '3.0.2'</#if>
+	compile group: 'org.apache.commons', name: 'commons-collections4'<#if useTP?? && false == useTP>, version: '4.2'</#if>
+	compile group: 'org.apache.commons', name: 'commons-compress'<#if useTP?? && false == useTP>, version: '1.18'</#if>
 	
     compileOnly project(":${dashcaseProjectName}-api")
     compileOnly project(":${dashcaseProjectName}-service")
