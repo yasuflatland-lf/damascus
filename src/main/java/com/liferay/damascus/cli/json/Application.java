@@ -42,7 +42,7 @@ public class Application {
     @JsonProperty(required = true)
     public Asset asset = null;
 
-    @JsonProperty(required = true)
+    @JsonProperty
     public String fieldsName = null;
 
     @JsonProperty(required = true)
