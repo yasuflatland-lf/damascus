@@ -25,7 +25,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = "indexer.class.name=${packageName}.model.${capFirstModel}",
 	service = ModelPreFilterContributor.class
 )
-public class ChallengeModelPreFilterContributor implements ModelPreFilterContributor {
+public class ${capFirstModel}ModelPreFilterContributor implements ModelPreFilterContributor {
 
 	@Override
 	public void contribute(BooleanFilter booleanFilter, ModelSearchSettings modelSearchSettings, SearchContext searchContext) {
