@@ -50,6 +50,7 @@ dependencies {
 	compile group: "org.osgi", name: "org.osgi.service.cm", version: "1.5.0"
 	compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
 	compile group: "org.osgi", name: "osgi.core", version: "6.0.0"
+	compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.26'
 	compile project(":${dashcaseProjectName}-api")
 }
 
