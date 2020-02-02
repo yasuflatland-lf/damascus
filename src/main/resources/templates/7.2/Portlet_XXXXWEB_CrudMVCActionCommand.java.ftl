@@ -10,8 +10,6 @@ package ${packageName}.web.portlet.action;
 import com.liferay.asset.display.page.portlet.AssetDisplayPageEntryFormProcessor;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -45,6 +43,9 @@ import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author ${damascus_author}
@@ -274,7 +275,7 @@ public class ${capFirstModel}CrudMVCActionCommand extends BaseMVCActionCommand {
 		_${uncapFirstModel}Service = ${uncapFirstModel}Service;
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
+	private static Logger _log = LoggerFactory.getLogger(
 		${capFirstModel}CrudMVCActionCommand.class);
 
 	@Reference

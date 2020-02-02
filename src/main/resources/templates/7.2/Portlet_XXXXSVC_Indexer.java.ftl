@@ -12,8 +12,6 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
@@ -40,6 +38,9 @@ import javax.portlet.PortletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ${capFirstModel} Indexer
@@ -238,7 +239,7 @@ public class ${capFirstModel}Indexer extends BaseIndexer<${capFirstModel}> {
 	@Reference
 	protected ${capFirstModel}LocalService _${uncapFirstModel}LocalService;
 
-	private static final Log _log = LogFactoryUtil.getLog(
+	private static final Logger _log = LoggerFactory.getLogger(
 		${capFirstModel}Indexer.class);
 
 	@Reference(target = "(model.class.name=${packageName}.model.${capFirstModel})")

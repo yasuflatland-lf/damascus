@@ -10,8 +10,6 @@ package ${packageName}.service.workflow;
 
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.WorkflowInstanceLink;
 import com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalServiceUtil;
@@ -26,6 +24,9 @@ import ${packageName}.model.${capFirstModel};
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ${capFirstModel} Workflow Utility class
@@ -361,7 +362,7 @@ public class ${capFirstModel}WorkflowManager {
 			user.getCompanyId(), scorpGroupId, _className, classPK);
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(
+	private static Logger _log = LoggerFactory.getLogger(
 		${capFirstModel}WorkflowManager.class);
 
 }
