@@ -46,7 +46,8 @@ dependencies {
 	compileOnly group: "javax.servlet.jsp", name: "jsp-api"<#if useTP?? && false == useTP>, version: "2.1"</#if>
 	compileOnly group: "jstl", name: "jstl"<#if useTP?? && false == useTP>, version: "1.2"</#if>
 	compileOnly group: "org.apache.felix", name: "org.apache.felix.http.servlet-api", version: "1.1.2"
-	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"<#if useTP?? && false == useTP>, version: "1.3.0"</#if>
+	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
+	compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.26'
 	compileOnly project(":${dashcaseProjectName}-api")
 	compileOnly project(":${dashcaseProjectName}-service")
 }

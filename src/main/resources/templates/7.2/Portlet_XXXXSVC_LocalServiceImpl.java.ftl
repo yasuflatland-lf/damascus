@@ -21,8 +21,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
@@ -74,6 +72,9 @@ import javax.portlet.PortletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The implementation of the ${capFirstModel} local service.
@@ -1274,7 +1275,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 		WorkflowConstants.STATUS_SCHEDULED
 	};
 
-	private static Log _log = LogFactoryUtil.getLog(
+	private static Logger _log = LoggerFactory.getLogger(
 		${capFirstModel}LocalServiceImpl.class);
 
 	@Reference

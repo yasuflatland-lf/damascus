@@ -9,8 +9,6 @@ package ${packageName}.web.portlet.action;
 
 import aQute.bnd.annotation.metatype.Configurable;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -33,6 +31,9 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Modified;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ${capFirstModel} Configuraion Aciton
@@ -152,7 +153,7 @@ public class ${capFirstModel}ConfigurationAction extends DefaultConfigurationAct
 		return valid;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
+	private static final Logger _log = LoggerFactory.getLogger(
 		${capFirstModel}ConfigurationAction.class);
 
 	private volatile ${capFirstModel}Configuration _${uncapFirstModel}Configuration;

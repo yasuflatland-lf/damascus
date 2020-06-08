@@ -12,8 +12,6 @@ import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseAssetRendererFactory;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
@@ -38,6 +36,9 @@ import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ${capFirstModel} Asset Renderer Factory
@@ -181,7 +182,7 @@ public class ${capFirstModel}AssetRendererFactory
 		_servletContext = servletContext;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
+	private static final Logger _log = LoggerFactory.getLogger(
 		${capFirstModel}AssetRendererFactory.class);
 
 	@Reference

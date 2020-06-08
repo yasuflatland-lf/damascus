@@ -21,7 +21,7 @@ import ${packageName}.model.${capFirstModel};
 @Component(
 	immediate = true,
 	property = "model.class.name=${packageName}.model.${capFirstModel}",
-	service = BaseSearcher.class.class
+	service = BaseSearcher.class
 )
 public class ${capFirstModel}Searcher extends BaseSearcher {
 
