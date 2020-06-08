@@ -28,18 +28,9 @@ repositories {
     }
 }
 
-// TODO : This can be removed once you set up IDE. When you import this project into a IDE, you may be asked
-// a path to the gradle root. Then you run "gradle getHomeDir" and use the path for the IDE.
-task getHomeDir << {
-    println gradle.gradleHomeDir
-}
-
 dependencies {
-    <#if useTP?? && true == useTP>
-    // needed because of an issue with 7.1's 3rd party boms.
-    implementation enforcedPlatform(group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1")
-
-    </#if>
+    // TODO : Please remove the comment when the project is built. This becomes the cause of error while generating this project
+    // implementation enforcedPlatform(group: "javax.servlet", name: "javax.servlet-api", version: "3.0.1")
     compile 'com.google.errorprone:error_prone_annotations:2.0.19'
     compile 'commons-digester:commons-digester<#if useTP?? && false == useTP>:1.8.1</#if>'
     compile "com.google.guava:guava<#if useTP?? && false == useTP>:21.0</#if>"

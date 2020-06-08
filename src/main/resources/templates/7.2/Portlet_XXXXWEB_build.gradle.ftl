@@ -37,6 +37,10 @@ dependencies {
 	compileOnly group: "com.liferay", name: "com.liferay.item.selector.criteria.api"<#if useTP?? && false == useTP>, version: "4.0.+"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.item.selector.taglib"<#if useTP?? && false == useTP>, version: "3.0.+"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.reflect"<#if useTP?? && false == useTP>, version: "3.0.+"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.petra.string"<#if useTP?? && false == useTP>, version: "3.0.+"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.petra.function"<#if useTP?? && false == useTP>, version: "3.0.+"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.trash.api"<#if useTP?? && false == useTP>, version: "2.0.+"</#if>
+
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel"<#if useTP?? && false == useTP>, version: "4.13.0"</#if>
 	compileOnly group: "com.liferay.portal", name: "com.liferay.util.taglib"<#if useTP?? && false == useTP>, version: "4.1.0"</#if>
 	compileOnly group: "javax.portlet", name: "portlet-api"<#if useTP?? && false == useTP>, version: "3.0.1"</#if>
