@@ -35,6 +35,9 @@ public class DamascusBase {
 
     public Map<String, String> customValue;
 
+    @JsonProperty
+    public boolean useTargetPlatform = false;
+
     @JsonProperty(required = true)
     public List<Application> applications = null;
 

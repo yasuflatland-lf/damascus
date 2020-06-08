@@ -41,6 +41,7 @@ public class ${capFirstModel}SearchRegistrar {
 					Field.ASSET_TAG_NAMES, Field.COMPANY_ID, Field.CONTENT,
 					Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.GROUP_ID,
 					Field.MODIFIED_DATE, Field.SCOPE_GROUP_ID, Field.TITLE, Field.UID);
+
 			modelSearchDefinition.setDefaultSelectedLocalizedFieldNames(Field.TITLE, Field.CONTENT);
 
 			modelSearchDefinition.setModelIndexWriteContributor(modelIndexWriterContributor);
