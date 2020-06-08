@@ -3,6 +3,7 @@
 <#assign packageName = "${damascus.packageName}">
 <#assign packagePath = "${packageName?replace(\".\", \"/\")}">
 <#assign packageSnake = "${packageName?replace(\".\", \"_\")}">
+<#assign useTP = damascus.isUseTargetPlatform() >
 
 <#assign camelcaseProjectName = "${damascus.projectName?replace(\"-\", \"\")}">
 <#assign dashcaseProjectName = "${caseUtil.camelCaseToDashCase(camelcaseProjectName)}">
