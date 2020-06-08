@@ -10,8 +10,6 @@ package ${packageName}.web.util;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
@@ -40,6 +38,9 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.osgi.service.component.annotations.Component;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * View Helper
@@ -276,6 +277,6 @@ public class ${capFirstModel}ViewHelper {
 		return false;
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(${capFirstModel}ViewHelper.class);
+	private static Logger _log = LoggerFactory.getLogger(${capFirstModel}ViewHelper.class);
 
 }
