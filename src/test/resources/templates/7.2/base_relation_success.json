@@ -22,7 +22,6 @@
         "advancedSearch": "true",
         "exportExcel": "true"
       },
-      "fieldsName": "Employees",
       "fields": [{
           "type": "com.liferay.damascus.cli.json.fields.Long",
           "primary": true,
@@ -75,7 +74,6 @@
         "advancedSearch": "true",
         "exportExcel": "true"
       },
-      "fieldsName": "Positions",
       "fields": [{
           "type": "com.liferay.damascus.cli.json.fields.Long",
           "primary": true,
