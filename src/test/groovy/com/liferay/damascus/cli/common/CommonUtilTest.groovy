@@ -111,9 +111,10 @@ class CommonUtilTest extends Specification {
 
         where:
         name   | packageName                               | liferayVersion
-        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_72
-        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_71
-        "Task" | "jp.co.liferay.test.longpackage.namehere" | DamascusProps.VERSION_70
+        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_73
+//        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_72
+//        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_71
+//        "Task" | "jp.co.liferay.test.longpackage.namehere" | DamascusProps.VERSION_70
     }
 
     @Unroll("Gradlew getDirFromPath test for a file")
@@ -206,6 +207,7 @@ class CommonUtilTest extends Specification {
 
         where:
         name        | packageName        | liferayVersion
+        "Todo"      | "com.liferay.test" | DamascusProps.VERSION_73
         "Todo"      | "com.liferay.test" | DamascusProps.VERSION_72
         "Todo"      | "com.liferay.test" | DamascusProps.VERSION_71
         "Todo_Dada" | "c.aaa"            | DamascusProps.VERSION_70
@@ -237,8 +239,9 @@ class CommonUtilTest extends Specification {
 
         where:
         name       | packageName        | liferayVersion
-        "Hoge"     | "com.liferay.test" | DamascusProps.VERSION_71
+        "Hoge-web" | "com.liferay"      | DamascusProps.VERSION_73
         "Hoge-web" | "com.liferay"      | DamascusProps.VERSION_72
+        "Hoge"     | "com.liferay.test" | DamascusProps.VERSION_71
     }
 
     @Unroll("Smoke test for Create workspace name<#name>")
@@ -264,6 +267,7 @@ class CommonUtilTest extends Specification {
         "Foo"     | DamascusProps.VERSION_70
         "Foo-web" | DamascusProps.VERSION_71
         "Bar_web" | DamascusProps.VERSION_72
+        "Bar_web" | DamascusProps.VERSION_73
     }
 
     void dummyWriter(file, dummy_text) {
