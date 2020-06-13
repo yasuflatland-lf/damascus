@@ -25,11 +25,12 @@ The list of what Damascus automatically generate is as follows
 * Template generation
 
 ### Required environment
-* Liferay 7.0 CE GA7 and Liferay DXP SP11 or higher versions.
-* Liferay 7.1 CE GA1 and higher.
+* Liferay 7.3 CE GA2 and higher.
 * Liferay 7.2 CE GA1 and higher.
+* Liferay 7.1 CE GA1 and higher.
+* Liferay 7.0 CE GA7 and Liferay DXP SP11 or higher versions.
 * Java 1.8 or above
-* gradle 3.0 or above need to be installed
+* gradle 5.4.6 or above need to be installed
 * jpm needs to be installed. (instruction to install is as follows)
 
 ### How to Install
@@ -58,7 +59,7 @@ Let's make a Todo app with damascus
 
 ### How to compile Damascus on your own?
 1. Clone this repository to your local. Please make sure you've already installed Gradle 3.0 or above and jpm.
-2. At the root directory, run ```gradle assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
+2. At the root directory, run ```./gradlew assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
 3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install your jar with ```jpm install ./damascus.jar```.
 
 ### Proxy settings
@@ -69,7 +70,7 @@ Damascus is including lombok library, so annotation library for lombok needs to 
 ##### Eclipse (Not Liferay Developer Studio)
 1. Download lombok https://projectlombok.org/download
 2. double click ```lombok.jar``` and select the directory where ```eclipse.exe``` exist
-3. Run ```gradle eclipse``` at the project directory and restart IDE, and right click on the project and display context name, and choose ```gradle > Refresh gradle project```
+3. Run ```./gradlew eclipse``` at the project directory and restart IDE, and right click on the project and display context name, and choose ```gradle > Refresh gradle project```
 4. Java files will be displayed properly without errors.
 ##### IntelliJ
 1. ```Preferences - Plugins``` and search Lombok. Install the Lombok plugin.
@@ -79,14 +80,14 @@ Damascus is including lombok library, so annotation library for lombok needs to 
 In terms of bugs, please post Github issues or send me a PR. To send me PR, please follow the process below.
 1. Fix bugs at your local
 2. Remove ```${user}/.damascus``` folder.
-3. Run test locally with this command ```gradle clean test``` and confirm your fix pass all tests.
+3. Run test locally with this command ```./gradlew clean test --info``` and confirm your fix pass all tests.
 4. Send PR to /development repository. I'll create a fix brunch accordingly.
 
 ### Enhancement requests
 A contribution is always welcome! In terms of an Enhancement request, please follow the process below. If you wonder it's a complex feature, please create an issue first and let's discuss. In terms of simple enhancement, please follow steps below.
 
 1. After implementing your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes, and in a test class, each test should be written each method basis.
-2. Run test locally with ```gradle clean test``` until your code pass all tests
+2. Run test locally with ```./gradlew clean test --info``` until your code pass all tests
 3. Send a PR to /development branch. According to the status of Travis CI / Appveyor, I may create a feature branch and request you to make it pass the test on Travis CI / Appveyor environment.
 4. After all tests pass on Travis CI / Appveyor, will merge into the development branch and release into master at some points according to the impact of the code.
 

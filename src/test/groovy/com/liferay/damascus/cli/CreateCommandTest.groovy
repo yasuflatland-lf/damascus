@@ -533,6 +533,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_73 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_72 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
@@ -563,6 +564,7 @@ class CreateCommandTest extends Specification {
 
 		where:
 		projectName | version     			    | packageName        		| base_json_name
+        "Employee"  | DamascusProps.VERSION_73	| "com.liferay.sb.employee"	| "base_relation_fail.json"
         "Employee"  | DamascusProps.VERSION_72	| "com.liferay.sb.employee"	| "base_relation_fail.json"
 		"Employee"  | DamascusProps.VERSION_71	| "com.liferay.sb.employee"	| "base_relation_fail.json"
 	}
@@ -591,6 +593,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | version     			    | packageName        		| base_json_name
+        "Employee"  | DamascusProps.VERSION_73	| "com.liferay.sb.employee"	| "base_relation_success.json"
         "Employee"  | DamascusProps.VERSION_72	| "com.liferay.sb.employee"	| "base_relation_success.json"
     }
 }

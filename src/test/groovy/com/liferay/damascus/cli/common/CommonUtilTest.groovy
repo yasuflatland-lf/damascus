@@ -112,9 +112,9 @@ class CommonUtilTest extends Specification {
         where:
         name   | packageName                               | liferayVersion
         "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_73
-//        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_72
-//        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_71
-//        "Task" | "jp.co.liferay.test.longpackage.namehere" | DamascusProps.VERSION_70
+        "Todo" | "com.liferay.test"                        | DamascusProps.VERSION_72
+        "Task" | "jp.co.liferay.test"                      | DamascusProps.VERSION_71
+        "Task" | "jp.co.liferay.test.longpackage.namehere" | DamascusProps.VERSION_70
     }
 
     @Unroll("Gradlew getDirFromPath test for a file")
