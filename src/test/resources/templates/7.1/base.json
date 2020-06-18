@@ -2,6 +2,7 @@
   "projectName": "${damascus.projectName}",
   "packageName" : "${damascus.packageName}",
   "liferayVersion": "${damascus.liferayVersion}",
+  "useTargetPlatform": "false",
   "applications": [
     {
       "model"       : "${damascus.entityName}",
@@ -22,7 +23,6 @@
         "advancedSearch": "true",
         "exportExcel": "true"
       },
-      "fieldsName" : "${damascus.projectName}s",
       "fields": [
         {
           "type": "com.liferay.damascus.cli.json.fields.Long",
