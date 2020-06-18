@@ -34,7 +34,7 @@ dependencies {
 	compileOnly group: "com.liferay", name: "com.liferay.petra.function"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.lang"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.string"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
-	compileOnly group: "com.liferay", name: "com.liferay.petra.sql.dsl.api"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.petra.sql.dsl.api"<#if useTP?? && false == useTP>, version: "1.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.portal.aop.api"<#if useTP?? && false == useTP>, version: "2.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.portal.search.api"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.portal.search.spi"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
