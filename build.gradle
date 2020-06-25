@@ -16,6 +16,7 @@ plugins {
     id 'idea'
     id 'jacoco'
     id 'antlr'
+    id "org.sonarqube" version "2.7"
 }
 
 apply plugin: 'com.github.kt3k.coveralls'

@@ -171,7 +171,7 @@ public class SourceToTemplateEngine {
 
     // White list of searching directory.
     // TODO: This value must be configured in settings.properties under .damascus
-    static public final List<String> EXT_WHITE_LIST =
+    public static final List<String> EXT_WHITE_LIST =
         Arrays.asList(
             ".*.java",
             ".*.jsp",

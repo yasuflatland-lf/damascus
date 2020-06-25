@@ -76,7 +76,13 @@ public class CommonUtil {
         if (1 < files.size()) {
             throw new InvalidPathException(files.toString(), "Same name files were found");
         }
-        return files.stream().findFirst().get();
+
+        Optional<File> value = files.stream().findFirst();
+
+        if (!value.isPresent()) {
+            throw new InvalidPathException(files.toString(), "The file was not found");
+        }
+        return value.get();
     }
 
     /**
