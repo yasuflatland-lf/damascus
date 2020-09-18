@@ -13,10 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * Template Generator command
  * <p>
@@ -70,7 +68,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
             PropertyContext propertyContext = PropertyContextFactory.createPropertyContext();
             String checkPattern = propertyContext.getString(DamascusProps.PROP_EXT_WHITE_LIST);
             List<String> extensionPatterns = getWhiteExtentionPatterns(checkPattern);
-            Map<String, String> replacementPattern = getReplacementPatternByModel(dmsb, args.getModel());
+            LinkedHashMap<String, String> replacementPattern = getReplacementPatternByModel(dmsb, args.getModel());
 
             if (replacementPattern.isEmpty()) {
                 System.out.println("Model name has not been found. Model name <" + args.getModel() + ">");
@@ -83,13 +81,16 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
                     processedSourceRootPath
                 )
                 .templateDirPath(
-                    processedTemplateDir + args.getLiferayVersion()
+                    processedTemplateDir
                 )
                 .replacements(
                     replacementPattern
                 )
                 .extentionPatterns(
                     extensionPatterns
+                )
+                .insertPathTag (
+                    args.getInsertPathTag()
                 )
                 .build()
                 .process();
@@ -135,7 +136,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
      * @param modelName
      * @return
      */
-    protected Map<String, String> getReplacementPatternByModel(DamascusBase dmsb, String modelName) {
+    protected LinkedHashMap<String, String> getReplacementPatternByModel(DamascusBase dmsb, String modelName) {
 
         List<Application> applications = dmsb.getApplications();
         for (Application application : applications) {
@@ -145,7 +146,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
             }
         }
 
-        return new ConcurrentHashMap<>();
+        return new LinkedHashMap<>();
     }
 
 }

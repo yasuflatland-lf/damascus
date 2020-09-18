@@ -1,21 +1,18 @@
 package com.liferay.damascus.cli
 
-import java.nio.charset.StandardCharsets
-import java.security.InvalidParameterException
-
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.filefilter.RegexFileFilter
-import org.apache.commons.io.filefilter.TrueFileFilter
-import org.apache.commons.lang3.StringUtils
-
 import com.beust.jcommander.internal.Maps
 import com.liferay.damascus.cli.common.*
 import com.liferay.damascus.cli.json.DamascusBase
 import com.liferay.damascus.cli.test.tools.TestUtils
-
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.filefilter.RegexFileFilter
+import org.apache.commons.io.filefilter.TrueFileFilter
+import org.apache.commons.lang3.StringUtils
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import java.nio.charset.StandardCharsets
 
 class CreateCommandTest extends Specification {
     static def DS = DamascusProps.DS;
@@ -94,11 +91,12 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName
+        "ToDo"      | DamascusProps.VERSION_72 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_71 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_70 | "com.liferay.test"
     }
 
-    @Unroll("Smoke test for generating Project Project<#projectName> Package<#packageName>")
+    @Unroll("Smoke test for generating Project Version<#liferayVersion> Project<#projectName> Package<#packageName>")
     def "Smoke test for generating Project"() {
 
         when:
@@ -151,9 +149,10 @@ class CreateCommandTest extends Specification {
 
         where:
         liferayVersion           | projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
+        DamascusProps.VERSION_72 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
+        DamascusProps.VERSION_72 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
-        DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
-        DamascusProps.VERSION_70 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
+        DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_70 | "To-Do"     | "com.bar.foo.packeage.long" | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_70 | "T_Ask"     | "com.foo.bar"               | true      | true      | true          | false             | false                | true
     }
@@ -208,7 +207,7 @@ class CreateCommandTest extends Specification {
         //Target path map of a project
         def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
-        def checkLoop = getCheckLoop(expectedProjectDirName);
+        def checkLoop = getCheckLoop(expectedProjectDirName, liferayVersion);
 
         then:
         //*-service / *-api
@@ -233,12 +232,76 @@ class CreateCommandTest extends Specification {
 
     }
 
-    def getCheckLoop(expectedProjectDirName) {
+    def getCheckLoop(expectedProjectDirName, liferayVersion) {
 
         def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
+        // if liferayVersion = 7.2
+        if (liferayVersion.equals(DamascusProps.VERSION_72)) {
+
+            return [
+                    [path: pathMap["apiPath"], target: ".*bnd.bnd", amount: 1],
+                    [path: pathMap["apiPath"], target: ".*build.gradle", amount: 1],
+                    [path: pathMap["apiPath"], target: ".*PortletKeys.java", amount: 1],
+                    [path: pathMap["apiPath"], target: ".*ValidateException.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*bnd.bnd", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*build.gradle", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*default.xml", amount: 1],
+
+                    [path: pathMap["servicePath"], target: ".*KeywordQueryContributor.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*ModelDocumentContributor.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*ModelIndexWriterContributor.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*ModelPreFilterContributor.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*ModelSummaryContributor.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*ModelVisibilityContributor.java", amount: 1],
+
+                    [path: pathMap["servicePath"], target: ".*Indexer.java", amount: 1],
+
+                    [path: pathMap["servicePath"], target: ".*LocalServiceImpl.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*PermissionChecker.java", amount: 2],
+                    [path: pathMap["servicePath"], target: ".*portlet.properties", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*portlet-model-hints.xml", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*ResourcePermissionChecker.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*TrashHandler.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*Validator.java", amount: 1],
+                    [path: pathMap["servicePath"], target: ".*WorkflowHandler.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*abstract.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*AssetRenderer.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*AssetRendererFactory.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*bnd.bnd", amount: 1],
+                    [path: pathMap["webPath"], target: ".*build.gradle", amount: 1],
+                    [path: pathMap["webPath"], target: ".*ConfigurationAction.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*Configuration.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*configuration.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*CrudMVCActionCommand.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*CrudMVCRenderCommand.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*default.xml", amount: 1],
+                    [path: pathMap["webPath"], target: ".*edit.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*edit_actions.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*full_content.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*init.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*ItemSelectorHelper.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*portlet.properties", amount: 1],
+                    [path: pathMap["webPath"], target: ".*search_results.jspf", amount: 1],
+                    [path: pathMap["webPath"], target: ".*view.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*ViewHelper.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*ViewMVCRenderCommand.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*view_record.jsp", amount: 1],
+                    [path: pathMap["webPath"], target: ".*WebKeys.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*WebPortlet.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*portlet.properties", amount: 1],
+                    [path: pathMap["webPath"], target: ".*FindEntryAction.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*FindEntryHelper.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*PortletLayoutFinder.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*AdminPortlet.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*PanelApp.java", amount: 1],
+                    [path: pathMap["rootPath"], target: ".*build.gradle", amount: 4],
+                    [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 1]
+            ];
+        }
+
+
         return [
-                [path: pathMap["apiPath"], target: ".*ActivityKeys.java", amount: 1],
                 [path: pathMap["apiPath"], target: ".*bnd.bnd", amount: 1],
                 [path: pathMap["apiPath"], target: ".*build.gradle", amount: 1],
                 [path: pathMap["apiPath"], target: ".*PortletKeys.java", amount: 1],
@@ -246,7 +309,9 @@ class CreateCommandTest extends Specification {
                 [path: pathMap["servicePath"], target: ".*bnd.bnd", amount: 1],
                 [path: pathMap["servicePath"], target: ".*build.gradle", amount: 1],
                 [path: pathMap["servicePath"], target: ".*default.xml", amount: 1],
+
                 [path: pathMap["servicePath"], target: ".*Indexer.java", amount: 1],
+
                 [path: pathMap["servicePath"], target: ".*LocalServiceImpl.java", amount: 1],
                 [path: pathMap["servicePath"], target: ".*PermissionChecker.java", amount: 2],
                 [path: pathMap["servicePath"], target: ".*portlet.properties", amount: 1],
@@ -256,7 +321,6 @@ class CreateCommandTest extends Specification {
                 [path: pathMap["servicePath"], target: ".*Validator.java", amount: 1],
                 [path: pathMap["servicePath"], target: ".*WorkflowHandler.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*abstract.jsp", amount: 1],
-                [path: pathMap["webPath"], target: ".*ActivityInterpreter.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*AssetRenderer.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*AssetRendererFactory.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*bnd.bnd", amount: 1],
@@ -351,7 +415,7 @@ class CreateCommandTest extends Specification {
         //Target path map of a project
         def pathMap = TestUtils.getPathMap(expectedProjectDirName)
 
-        def checkLoop = getCheckLoop(expectedProjectDirName)
+        def checkLoop = getCheckLoop(expectedProjectDirName, liferayVersion)
 
         checkLoop.each { trow ->
             def targetFile1 = FileUtils.listFiles(new File(trow.path), new RegexFileFilter(trow.target), TrueFileFilter.INSTANCE)
@@ -469,6 +533,8 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName        | expectedProjectDirName
+        "SampleSB"  | DamascusProps.VERSION_73 | "com.liferay.test" | "sample-sb"
+        "SampleSB"  | DamascusProps.VERSION_72 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_71 | "com.liferay.test" | "sample-sb"
         "SampleSB"  | DamascusProps.VERSION_70 | "com.liferay.test" | "sample-sb"
 
@@ -498,7 +564,36 @@ class CreateCommandTest extends Specification {
 
 		where:
 		projectName | version     			    | packageName        		| base_json_name
+        "Employee"  | DamascusProps.VERSION_73	| "com.liferay.sb.employee"	| "base_relation_fail.json"
+        "Employee"  | DamascusProps.VERSION_72	| "com.liferay.sb.employee"	| "base_relation_fail.json"
 		"Employee"  | DamascusProps.VERSION_71	| "com.liferay.sb.employee"	| "base_relation_fail.json"
-
 	}
+
+    @Unroll("Relation Create Test <#projectName> <#version> <#packageName> <#base_json_name>")
+    def "Relation Create Test"() {
+        when:
+        //Initialize
+        setupEx(version);
+
+        def buffer = new ByteArrayOutputStream()
+        System.err = new PrintStream(buffer)
+
+        // Read test base.json file
+        def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
+        def file_path = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
+        def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
+        FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
+
+        //Run damascus create
+        String[] args = ["create"]
+        Damascus.main(args)
+
+        then:
+        buffer.toString() == ""
+
+        where:
+        projectName | version     			    | packageName        		| base_json_name
+        "Employee"  | DamascusProps.VERSION_73	| "com.liferay.sb.employee"	| "base_relation_success.json"
+        "Employee"  | DamascusProps.VERSION_72	| "com.liferay.sb.employee"	| "base_relation_success.json"
+    }
 }

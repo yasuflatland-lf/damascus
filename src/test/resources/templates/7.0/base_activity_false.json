@@ -20,7 +20,6 @@
         "generateActivity": "false",
         "trash":"true"
       },
-      "fieldsName" : "${damascus.projectName}s",
       "fields": [
         {
           "type": "com.liferay.damascus.cli.json.fields.Long",

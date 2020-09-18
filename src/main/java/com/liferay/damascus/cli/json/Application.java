@@ -1,18 +1,18 @@
 package com.liferay.damascus.cli.json;
 
-import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.liferay.damascus.cli.json.fields.FieldBase;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.security.InvalidParameterException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JSON structure POJO : Application
@@ -42,9 +42,6 @@ public class Application {
     public Asset asset = null;
 
     @JsonProperty(required = true)
-    public String fieldsName = null;
-
-    @JsonProperty(required = true)
     public List<FieldBase> fields = null;
 
     /**
@@ -55,7 +52,7 @@ public class Application {
     /**
      * Replacement keywords map
      */
-    public Map<String, String> replacements;
+    public LinkedHashMap<String, String> replacements;
 
     /**
      * Has an asset configured?

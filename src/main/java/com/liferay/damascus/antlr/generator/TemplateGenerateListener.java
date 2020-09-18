@@ -105,7 +105,6 @@ public class TemplateGenerateListener extends DmscSrcParserExListener {
 
             StringBuffer errorMsg = new StringBuffer();
             errorMsg.append("Skip save data because some required data are null <" + StringUtils.truncate(ctx.getText(),200) + "....>");
-            errorMsg.append(" currentSyncId <" + ((null==currentSyncId)?"null":"exist") + ">");
             log.error(errorMsg.toString());
             errors.add(errorMsg.toString());
             return;

@@ -384,7 +384,7 @@ public class TemplateUtil {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getLocalizedMessage());
         }
 
         return files;

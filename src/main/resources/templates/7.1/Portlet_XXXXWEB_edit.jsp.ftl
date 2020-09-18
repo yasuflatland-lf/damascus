@@ -317,5 +317,6 @@
 		);
     }
 </aui:script>
+			<#break>
     </#if>
 </#list>

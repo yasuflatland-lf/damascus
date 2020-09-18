@@ -108,8 +108,8 @@ class TemplateUtilTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName                | filepath
-        "Todo"      | DamascusProps.VERSION_70 | "com.liferay.test.foo.bar" | "foo" + DS + "bar"
-        "Todo"      | DamascusProps.VERSION_70 | "com.liferay.test.foo.bar" | ""
+        "Todo"      | DamascusProps.VERSION_72 | "com.liferay.test.foo.bar" | "foo" + DS + "bar"
+        "Todo"      | DamascusProps.VERSION_72 | "com.liferay.test.foo.bar" | ""
     }
 
     @Unroll("Search template files Success Test file1<#file1> file2<#file2> file3<#file3> file4<#file4>")

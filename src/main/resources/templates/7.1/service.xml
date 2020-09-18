@@ -1,8 +1,11 @@
-<#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/service.xml">
 <?xml version="1.0"?>
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.1.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_1_0.dtd">
-
+<!--  <dmsc:root templateName="service.xml" pickup="true" />  -->
+<!--  <dmsc:sync id="head-common" >  -->
+<#include "./valuables.ftl">
+<#assign createPath = "${createPath_val}/service.xml">
+<!--  </dmsc:sync> -->
+<!--  <dmsc:sync id="service-builder" >  -->
 <service-builder package-path="${packageName}">
 
     <namespace>${camelcaseProjectName}</namespace>
@@ -170,3 +173,4 @@
     </exceptions>
 
 </service-builder>
+<!--  </dmsc:sync> -->
