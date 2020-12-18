@@ -48,6 +48,154 @@ ${capFirstModel}ManagementToolbarDisplayContext ${uncapFirstModel}ManagementTool
 	sortingURL="<%= ${uncapFirstModel}ManagementToolbarDisplayContext.getSortingURL() %>"
 />
 
+<#if advancedSearch>
+<liferay-ui:panel-container cssClass="container-fluid-1280" extended="<%= false %>" persistState="<%= true %>" markupView="lexicon">
+<liferay-ui:panel title="Advance Search" markupView="lexicon" collapsible="<%= true %>" extended="<%= false %>" iconCssClass="icon-plus-sign" id="advanceSearchPanel" persistState="<%= true %>">
+	<style>
+		#advanceSearchPanel {
+			margin-bottom: 4px;
+		}
+		#advanceSearchPanel .col-md-6 {
+			padding-right: 10px;
+			padding-left: 7px;
+		}
+		#advanceSearchPanel .field-range {
+			padding-right: 7px;
+			padding-left: 7px;
+		}
+    </style>
+	<aui:form action="<%=portletURL.toString()%>" name="advanceSearchForm">
+		<aui:container fluid="false">
+			<#-- ---------------- -->
+			<#-- field loop start -->
+			<#-- ---------------- -->
+			<#assign dateExist = false>
+			<#assign counter = 1>
+			<#list application.fields as field >
+				<#if
+					field.type?string == "com.liferay.damascus.cli.json.fields.Long"     		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Double"   		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Integer"			||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Date"     		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+					>
+
+					<#if counter % 2 != 0>
+						<aui:row>
+					</#if>
+					
+					<#if
+						field.type?string == "com.liferay.damascus.cli.json.fields.Long"     		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.Double"   		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.Integer"
+						>
+						<aui:col span="6" cssClass="field-range">
+						<aui:input name="search${field.name?cap_first}Start" label="search${field.name?cap_first}Range" type="text"
+							inlineField="true">
+							<aui:validator name="number" />
+						</aui:input>
+						<div class="form-group form-group-inline">
+							<label class="form-control" style="border-bottom: 0px; display: table-cell; vertical-align: middle;">
+								<%= LanguageUtil.get(request, "until") %>
+							</label>
+						</div>
+						<aui:input name="search${field.name?cap_first}End" label="" inlineLabel="true" inlineField="true" type="text">
+							<aui:validator name="number" />
+						</aui:input>
+						</aui:col>
+					</#if>
+					<#if
+						field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+						field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+						>
+						<aui:col span="6">
+						<aui:input  name="search${field.name?cap_first}" type="text"/>
+						</aui:col>
+					</#if>
+
+					<#if
+						field.type?string == "com.liferay.damascus.cli.json.fields.Date"     ||
+						field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"
+						>
+						<#assign dateExist = true>
+						<aui:col span="6" cssClass="field-range">
+						<aui:input name="search${field.name?cap_first}Start" label="search${field.name?cap_first}Range" cssClass="date" type="text"
+							placeholder="<%= dateFormatVal %>" inlineField="true" >
+							<aui:validator name="date" />
+						</aui:input>
+						<div class="form-group form-group-inline">
+							<label class="form-control" style="border-bottom: 0px; display: table-cell; vertical-align: middle;">
+								<%= LanguageUtil.get(request, "until") %>
+							</label>
+						</div>
+						<aui:input name="search${field.name?cap_first}End" label="" inlineLabel="true" inlineField="true"
+							cssClass="date" type="text" placeholder="<%= dateFormatVal %>" >
+							<aui:validator name="date" />
+						</aui:input>
+						</aui:col>
+					</#if>
+					
+					<#if counter % 2 == 0 || field?is_last>
+						</aui:row>
+					</#if>
+					<#assign counter += 1>
+				</#if>
+				<#if
+					field.type?string == "com.liferay.damascus.cli.json.fields.Boolean"  		||
+					field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary"
+				>
+					<#if field?is_last && counter % 2 == 0>
+						</aui:row>
+					</#if>
+				</#if>
+			</#list>
+			<#-- ---------------- -->
+			<#-- field loop ends  -->
+			<#-- ---------------- -->
+
+			<#if dateExist>
+				<aui:script>
+				    AUI().use(
+				        'aui-datepicker',
+				        function(A) {
+				            new A.DatePicker({
+				                trigger: '.date',
+				                mask: '<%= datePickerFormatVal %>',
+				                popover: {
+				                    zIndex: 1000
+				                }
+				            });
+				        }
+				    );
+				</aui:script>
+			</#if>
+			<style>.center-text { text-align: center; }</style>
+			<aui:button-row id="searchButton" cssClass="center-text">
+				<aui:button name="searchSubmit" type="submit" value="search" />
+				<aui:button name="searchReset" type="cancel" value="reset"
+					onClick='<%= portletDisplay.getNamespace() + "resetAdvanceSearch()" %>'>
+					<aui:script>
+						function <portlet:namespace />resetAdvanceSearch() {
+							 AUI().use(
+						        'aui-base',
+						        function(A) {
+						            A.all('#<portlet:namespace />advanceSearchForm input').val('');
+						        }
+						    );							
+						}
+					</aui:script>
+				</aui:button>
+			</aui:button-row>
+		</aui:container>
+	</aui:form>
+</liferay-ui:panel>
+</liferay-ui:panel-container>
+</#if>
+
 <portlet:actionURL name="/${lowercaseModel}/crud" var="restoreTrashEntriesURL">
 	<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.RESTORE %>" />
 </portlet:actionURL>

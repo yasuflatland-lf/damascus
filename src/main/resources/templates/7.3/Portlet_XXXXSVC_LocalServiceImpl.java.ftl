@@ -16,7 +16,12 @@ import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Junction;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -47,6 +52,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import ${packageName}.exception.${capFirstModel}ValidateException;
 import ${packageName}.model.${capFirstModel};
+import ${packageName}.model.impl.${capFirstModel}Impl;
 import ${packageName}.service.base.${capFirstModel}LocalServiceBaseImpl;
 import ${packageName}.service.util.${capFirstModel}Validator;
 import com.liferay.trash.exception.RestoreEntryException;
@@ -1265,6 +1271,156 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 			entry.getCompanyId(), entry.getGroupId(), userId,
 			${capFirstModel}.class.getName(), entry.getPrimaryKey(), entry,
 			serviceContext, workflowContext);
+	}
+	
+	/**
+	 * advanceSearchInGroup
+	 *
+	 * @param advSearchKeywords
+	 * @param groupId
+	 * @param start
+	 * @param end
+	 * @param orderByComparator
+	 * @param states
+	 * @return search result list
+	 */
+	public List<${capFirstModel}> advanceSearchInGroup(Map<String, Object> advSearchKeywords, long groupId,
+			int start, int end, OrderByComparator<${capFirstModel}> orderByComparator, int[] states) {
+    	DynamicQuery dynamicQuery = getDynamicQuery(advSearchKeywords, states);
+    	dynamicQuery.add(PropertyFactoryUtil.forName("groupId").eq(groupId));
+    	
+    	return dynamicQuery(dynamicQuery, start, end, orderByComparator);
+    }
+	
+	/**
+	 * countAdvanceSearchInGroup
+	 *
+	 * @param advSearchKeywords
+	 * @param groupId
+	 * @param states
+	 * @return search result size
+	 */
+	public int countAdvanceSearchInGroup(Map<String, Object> advSearchKeywords, long groupId, int[] states) {
+    	DynamicQuery dynamicQuery = getDynamicQuery(advSearchKeywords, states);
+    	dynamicQuery.add(PropertyFactoryUtil.forName("groupId").eq(groupId));
+    	
+    	return dynamicQuery(dynamicQuery).size();
+    }
+	
+	/**
+	 * advanceSearchInUser
+	 *
+	 * @param advSearchKeywords
+	 * @param userId
+	 * @param start
+	 * @param end
+	 * @param orderByComparator
+	 * @param states
+	 * @return search result list
+	 */
+	public List<${capFirstModel}> advanceSearchInUser(Map<String, Object> advSearchKeywords, long userId,
+			int start, int end, OrderByComparator<${capFirstModel}> orderByComparator, int[] states) {
+		DynamicQuery dynamicQuery = getDynamicQuery(advSearchKeywords, states);
+    	dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
+    	
+    	return dynamicQuery(dynamicQuery, start, end, orderByComparator);
+    }
+	
+	/**
+	 * countAdvanceSearchInUser
+	 *
+	 * @param advSearchKeywords
+	 * @param userId
+	 * @param states
+	 * @return search result size
+	 */
+	public int countAdvanceSearchInUser(Map<String, Object> advSearchKeywords, long userId, int[] states) {
+		DynamicQuery dynamicQuery = getDynamicQuery(advSearchKeywords, states);
+    	dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
+    	
+    	return dynamicQuery(dynamicQuery).size();
+    }
+	
+	/**
+	 * advanceSearchInUserAndGroup
+	 *
+	 * @param advSearchKeywords
+	 * @param userId
+	 * @param groupId
+	 * @param start
+	 * @param end
+	 * @param orderByComparator
+	 * @param states
+	 * @return search result list
+	 */
+	public List<${capFirstModel}> advanceSearchInUserAndGroup(Map<String, Object> advSearchKeywords, long userId, 
+			long groupId, int start, int end, OrderByComparator<${capFirstModel}> orderByComparator, int[] states) {
+		DynamicQuery dynamicQuery = getDynamicQuery(advSearchKeywords, states);
+    	dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
+    	dynamicQuery.add(PropertyFactoryUtil.forName("groupId").eq(groupId));
+    	
+    	return dynamicQuery(dynamicQuery, start, end, orderByComparator);
+    }
+	
+	/**
+	 * countAdvanceSearchInUserAndGroup
+	 *
+	 * @param advSearchKeywords
+	 * @param userId
+	 * @param groupId
+	 * @param states
+	 * @return search result size
+	 */
+	public int countAdvanceSearchInUserAndGroup(Map<String, Object> advSearchKeywords, long userId, 
+			long groupId, int[] states) {
+		DynamicQuery dynamicQuery = getDynamicQuery(advSearchKeywords, states);
+    	dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
+    	dynamicQuery.add(PropertyFactoryUtil.forName("groupId").eq(groupId));
+    	
+    	return dynamicQuery(dynamicQuery).size();
+    }
+	
+	/**
+	 * getDynamicQuery
+	 *
+	 * @param advSearchKeywords
+	 * @param states
+	 * @return dynamicQuery
+	 */  
+	@SuppressWarnings("unchecked")
+	private DynamicQuery getDynamicQuery(Map<String, Object> advSearchKeywords, int[] states) {
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(${capFirstModel}Impl.class);
+    	
+    	Junction conJunction = RestrictionsFactoryUtil.conjunction();
+    	for(String key : advSearchKeywords.keySet()) {
+    		String column = key.replaceFirst("search","");
+    		column = column.substring(0, 1).toLowerCase() + column.substring(1, column.length());
+    		
+    		if(advSearchKeywords.get(key) instanceof Map) {
+    			Map<String, Object> map = (Map<String, Object>) advSearchKeywords.get(key);
+    			
+    			if(map.get("start") instanceof Calendar && map.get("end") instanceof Calendar) {
+    				conJunction.add(RestrictionsFactoryUtil.ge(column, ((Calendar)map.get("start")).getTime()));
+    				conJunction.add(RestrictionsFactoryUtil.le(column, ((Calendar)map.get("end")).getTime()));
+    			} else if((map.get("start") instanceof Long && map.get("end") instanceof Long) || 
+    					(map.get("start") instanceof Double && map.get("end") instanceof Double) ||
+    					(map.get("start") instanceof Integer && map.get("end") instanceof Integer)) {
+        			conJunction.add(RestrictionsFactoryUtil.ge(column, map.get("start")));
+        			conJunction.add(RestrictionsFactoryUtil.le(column, map.get("end")));
+        		}
+    		} else if(advSearchKeywords.get(key) instanceof String) {    		
+    			conJunction.add(RestrictionsFactoryUtil.ilike(column, "%" + advSearchKeywords.get(key) + "%"));
+    		}
+    	}
+    	dynamicQuery.add(conJunction);
+    	
+    	Junction disJunction = RestrictionsFactoryUtil.disjunction();
+    	for(int state : states) {
+    		disJunction.add(RestrictionsFactoryUtil.eq("status", state));
+    	}
+    	dynamicQuery.add(disJunction);
+    	
+    	return dynamicQuery;
 	}
 
 	private static final int[] STATUS_ANY = {

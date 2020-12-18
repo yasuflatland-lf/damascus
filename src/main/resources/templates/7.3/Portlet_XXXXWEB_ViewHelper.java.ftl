@@ -20,19 +20,26 @@ import com.liferay.portal.kernel.search.SearchContextFactory;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.service.${capFirstModel}LocalServiceUtil;
 import ${packageName}.web.portlet.action.${capFirstModel}Configuration;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
@@ -76,6 +83,9 @@ public class ${capFirstModel}ViewHelper {
 			${capFirstModel}Configuration.CONF_PREFS_VIEW_TYPE,
 			${capFirstModel}Configuration.PREFS_VIEW_TYPE_DEFAULT);
 
+		// Advance Search Key
+        Map<String, Object> advSearchKeywords = getAdvSearchKeywordsObject(request);
+
 		long groupId = themeDisplay.getScopeGroupId();
 		int containerStart = start;
 		int containerEnd = end;
@@ -91,27 +101,45 @@ public class ${capFirstModel}ViewHelper {
 
 		if (prefsViewType.equals(
 				${capFirstModel}Configuration.PREFS_VIEW_TYPE_DEFAULT)) {
-
-			results = ${capFirstModel}LocalServiceUtil.findAllInGroup(
-				groupId, containerStart, containerEnd, orderByComparator,
-				state);
-			total = ${capFirstModel}LocalServiceUtil.countAllInGroup(groupId, state);
+			if(advSearchKeywords.isEmpty()) {
+	            results = ${capFirstModel}LocalServiceUtil.findAllInGroup(
+					groupId, containerStart, containerEnd, orderByComparator,
+					state);
+				total = ${capFirstModel}LocalServiceUtil.countAllInGroup(groupId, state);
+			} else {
+				results.addAll(${capFirstModel}LocalServiceUtil.advanceSearchInGroup(advSearchKeywords, groupId, 
+        			containerStart, containerEnd, orderByComparator, state));
+            	total = ${capFirstModel}LocalServiceUtil.countAdvanceSearchInGroup(advSearchKeywords, groupId, state);
+			}			
 		}
 		else if (prefsViewType.equals(
 					${capFirstModel}Configuration.PREFS_VIEW_TYPE_USER)) {
-
-			results = ${capFirstModel}LocalServiceUtil.findAllInUser(
-				themeDisplay.getUserId(), containerStart, containerEnd,
-				orderByComparator, state);
-			total = ${capFirstModel}LocalServiceUtil.countAllInUser(
-				themeDisplay.getUserId(), state);
+			if(advSearchKeywords.isEmpty()) {
+	            results = ${capFirstModel}LocalServiceUtil.findAllInUser(
+					themeDisplay.getUserId(), containerStart, containerEnd,
+					orderByComparator, state);
+				total = ${capFirstModel}LocalServiceUtil.countAllInUser(
+					themeDisplay.getUserId(), state);
+			} else {
+				results.addAll(${capFirstModel}LocalServiceUtil.advanceSearchInUser(advSearchKeywords, 
+        				themeDisplay.getUserId(), containerStart, containerEnd, orderByComparator, state));
+            	total = ${capFirstModel}LocalServiceUtil.countAdvanceSearchInUser(advSearchKeywords, 
+        				themeDisplay.getUserId(), state);
+			}
 		}
 		else {
-			results = ${capFirstModel}LocalServiceUtil.findAllInUserAndGroup(
-				themeDisplay.getUserId(), groupId, containerStart, containerEnd,
-				orderByComparator, state);
-			total = ${capFirstModel}LocalServiceUtil.countAllInUserAndGroup(
-				themeDisplay.getUserId(), groupId, state);
+			if(advSearchKeywords.isEmpty()) {
+				results = ${capFirstModel}LocalServiceUtil.findAllInUserAndGroup(
+					themeDisplay.getUserId(), groupId, containerStart, containerEnd,
+					orderByComparator, state);
+				total = ${capFirstModel}LocalServiceUtil.countAllInUserAndGroup(
+					themeDisplay.getUserId(), groupId, state);
+			} else {
+				results.addAll(${capFirstModel}LocalServiceUtil.advanceSearchInUserAndGroup(advSearchKeywords, 
+        				themeDisplay.getUserId(), groupId, containerStart, containerEnd, orderByComparator, state));
+            	total = ${capFirstModel}LocalServiceUtil.countAdvanceSearchInUserAndGroup(advSearchKeywords, 
+        				themeDisplay.getUserId(), groupId, state);
+			}
 		}
 
 		return new SearchContainerResults<>(results, total);
@@ -262,6 +290,128 @@ public class ${capFirstModel}ViewHelper {
 		return OrderByComparatorFactoryUtil.create(
 			"${capFirstModel}_${capFirstModel}", orderByCol, getOrder(orderByType));
 	}
+		
+	public Map<String, String> getAdvSearchKeywords(PortletRequest request, SimpleDateFormat dateFormat) throws ParseException {
+    	Map<String, Object> advSearchKeywordsObj = getAdvSearchKeywordsObject(request);
+    	Map<String, String> advSearchKeywords = new HashMap<>();
+    	
+    	for(String key : advSearchKeywordsObj.keySet()) {
+    		if(advSearchKeywordsObj.get(key) instanceof Map) {
+    			Map<String, Object> map = (Map<String, Object>) advSearchKeywordsObj.get(key);
+    			
+    			for(String hashKey : map.keySet()) {
+    				if(map.get(hashKey) instanceof Calendar) {
+    					advSearchKeywords.put(key, dateFormat.format(((Calendar) map.get(hashKey)).getTime()));    					
+    				} else if (map.get(hashKey) instanceof Long || 
+    						map.get(hashKey) instanceof Double || 
+    						map.get(hashKey) instanceof Integer ) {
+    					advSearchKeywords.put(key, map.get(hashKey).toString());
+    				}    				
+    			}
+    		} else if(advSearchKeywordsObj.get(key) instanceof String) {
+    			advSearchKeywords.put(key, (String) advSearchKeywordsObj.get(key));
+    		} 
+    	}
+    	return advSearchKeywords;
+    }
+	
+	protected Map<String, Object> getAdvSearchKeywordsObject(PortletRequest request) throws ParseException {
+    	${capFirstModel}Configuration ${uncapFirstModel}Configuration =
+    	        (${capFirstModel}Configuration) request.getAttribute(${capFirstModel}Configuration.class.getName());
+    	
+    	PortletPreferences portletPreferences = request.getPreferences();
+    	String dateFormatVal = HtmlUtil.escape(
+                portletPreferences.getValue("dateFormat", 
+                		Validator.isNull(${uncapFirstModel}Configuration) ? "yyyy/MM/dd" : ${uncapFirstModel}Configuration.dateFormat()));
+    	
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatVal);
+    	
+    	Map<String, Object> advSearchKeywords = new HashMap<String, Object>();
+    	
+		<#list application.fields as field >
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Boolean"  		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" 
+				>
+			</#if>
+			
+			<#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
+				Map<String, Long> search${field.name?cap_first} = new HashMap<>();		    	
+		    	if(ParamUtil.getLong(request, "search${field.name?cap_first}Start", 0) != 0) {
+		    		search${field.name?cap_first}.put("start", ParamUtil.getLong(request, "search${field.name?cap_first}Start"));
+		    	}
+		    	if(ParamUtil.getLong(request, "search${field.name?cap_first}End", 0) != 0) {
+		    		search${field.name?cap_first}.put("end", ParamUtil.getLong(request, "search${field.name?cap_first}End"));		    		
+		    	}		    	
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>
+			<#if field.type?string == "com.liferay.damascus.cli.json.fields.Double" >
+				Map<String, Double> search${field.name?cap_first} = new HashMap<>();		    	
+		    	if(ParamUtil.getDouble(request, "search${field.name?cap_first}Start", 0) != 0) {
+		    		search${field.name?cap_first}.put("start", ParamUtil.getDouble(request, "search${field.name?cap_first}Start"));
+		    	}
+		    	if(ParamUtil.getDouble(request, "search${field.name?cap_first}End", 0) != 0) {
+		    		search${field.name?cap_first}.put("end", ParamUtil.getDouble(request, "search${field.name?cap_first}End"));		    		
+		    	}		    	
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>
+			<#if field.type?string == "com.liferay.damascus.cli.json.fields.Integer" >
+				Map<String, Integer> search${field.name?cap_first} = new HashMap<>();		    	
+		    	if(ParamUtil.getInteger(request, "search${field.name?cap_first}Start", 0) != 0) {
+		    		search${field.name?cap_first}.put("start", ParamUtil.getInteger(request, "search${field.name?cap_first}Start"));
+		    	}
+		    	if(ParamUtil.getInteger(request, "search${field.name?cap_first}End", 0) != 0) {
+		    		search${field.name?cap_first}.put("end", ParamUtil.getInteger(request, "search${field.name?cap_first}End"));		    		
+		    	}		    	
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+				>
+				if(!ParamUtil.getString(request, "search${field.name?cap_first}", "").isEmpty()) {
+		        	advSearchKeywords.put("search${field.name?cap_first}", ParamUtil.getString(request, "search${field.name?cap_first}"));
+		    	}
+			</#if>
+				
+					
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Date"     ||
+				field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"
+				>
+				Map<String, Calendar> search${field.name?cap_first} = new HashMap<>();
+    	
+		    	if(!ParamUtil.getString(request, "search${field.name?cap_first}Start", "").isEmpty()) {
+		    		Date start = dateFormat.parse(ParamUtil.getString(request, "search${field.name?cap_first}Start"));
+		    		Calendar cal = Calendar.getInstance();
+		    		cal.setTime(start);
+		    		search${field.name?cap_first}.put("start", cal);
+		    	}
+		    	if(!ParamUtil.getString(request, "search${field.name?cap_first}End", "").isEmpty()) {
+		    		Date end = dateFormat.parse(ParamUtil.getString(request, "search${field.name?cap_first}End"));
+		    		Calendar cal = Calendar.getInstance();    		
+		    		cal.setTime(end);
+		    		cal.set(Calendar.HOUR_OF_DAY, 23);
+		    		cal.set(Calendar.MINUTE, 59);
+		    		cal.set(Calendar.SECOND, 59);
+		    		cal.set(Calendar.MILLISECOND, 0);
+		    		search${field.name?cap_first}.put("end", cal);
+		    	}
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>				
+		</#list>
+		
+    	return advSearchKeywords;
+    }
 
 	/**
 	 * Order string to boolean
