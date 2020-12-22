@@ -150,19 +150,8 @@ public class ${capFirstModel}DisplayContext {
 			SearchContainer.DEFAULT_ORDER_BY_TYPE_PARAM, orderByType);
 
 		
-	<#if advancedSearch>
-		${capFirstModel}Configuration ${uncapFirstModel}Configuration =
-			(${capFirstModel}Configuration)
-				_liferayPortletRequest.getAttribute(${capFirstModel}Configuration.class.getName());
-			
-		PortletPreferences portletPreferences = _liferayPortletRequest.getPreferences();
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
-			HtmlUtil.escape(
-                portletPreferences.getValue(
-                    "dateFormat", ${uncapFirstModel}Configuration.dateFormat())));
-					
-		Map<String, String> advSearchKeywords = _${uncapFirstModel}ViewHelper.getAdvSearchKeywords(_liferayPortletRequest, dateFormat);
+	<#if advancedSearch>							
+		Map<String, String> advSearchKeywords = _${uncapFirstModel}ViewHelper.getAdvSearchKeywords(_liferayPortletRequest);
 	
 		for(String key : advSearchKeywords.keySet()) {
 			navigationPortletURL.setParameter(key, advSearchKeywords.get(key));
@@ -181,8 +170,12 @@ public class ${capFirstModel}DisplayContext {
 		_searchContainer.setOrderByType(orderByType);
 
 		SearchContainerResults<${capFirstModel}> searchContainerResults = null;
-
+	
+	<#if advancedSearch>
+		if (Validator.isNull(keywords) && advSearchKeywords.isEmpty()) {
+	<#else>
 		if (Validator.isNull(keywords)) {
+	</#if>		
 			searchContainerResults = _${uncapFirstModel}ViewHelper.getListFromDB(
 				_liferayPortletRequest, _searchContainer,
 				new int[] {WorkflowConstants.STATUS_APPROVED});

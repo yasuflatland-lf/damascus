@@ -43,6 +43,25 @@ public class ${capFirstModel}KeywordQueryContributor implements KeywordQueryCont
 		queryHelper.addSearchLocalizedTerm(booleanQuery, searchContext, Field.DESCRIPTION, false);
 		queryHelper.addSearchLocalizedTerm(booleanQuery, searchContext, Field.TITLE, false);
 		queryHelper.addSearchLocalizedTerm(booleanQuery, searchContext, Field.SUBTITLE, false);
+
+<#if advancedSearch>
+	<#list application.fields as field >
+		<#if field.name != "title">
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Long"     		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Double"   		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Integer"			||
+				field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Text"			||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Date"     		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"
+				>			
+				queryHelper.addSearchTerm(booleanQuery, searchContext, "${field.name}", false);			
+			</#if>	
+		</#if>
+	</#list>
+</#if>			
 	}
 
 	@Reference

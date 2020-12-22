@@ -41,5 +41,36 @@ public class ${capFirstModel}ModelDocumentContributor implements ModelDocumentCo
 		document.addText(Field.TITLE, entry.get${application.asset.assetTitleFieldName?cap_first}());
 
 		document.addDate(Field.MODIFIED_DATE, entry.getModifiedDate());
+		
+<#if advancedSearch>
+	<#list application.fields as field >		
+		<#if field.name != "title">
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Long"     		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Double"   		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Integer"
+				>
+				document.addNumber("${field.name}", entry.get${field.name?cap_first}());			
+			</#if>			
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		
+				>
+				document.addText("${field.name}", HtmlUtil.extractText(entry.get${field.name?cap_first}()));
+			</#if>			
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+				>
+				document.addText("${field.name}", entry.get${field.name?cap_first}());
+			</#if>
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Date"     ||
+				field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"
+				>
+				document.addDate("${field.name}", entry.get${field.name?cap_first}());
+			</#if>
+		</#if>			
+	</#list>
+</#if>	
 	}
 }

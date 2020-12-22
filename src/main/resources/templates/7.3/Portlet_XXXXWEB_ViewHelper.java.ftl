@@ -10,6 +10,7 @@ package ${packageName}.web.util;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
+import com.liferay.portal.kernel.portlet.LiferayActionRequest;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
@@ -27,6 +28,16 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.search.hits.SearchHit;
+import com.liferay.portal.search.hits.SearchHits;
+import com.liferay.portal.search.query.BooleanQuery;
+import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.query.Query;
+import com.liferay.portal.search.searcher.SearchRequest;
+import com.liferay.portal.search.searcher.SearchRequestBuilder;
+import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
+import com.liferay.portal.search.searcher.SearchResponse;
+import com.liferay.portal.search.searcher.Searcher;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.service.${capFirstModel}LocalServiceUtil;
 import ${packageName}.web.portlet.action.${capFirstModel}Configuration;
@@ -45,6 +56,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,9 +95,6 @@ public class ${capFirstModel}ViewHelper {
 			${capFirstModel}Configuration.CONF_PREFS_VIEW_TYPE,
 			${capFirstModel}Configuration.PREFS_VIEW_TYPE_DEFAULT);
 
-		// Advance Search Key
-        Map<String, Object> advSearchKeywords = getAdvSearchKeywordsObject(request);
-
 		long groupId = themeDisplay.getScopeGroupId();
 		int containerStart = start;
 		int containerEnd = end;
@@ -101,45 +110,25 @@ public class ${capFirstModel}ViewHelper {
 
 		if (prefsViewType.equals(
 				${capFirstModel}Configuration.PREFS_VIEW_TYPE_DEFAULT)) {
-			if(advSearchKeywords.isEmpty()) {
-	            results = ${capFirstModel}LocalServiceUtil.findAllInGroup(
-					groupId, containerStart, containerEnd, orderByComparator,
-					state);
-				total = ${capFirstModel}LocalServiceUtil.countAllInGroup(groupId, state);
-			} else {
-				results.addAll(${capFirstModel}LocalServiceUtil.advanceSearchInGroup(advSearchKeywords, groupId, 
-        			containerStart, containerEnd, orderByComparator, state));
-            	total = ${capFirstModel}LocalServiceUtil.countAdvanceSearchInGroup(advSearchKeywords, groupId, state);
-			}			
+			results = ${capFirstModel}LocalServiceUtil.findAllInGroup(
+				groupId, containerStart, containerEnd, orderByComparator,
+				state);
+			total = ${capFirstModel}LocalServiceUtil.countAllInGroup(groupId, state);					
 		}
 		else if (prefsViewType.equals(
 					${capFirstModel}Configuration.PREFS_VIEW_TYPE_USER)) {
-			if(advSearchKeywords.isEmpty()) {
-	            results = ${capFirstModel}LocalServiceUtil.findAllInUser(
-					themeDisplay.getUserId(), containerStart, containerEnd,
-					orderByComparator, state);
-				total = ${capFirstModel}LocalServiceUtil.countAllInUser(
-					themeDisplay.getUserId(), state);
-			} else {
-				results.addAll(${capFirstModel}LocalServiceUtil.advanceSearchInUser(advSearchKeywords, 
-        				themeDisplay.getUserId(), containerStart, containerEnd, orderByComparator, state));
-            	total = ${capFirstModel}LocalServiceUtil.countAdvanceSearchInUser(advSearchKeywords, 
-        				themeDisplay.getUserId(), state);
-			}
+			results = ${capFirstModel}LocalServiceUtil.findAllInUser(
+				themeDisplay.getUserId(), containerStart, containerEnd,
+				orderByComparator, state);
+			total = ${capFirstModel}LocalServiceUtil.countAllInUser(
+				themeDisplay.getUserId(), state);
 		}
 		else {
-			if(advSearchKeywords.isEmpty()) {
-				results = ${capFirstModel}LocalServiceUtil.findAllInUserAndGroup(
-					themeDisplay.getUserId(), groupId, containerStart, containerEnd,
-					orderByComparator, state);
-				total = ${capFirstModel}LocalServiceUtil.countAllInUserAndGroup(
-					themeDisplay.getUserId(), groupId, state);
-			} else {
-				results.addAll(${capFirstModel}LocalServiceUtil.advanceSearchInUserAndGroup(advSearchKeywords, 
-        				themeDisplay.getUserId(), groupId, containerStart, containerEnd, orderByComparator, state));
-            	total = ${capFirstModel}LocalServiceUtil.countAdvanceSearchInUserAndGroup(advSearchKeywords, 
-        				themeDisplay.getUserId(), groupId, state);
-			}
+			results = ${capFirstModel}LocalServiceUtil.findAllInUserAndGroup(
+				themeDisplay.getUserId(), groupId, containerStart, containerEnd,
+				orderByComparator, state);
+			total = ${capFirstModel}LocalServiceUtil.countAllInUserAndGroup(
+				themeDisplay.getUserId(), groupId, state);			
 		}
 
 		return new SearchContainerResults<>(results, total);
@@ -175,7 +164,75 @@ public class ${capFirstModel}ViewHelper {
 	public SearchContainerResults<${capFirstModel}> getListFromIndex(
 			PortletRequest request, int start, int end, int state)
 		throws SearchException {
+		
+		int total = 0;
+		List<${capFirstModel}> tempResults = new ArrayList<>();
+		
+	<#if advancedSearch>
+		
+		Map<String, Object> advSearchKeywords = new HashMap<>();
+		try {			
+			advSearchKeywords =	getAdvSearchKeywordsObject(request);
+		} catch(ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if(!advSearchKeywords.isEmpty()) {
+			ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
+			BooleanQuery booleanQuery = getBooleanQuery(advSearchKeywords);
+			
+			SearchRequestBuilder searchRequestBuilder =
+				    searchRequestBuilderFactory.builder();
+			searchRequestBuilder.emptySearchEnabled(true);
+			
+			searchRequestBuilder.withSearchContext(
+				    searchContext -> {
+						searchContext.setAttribute(Field.STATUS, state);
+						searchContext.setStart(start);
+						searchContext.setEnd(end);
+						searchContext.setEntryClassNames(new String[] {${capFirstModel}.class.getName()});
+				        searchContext.setCompanyId(themeDisplay.getCompanyId());
+				    });
+			
+			SearchRequest searchRequest = 
+				    searchRequestBuilder.query(booleanQuery).build();
+					
+			
+			SearchResponse searchResponse = searcher.search(searchRequest);
+			SearchHits searchHits = searchResponse.getSearchHits();
+			List<SearchHit> searchHitsList = searchHits.getSearchHits();
+					
+			total = GetterUtil.getInteger(searchHits.getTotalHits());
+			
+			for(SearchHit searchHit : searchHitsList) {
+				${capFirstModel} resReg = null;
+
+				// Entry
+
+				long entryId = GetterUtil.getLong(searchHit.getDocument().getLong(Field.ENTRY_CLASS_PK));
+
+				try {
+					resReg = ${capFirstModel}LocalServiceUtil.get${capFirstModel}(entryId);
+
+					resReg = resReg.toEscapedModel();
+
+					tempResults.add(resReg);
+				}
+				catch (Exception e) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(
+							"${capFirstModel} search index is stale and contains entry " +
+								entryId);
+					}
+
+					continue;
+				}
+			}
+		} else {
+		
+	</#if>
+	
 		// Search Key
 
 		String searchFilter = ParamUtil.getString(
@@ -203,8 +260,7 @@ public class ${capFirstModel}ViewHelper {
 
 		// Initialize return values
 
-		int total = results.getLength();
-		List<${capFirstModel}> tempResults = new ArrayList<>();
+		total = results.getLength();
 
 		for (int i = 0; i < results.getDocs().length; i++) {
 			Document doc = results.doc(i);
@@ -232,6 +288,10 @@ public class ${capFirstModel}ViewHelper {
 				continue;
 			}
 		}
+
+<#if advancedSearch>
+		}
+</#if>
 
 		return new SearchContainerResults<>(tempResults, total);
 	}
@@ -290,9 +350,30 @@ public class ${capFirstModel}ViewHelper {
 		return OrderByComparatorFactoryUtil.create(
 			"${capFirstModel}_${capFirstModel}", orderByCol, getOrder(orderByType));
 	}
+	
+	public static Map<String, String> getAdvSearchKeywords(LiferayActionRequest request) {
+		return getAdvSearchKeywords((PortletRequest) request);
+	}
 		
-	public Map<String, String> getAdvSearchKeywords(PortletRequest request, SimpleDateFormat dateFormat) throws ParseException {
-    	Map<String, Object> advSearchKeywordsObj = getAdvSearchKeywordsObject(request);
+	public static Map<String, String> getAdvSearchKeywords(PortletRequest request) {
+    	${capFirstModel}Configuration ${uncapFirstModel}Configuration =
+				(${capFirstModel}Configuration) request.getAttribute(${capFirstModel}Configuration.class.getName());
+				
+		PortletPreferences portletPreferences = request.getPreferences();
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+			HtmlUtil.escape(
+                portletPreferences.getValue(
+                    "dateFormat", ${uncapFirstModel}Configuration.dateFormat())));
+			
+    	Map<String, Object> advSearchKeywordsObj = new HashMap<>();
+    	
+    	try {
+    		advSearchKeywordsObj = getAdvSearchKeywordsObject(request);
+    	} catch(ParseException e) {
+    		e.printStackTrace();
+    	}		
+		
     	Map<String, String> advSearchKeywords = new HashMap<>();
     	
     	for(String key : advSearchKeywordsObj.keySet()) {
@@ -301,11 +382,13 @@ public class ${capFirstModel}ViewHelper {
     			
     			for(String hashKey : map.keySet()) {
     				if(map.get(hashKey) instanceof Calendar) {
-    					advSearchKeywords.put(key, dateFormat.format(((Calendar) map.get(hashKey)).getTime()));    					
+    					advSearchKeywords.put(key + hashKey.substring(0, 1).toUpperCase() + hashKey.substring(1), 
+    							dateFormat.format(((Calendar) map.get(hashKey)).getTime()));    					
     				} else if (map.get(hashKey) instanceof Long || 
     						map.get(hashKey) instanceof Double || 
     						map.get(hashKey) instanceof Integer ) {
-    					advSearchKeywords.put(key, map.get(hashKey).toString());
+    					advSearchKeywords.put(key + hashKey.substring(0, 1).toUpperCase() + hashKey.substring(1), 
+    							map.get(hashKey).toString());
     				}    				
     			}
     		} else if(advSearchKeywordsObj.get(key) instanceof String) {
@@ -315,7 +398,7 @@ public class ${capFirstModel}ViewHelper {
     	return advSearchKeywords;
     }
 	
-	protected Map<String, Object> getAdvSearchKeywordsObject(PortletRequest request) throws ParseException {
+	protected static Map<String, Object> getAdvSearchKeywordsObject(PortletRequest request) throws ParseException {
     	${capFirstModel}Configuration ${uncapFirstModel}Configuration =
     	        (${capFirstModel}Configuration) request.getAttribute(${capFirstModel}Configuration.class.getName());
     	
@@ -413,6 +496,41 @@ public class ${capFirstModel}ViewHelper {
     	return advSearchKeywords;
     }
 
+<#if advancedSearch>	
+	private BooleanQuery getBooleanQuery(Map<String, Object> advSearchKeywords) {
+		
+    	BooleanQuery booleanQuery = queries.booleanQuery();
+    	List<Query> queryList = new ArrayList<>();
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    	
+    	for(String key : advSearchKeywords.keySet()) {
+    		String column = key.replaceFirst("search","");
+    		column = column.substring(0, 1).toLowerCase() + column.substring(1, column.length());
+    		
+    		if(advSearchKeywords.get(key) instanceof Map) {
+    			Map<String, Object> map = (Map<String, Object>) advSearchKeywords.get(key);
+    			
+    			if(map.get("start") instanceof Calendar && map.get("end") instanceof Calendar) {
+    				queryList.add(queries.dateRangeTerm(column, true, true, 
+    						sdf.format(((Calendar)map.get("start")).getTime()), 
+    						sdf.format(((Calendar)map.get("end")).getTime())));    				
+    			} else if((map.get("start") instanceof Long && map.get("end") instanceof Long) || 
+    					(map.get("start") instanceof Double && map.get("end") instanceof Double) ||
+    					(map.get("start") instanceof Integer && map.get("end") instanceof Integer)) {
+    				queryList.add(queries.rangeTerm(column, true, true, map.get("start"), map.get("end")));
+        		}
+    		} else if(advSearchKeywords.get(key) instanceof String) {
+    			queryList.add(queries.match(column, advSearchKeywords.get(key)));
+    		}
+    	}
+    	
+    	booleanQuery.addMustQueryClauses(queryList.toArray(new Query[] {}));
+    	
+    	return booleanQuery;
+	}
+</#if>
+
 	/**
 	 * Order string to boolean
 	 *
@@ -428,5 +546,15 @@ public class ${capFirstModel}ViewHelper {
 	}
 
 	private static Logger _log = LoggerFactory.getLogger(${capFirstModel}ViewHelper.class);
+	
+<#if advancedSearch>
+	@Reference
+	protected Queries queries;
 
+	@Reference
+	protected Searcher searcher;
+	
+	@Reference
+	protected SearchRequestBuilderFactory searchRequestBuilderFactory;
+</#if>	
 }
