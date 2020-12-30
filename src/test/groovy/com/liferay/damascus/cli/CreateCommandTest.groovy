@@ -22,13 +22,21 @@ class CreateCommandTest extends Specification {
     static def createCommand;
 
     def setupEx(version) {
-        //Cleanup enviroment
+        //Cleanup environment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
         def templateUtil = Spy(TemplateUtil)
         templateUtil.clear();
 
+        // Caching templates under the cache directory.
+        templateUtil.cacheTemplates(
+                CreateCommandTest.class,
+                DamascusProps.TEMPLATE_FOLDER_NAME,
+                DamascusProps.CACHE_DIR_PATH + DamascusProps.DS,
+                version
+        );
+
         //Create Workspace
-        CommonUtil.createWorkspace(version, workspaceRootDir, workspaceName);
+        CommonUtil.createWorkspaceWithProperties(version, workspaceRootDir, workspaceName);
 
         //Execute all tests under modules
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
@@ -579,7 +587,7 @@ class CreateCommandTest extends Specification {
         System.err = new PrintStream(buffer)
 
         // Read test base.json file
-        def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
+        def target_file_path = workTempDir + DS + projectName + DS + DamascusProps.BASE_JSON
         def file_path = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
         def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
         FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
