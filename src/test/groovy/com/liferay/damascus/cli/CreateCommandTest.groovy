@@ -42,6 +42,8 @@ class CreateCommandTest extends Specification {
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
 
         TestUtils.setFinalStatic(CreateCommand.class.getDeclaredField("CREATE_TARGET_PATH"), workTempDir + DS);
+        TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
+
         createCommand = new CreateCommand();
     }
 
@@ -99,6 +101,7 @@ class CreateCommandTest extends Specification {
 
         where:
         projectName | liferayVersion           | packageName
+        "ToDo"      | DamascusProps.VERSION_73 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_72 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_71 | "com.liferay.test"
         "ToDo"      | DamascusProps.VERSION_70 | "com.liferay.test"
@@ -157,6 +160,8 @@ class CreateCommandTest extends Specification {
 
         where:
         liferayVersion           | projectName | packageName                 | web_exist | web_isdir | web_src_exist | web_gradlew_exist | web_gradlewbat_exist | web_switch
+        DamascusProps.VERSION_73 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
+        DamascusProps.VERSION_73 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_72 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
         DamascusProps.VERSION_72 | "ToDo"      | "com.liferay.test"          | true      | true      | true          | false             | false                | true
         DamascusProps.VERSION_71 | "ToDo"      | "com.liferay.test"          | false     | false     | false         | false             | false                | false
@@ -557,11 +562,14 @@ class CreateCommandTest extends Specification {
 		def buffer = new ByteArrayOutputStream()
 		System.err = new PrintStream(buffer)
 
-		// Read test base.json file
-		def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
-		def file_path = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
-		def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
-		FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
+        // Read test base.json file
+        def targetFilePath = workTempDir + DS + projectName + DS + DamascusProps.BASE_JSON
+        def filePath = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
+        def json = CommonUtil.readResource(CreateCommandTest.class, filePath);
+        FileUtils.writeStringToFile(new File(targetFilePath), json, StandardCharsets.UTF_8)
+
+        // Set base.json directory
+        TestUtils.setFinalStatic(CreateCommand.class.getDeclaredField("CREATE_TARGET_PATH"), workTempDir + DS + projectName + DS);
 
 		//Run damascus create
 		String[] args = ["create"]
@@ -587,10 +595,13 @@ class CreateCommandTest extends Specification {
         System.err = new PrintStream(buffer)
 
         // Read test base.json file
-        def target_file_path = workTempDir + DS + projectName + DS + DamascusProps.BASE_JSON
-        def file_path = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
-        def json = CommonUtil.readResource(CreateCommandTest.class, file_path);
-        FileUtils.writeStringToFile(new File(target_file_path), json, StandardCharsets.UTF_8)
+        def targetFilePath = workTempDir + DS + projectName + DS + DamascusProps.BASE_JSON
+        def filePath = DS + DamascusProps.TEMPLATE_FOLDER_NAME + DS + version + DS + base_json_name;
+        def json = CommonUtil.readResource(CreateCommandTest.class, filePath);
+        FileUtils.writeStringToFile(new File(targetFilePath), json, StandardCharsets.UTF_8)
+
+        // Set base.json directory
+        TestUtils.setFinalStatic(CreateCommand.class.getDeclaredField("CREATE_TARGET_PATH"), workTempDir + DS + projectName + DS);
 
         //Run damascus create
         String[] args = ["create"]

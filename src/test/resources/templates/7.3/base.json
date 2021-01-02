@@ -2,7 +2,7 @@
   "projectName": "${damascus.projectName}",
   "packageName" : "${damascus.packageName}",
   "liferayVersion": "${damascus.liferayVersion}",
-  "useTargetPlatform": "false",
+  "useTargetPlatform": "true",
   "applications": [
     {
       "model"       : "${damascus.entityName}",

@@ -11,8 +11,10 @@ import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.*;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -50,8 +52,8 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
             // Mapping base.json into an object after parsing values
             DamascusBase dmsb = JsonUtil.getObject(
-                CREATE_TARGET_PATH + DamascusProps.BASE_JSON,
-                DamascusBase.class
+                    CREATE_TARGET_PATH + DamascusProps.BASE_JSON,
+                    DamascusBase.class
             );
 
             // Get root path to the templates
@@ -60,9 +62,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             // Fetch all template file paths
             Collection<File> templatePaths = _templateUtil.getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
 
-            String camelCaseProjectName = dmsb.getProjectName();
-
-            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(camelCaseProjectName);
+            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(dmsb.getProjectName());
 
             //1. Generate skeleton of the project.
             //2. Parse service.xml
@@ -72,8 +72,8 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
             // Get path to the service.xml
             String serviceXmlPath = _templateUtil.getServiceXmlPath(
-                CREATE_TARGET_PATH,
-                dashCaseProjectName
+                    CREATE_TARGET_PATH,
+                    dashCaseProjectName
             );
 
             StringBuilder sb = new StringBuilder();
@@ -86,11 +86,11 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
             // Generate skeletons of the project
             generateProjectSkeleton(
-                dmsb.getLiferayVersion(),
-                dashCaseProjectName,
-                dmsb.getPackageName(),
-                CREATE_TARGET_PATH,
-                dmsb.isWebExist()
+                    dmsb.getLiferayVersion(),
+                    dashCaseProjectName,
+                    dmsb.getPackageName(),
+                    CREATE_TARGET_PATH,
+                    dmsb.isWebExist()
             );
 
             System.out.println("Parsing " + serviceXmlPath);
@@ -117,15 +117,20 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
                 System.out.println(".");
             }
 
+            System.out.println("Moving all modules projects into the same directory");
+
+            // Project origin path
+            String originPath = DamascusProps.CURRENT_DIR + dmsb.getProjectName() + DamascusProps.DS;
+            File srcDir = new File(originPath + dashCaseProjectName);
+            File distDir = new File(originPath);
+
+            // Finalize Project Directory: move modules directories into the current directory
+            finalizeProjects(srcDir, distDir);
+
             System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
 
             // Run "gradle buildService" to regenerate with added templates
-            CommonUtil.runGradle(serviceXmlPath, "buildService");
-
-            System.out.println("Moving all modules projects into the same directory");
-
-            // Finalize Project Directory: move modules directories into the current directory
-            finalizeProjects(dashCaseProjectName);
+            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
 
             System.out.println("Done.");
 
@@ -155,7 +160,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * @throws ConfigurationException settings.properties file manipulation error
      */
     private void generateScaffolding(DamascusBase damascusBase, String templateFileName, String outputFilePath, Application app)
-        throws IOException, URISyntaxException, TemplateException, ConfigurationException {
+            throws IOException, URISyntaxException, TemplateException, ConfigurationException {
         Map params = Maps.newHashMap();
 
         //Mapping values used in templates
@@ -171,11 +176,11 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         //Parse template and output
         _templateUtil.process(
-            CreateCommand.class,
-            damascusBase.getLiferayVersion(),
-            templateFileName,
-            params,
-            outputFilePath);
+                CreateCommand.class,
+                damascusBase.getLiferayVersion(),
+                templateFileName,
+                params,
+                outputFilePath);
     }
 
     /**
@@ -194,19 +199,19 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         //Generate Service (*-service, *-api) skelton
         CommonUtil.createServiceBuilderProject(
-            version,
-            projectName,
-            packageName,
-            destinationDir
+                version,
+                projectName,
+                packageName,
+                destinationDir
         );
 
         if (true == webEnable) {
             //Generate Web project (*-web)
             CommonUtil.createMVCPortletProject(
-                version,
-                projectName,
-                packageName,
-                destinationDir + DamascusProps.DS + projectName
+                    version,
+                    projectName,
+                    packageName,
+                    destinationDir + DamascusProps.DS + projectName
             );
         }
     }
@@ -222,7 +227,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         //Fetch replacement target files
         List<String> pathPatterns = new ArrayList<>(Arrays.asList(
-            DamascusProps._BUILD_GRADLE_FILE_NAME
+                DamascusProps._BUILD_GRADLE_FILE_NAME
         ));
         List<File> targetPaths = CommonUtil.getTargetFiles(rootPath, pathPatterns);
 
@@ -233,12 +238,12 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
                 for (File path : targetPaths) {
                     List<String> pathList = CommonUtil.invertPathWithSize(
-                        path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
+                            path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
 
                     if (pathList.size() < DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH) {
                         throw new DamascusProcessException(
-                            "Path must be larger than " + DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH
-                                + " depth. Currently it's <" + path.getPath() + ">");
+                                "Path must be larger than " + DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH
+                                        + " depth. Currently it's <" + path.getPath() + ">");
                     }
 
                     put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
@@ -257,29 +262,34 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * So it gets nested in this tool. This method move those nested project directory
      * into the current directory.
      *
-     * @param projectName Project name
+     * @param srcDir  Source Directory
+     * @param destDir Destination Directory
      * @throws IOException
+     * @throws DamascusProcessException
      */
-    private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
+    private void finalizeProjects(File srcDir, File destDir) throws IOException, DamascusProcessException {
 
-        //Generated Project files are nested. Move into current directory
-        File srcDir = new File("." + DamascusProps.DS + projectName);
-        File distDir = new File("." + DamascusProps.DS);
-
-        if (!srcDir.exists() || !srcDir.isDirectory()) {
+        if (!srcDir.exists()) {
+            log.info("srcDir does not exist");
+            return;
+        } else if (!srcDir.isDirectory()) {
+            log.info("srcDir is not a directory");
             return;
         }
 
-        //Move project directory to the current directory
-        FileUtils.copyDirectory(srcDir, distDir);
+        // Create a filter for ".gradle" and ".md" files
+        FileUtils.copyDirectory(srcDir, destDir);
+
+        // Delete old nested directory
         FileUtils.deleteDirectory(srcDir);
 
         //Remove unused gradlew / gradlew.bat files
         List<String> pathPatterns = new ArrayList<>(Arrays.asList(
-            DamascusProps._GRADLEW_UNIX_FILE_NAME,
-            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
-            DamascusProps._GRADLE_SETTINGS_FILE_NAME
+                DamascusProps._GRADLEW_UNIX_FILE_NAME,
+                DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+                DamascusProps._GRADLE_SETTINGS_FILE_NAME
         ));
+
         List<File> deletePaths = CommonUtil.getTargetFiles(DamascusProps.CURRENT_DIR, pathPatterns);
         deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME));
         deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._GRADLE_FOLDER_NAME));
@@ -289,7 +299,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         }
 
         //Finalize Gradle Files appropriately.
-        finalizeGradleFiles(DamascusProps.CURRENT_DIR);
+        finalizeGradleFiles(destDir.getAbsolutePath());
     }
 
     /**
