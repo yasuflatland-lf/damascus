@@ -7,10 +7,9 @@
 
 <#assign camelcaseProjectName = "${damascus.projectName?replace(\"-\", \"\")}">
 <#assign dashcaseProjectName = "${caseUtil.camelCaseToDashCase(camelcaseProjectName)}">
-<#assign projectPath = "${createPath_val}/${dashcaseProjectName}">
-<#assign apiModulePath = "${projectPath}/${dashcaseProjectName}-api">
-<#assign serviceModulePath = "${projectPath}/${dashcaseProjectName}-service">
-<#assign webModulePath = "${projectPath}/${dashcaseProjectName}-web">
+<#assign apiModulePath = "${createPath_val}/${dashcaseProjectName}-api">
+<#assign serviceModulePath = "${createPath_val}/${dashcaseProjectName}-service">
+<#assign webModulePath = "${createPath_val}/${dashcaseProjectName}-web">
 
 <#if application?exists>
 <#assign capFirstModel = "${application.model?cap_first}">

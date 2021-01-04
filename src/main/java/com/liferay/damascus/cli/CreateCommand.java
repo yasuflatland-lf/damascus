@@ -46,12 +46,12 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             System.out.println("Started creating service scaffolding. Fetching base.json");
 
             // base.json validation
-            validation(CREATE_TARGET_PATH + DamascusProps.BASE_JSON);
+            validation(getArgs().getBaseDir() + DamascusProps.BASE_JSON);
 
             // Mapping base.json into an object after parsing values
             DamascusBase dmsb = JsonUtil.getObject(
-                CREATE_TARGET_PATH + DamascusProps.BASE_JSON,
-                DamascusBase.class
+                    getArgs().getBaseDir() + DamascusProps.BASE_JSON,
+                    DamascusBase.class
             );
 
             // Get root path to the templates
@@ -60,9 +60,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             // Fetch all template file paths
             Collection<File> templatePaths = _templateUtil.getTargetTemplates(DamascusProps.TARGET_TEMPLATE_PREFIX, resourceRoot);
 
-            String camelCaseProjectName = dmsb.getProjectName();
-
-            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(camelCaseProjectName);
+            String dashCaseProjectName = CaseUtil.camelCaseToDashCase(dmsb.getProjectName());
 
             //1. Generate skeleton of the project.
             //2. Parse service.xml
@@ -72,8 +70,8 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
             // Get path to the service.xml
             String serviceXmlPath = _templateUtil.getServiceXmlPath(
-                CREATE_TARGET_PATH,
-                dashCaseProjectName
+                    getArgs().getBaseDir(),
+                    dashCaseProjectName
             );
 
             StringBuilder sb = new StringBuilder();
@@ -86,11 +84,11 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
             // Generate skeletons of the project
             generateProjectSkeleton(
-                dmsb.getLiferayVersion(),
-                dashCaseProjectName,
-                dmsb.getPackageName(),
-                CREATE_TARGET_PATH,
-                dmsb.isWebExist()
+                    dmsb.getLiferayVersion(),
+                    dashCaseProjectName,
+                    dmsb.getPackageName(),
+                    getArgs().getBaseDir(),
+                    dmsb.isWebExist()
             );
 
             System.out.println("Parsing " + serviceXmlPath);
@@ -98,10 +96,23 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             // Generate service.xml based on base.json configurations and overwrite existing service.xml
             generateScaffolding(dmsb, DamascusProps.SERVICE_XML, serviceXmlPath, null);
 
+            System.out.println("Moving all modules projects into the same directory");
+
+            // Project origin path
+            String originPath = DamascusProps.CURRENT_DIR + DamascusProps.DS;
+            File srcDir = new File(originPath + dashCaseProjectName);
+            File distDir = new File(originPath);
+
+            // Resolve Project Directory: move modules directories into the current directory
+            resolveProjects(srcDir, distDir);
+
+            //Finalize Gradle Files appropriately.
+            resolveGradleFiles(distDir.getAbsolutePath());
+
             System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
 
             // Run "gradle buildService" to generate the skeleton of services.
-            CommonUtil.runGradle(serviceXmlPath, "buildService");
+            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
 
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
@@ -117,23 +128,13 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
                 System.out.println(".");
             }
 
-            System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
-
-            // Run "gradle buildService" to regenerate with added templates
-            CommonUtil.runGradle(serviceXmlPath, "buildService");
-
-            System.out.println("Moving all modules projects into the same directory");
-
-            // Finalize Project Directory: move modules directories into the current directory
-            finalizeProjects(dashCaseProjectName);
-
             System.out.println("Done.");
 
         } catch (DamascusProcessException e) {
             // Damascus operation error
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -155,7 +156,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * @throws ConfigurationException settings.properties file manipulation error
      */
     private void generateScaffolding(DamascusBase damascusBase, String templateFileName, String outputFilePath, Application app)
-        throws IOException, URISyntaxException, TemplateException, ConfigurationException {
+            throws IOException, URISyntaxException, TemplateException, ConfigurationException {
         Map params = Maps.newHashMap();
 
         //Mapping values used in templates
@@ -163,7 +164,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, _templateUtil);
         params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
-        params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
+        params.put(DamascusProps.TEMPVALUE_FILEPATH, getArgs().getBaseDir());
 
         PropertyContext propertyContext = PropertyContextFactory.createPropertyContext();
         String author = propertyContext.getString(DamascusProps.PROP_AUTHOR);
@@ -171,11 +172,11 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         //Parse template and output
         _templateUtil.process(
-            CreateCommand.class,
-            damascusBase.getLiferayVersion(),
-            templateFileName,
-            params,
-            outputFilePath);
+                CreateCommand.class,
+                damascusBase.getLiferayVersion(),
+                templateFileName,
+                params,
+                outputFilePath);
     }
 
     /**
@@ -194,19 +195,19 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
         //Generate Service (*-service, *-api) skelton
         CommonUtil.createServiceBuilderProject(
-            version,
-            projectName,
-            packageName,
-            destinationDir
+                version,
+                projectName,
+                packageName,
+                destinationDir
         );
 
         if (true == webEnable) {
             //Generate Web project (*-web)
             CommonUtil.createMVCPortletProject(
-                version,
-                projectName,
-                packageName,
-                destinationDir + DamascusProps.DS + projectName
+                    version,
+                    projectName,
+                    packageName,
+                    destinationDir + DamascusProps.DS + projectName
             );
         }
     }
@@ -218,11 +219,11 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * @throws IOException
      * @throws DamascusProcessException
      */
-    private void finalizeGradleFiles(String rootPath) throws IOException, DamascusProcessException {
+    private void resolveGradleFiles(String rootPath) throws IOException, DamascusProcessException {
 
         //Fetch replacement target files
         List<String> pathPatterns = new ArrayList<>(Arrays.asList(
-            DamascusProps._BUILD_GRADLE_FILE_NAME
+                DamascusProps._BUILD_GRADLE_FILE_NAME
         ));
         List<File> targetPaths = CommonUtil.getTargetFiles(rootPath, pathPatterns);
 
@@ -231,17 +232,18 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             {
                 put("apply.*builder\".*\\n", "");
 
+                // Fix project path
                 for (File path : targetPaths) {
                     List<String> pathList = CommonUtil.invertPathWithSize(
-                        path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
+                            path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
 
                     if (pathList.size() < DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH) {
                         throw new DamascusProcessException(
-                            "Path must be larger than " + DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH
-                                + " depth. Currently it's <" + path.getPath() + ">");
+                                "Path must be larger than " + DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH
+                                        + " depth. Currently it's <" + path.getPath() + ">");
                     }
 
-                    put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
+                    put("project.*:" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
                 }
             }
         };
@@ -257,29 +259,34 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * So it gets nested in this tool. This method move those nested project directory
      * into the current directory.
      *
-     * @param projectName Project name
+     * @param srcDir  Source Directory
+     * @param destDir Destination Directory
      * @throws IOException
+     * @throws DamascusProcessException
      */
-    private void finalizeProjects(String projectName) throws IOException, DamascusProcessException {
+    private void resolveProjects(File srcDir, File destDir) throws IOException, DamascusProcessException {
 
-        //Generated Project files are nested. Move into current directory
-        File srcDir = new File("." + DamascusProps.DS + projectName);
-        File distDir = new File("." + DamascusProps.DS);
-
-        if (!srcDir.exists() || !srcDir.isDirectory()) {
+        if (!srcDir.isDirectory()) {
+            log.info("srcDir does not exist");
+            return;
+        } else if (!srcDir.isDirectory()) {
+            log.info("srcDir is not a directory");
             return;
         }
 
-        //Move project directory to the current directory
-        FileUtils.copyDirectory(srcDir, distDir);
+        // Create a filter for ".gradle" and ".md" files
+        FileUtils.copyDirectory(srcDir, destDir);
+
+        // Delete old nested directory
         FileUtils.deleteDirectory(srcDir);
 
         //Remove unused gradlew / gradlew.bat files
         List<String> pathPatterns = new ArrayList<>(Arrays.asList(
-            DamascusProps._GRADLEW_UNIX_FILE_NAME,
-            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
-            DamascusProps._GRADLE_SETTINGS_FILE_NAME
+                DamascusProps._GRADLEW_UNIX_FILE_NAME,
+                DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+                DamascusProps._GRADLE_SETTINGS_FILE_NAME
         ));
+
         List<File> deletePaths = CommonUtil.getTargetFiles(DamascusProps.CURRENT_DIR, pathPatterns);
         deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME));
         deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._GRADLE_FOLDER_NAME));
@@ -287,9 +294,6 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         for (File file : deletePaths) {
             FileUtils.deleteQuietly(file);
         }
-
-        //Finalize Gradle Files appropriately.
-        finalizeGradleFiles(DamascusProps.CURRENT_DIR);
     }
 
     /**
@@ -308,6 +312,13 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         }
     }
 
-    private static final String CREATE_TARGET_PATH = "." + DamascusProps.DS;
+    /**
+     * Base.json directory path
+     *
+     * @return Base.json directory path
+     */
+    public String getBaseDir() {
+        return getArgs().getBaseDir();
+    }
 
 }

@@ -1,8 +1,8 @@
 {
   "projectName": "Employee",
   "packageName": "com.liferay.sb.employee",
-  "liferayVersion": "7.3",
-  "useTargetPlatform": "true",
+  "liferayVersion": "7.1",
+  "useTargetPlatform": "false",
   "applications": [{
       "model": "Employee",
       "title": "Employee Test",
@@ -45,8 +45,8 @@
           "showFieldInView": "false",
           "required": "true",
           "validation": {
-            "className": "Skills",
-            "fieldName": "skillId",
+            "className": "Position",
+            "fieldName": "positionId",
             "orderByField": "title"
           }
         }

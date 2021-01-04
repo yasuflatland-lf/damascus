@@ -94,8 +94,8 @@ public class CommonUtil {
      */
     static public File getDirFromPath(File file) throws IOException {
         return (file.isDirectory())
-            ? new File(file.getAbsolutePath())
-            : new File(FilenameUtils.getFullPath(file.getAbsolutePath()));
+                ? new File(file.getAbsolutePath())
+                : new File(FilenameUtils.getFullPath(file.getAbsolutePath()));
     }
 
     /**
@@ -118,10 +118,10 @@ public class CommonUtil {
             Collection<File> files = FileUtils.listFiles(currentDir, null, false);
             if (0 < files.size()) {
                 gradleFile = files
-                    .stream()
-                    .filter(file -> file.getName().equals(filename))
-                    .findFirst()
-                    .orElse(null);
+                        .stream()
+                        .filter(file -> file.getName().equals(filename))
+                        .findFirst()
+                        .orElse(null);
             }
 
             if (null != gradleFile) {
@@ -147,15 +147,15 @@ public class CommonUtil {
         ProjectConnection connection = null;
         try {
             connection =
-                GradleConnector
-                    .newConnector()
-                    .forProjectDirectory(filePath)
-                    .connect();
+                    GradleConnector
+                            .newConnector()
+                            .forProjectDirectory(filePath)
+                            .connect();
             connection
-                .newBuild()
-                .forTasks(task)
-                .setStandardOutput(System.out)
-                .run();
+                    .newBuild()
+                    .forTasks(task)
+                    .setStandardOutput(System.out)
+                    .run();
         } finally {
             if (null != connection) {
                 connection.close();
@@ -175,11 +175,43 @@ public class CommonUtil {
      */
     static public void createWorkspace(String version, String destinationDir, String name) throws Exception {
         ProjectTemplatesBuilder.builder()
-            .liferayVersion(version)
-            .destinationDir(new File(destinationDir))
-            .name(name)
-            .template(DamascusProps.WORKSPACE_CMD)
-            .build().create();
+                .liferayVersion(version)
+                .destinationDir(new File(destinationDir))
+                .name(name)
+                .template(DamascusProps.WORKSPACE_CMD)
+                .build().create();
+    }
+
+    /**
+     * Crate Workspace With Gradle Properties
+     *
+     * @param version        Liferay Version
+     * @param destinationDir Directory path to create a workspace
+     * @param name           workspace name to create
+     * @throws Exception
+     */
+    static public void createWorkspaceWithProperties(String version, String destinationDir, String name) throws Exception {
+        createWorkspace(version, destinationDir, name);
+
+        // Original file path
+        String path = DamascusProps.TEMPLATE_FILE_PATH +
+                DamascusProps.DS +
+                version +
+                DamascusProps.DS +
+                DamascusProps.GRADLE_LOCAL_PROP;
+
+        // Distinction path
+        String distPath = destinationDir +
+                DamascusProps.DS +
+                name +
+                DamascusProps.DS +
+                DamascusProps.GRADLE_LOCAL_PROP;
+
+        // Write the gradle properties into the target workspace
+        FileUtils.copyFile(
+                new File(path),
+                new File(distPath)
+        );
     }
 
     /**
@@ -193,12 +225,12 @@ public class CommonUtil {
      */
     static public void createServiceBuilderProject(String version, String name, String packageName, String destinationDir) throws Exception {
         ProjectTemplatesBuilder.builder()
-            .liferayVersion(version)
-            .destinationDir(new File(destinationDir))
-            .name(name)
-            .packageName(packageName)
-            .template(DamascusProps.SERVICE_BUILDER_CMD)
-            .build().create();
+                .liferayVersion(version)
+                .destinationDir(new File(destinationDir))
+                .name(name)
+                .packageName(packageName)
+                .template(DamascusProps.SERVICE_BUILDER_CMD)
+                .build().create();
     }
 
     /**
@@ -214,8 +246,8 @@ public class CommonUtil {
 
         // According to DXP code standard, add "-web" as a suffix if the project name doesn't have "-web" at the end
         String projectName = name;
-        if (!name.endsWith("-web")) {
-            projectName = name.concat("-web");
+        if (!name.endsWith(DamascusProps.DIR_WEB_SUFFIX)) {
+            projectName = name.concat(DamascusProps.DIR_WEB_SUFFIX);
         }
 
         String packageNameForWeb = packageName;
@@ -224,12 +256,12 @@ public class CommonUtil {
         }
 
         ProjectTemplatesBuilder.builder()
-            .liferayVersion(version)
-            .destinationDir(new File(destinationDir))
-            .name(projectName)
-            .packageName(packageNameForWeb)
-            .template(DamascusProps.MVC_PORTLET_CMD)
-            .build().create();
+                .liferayVersion(version)
+                .destinationDir(new File(destinationDir))
+                .name(projectName)
+                .packageName(packageNameForWeb)
+                .template(DamascusProps.MVC_PORTLET_CMD)
+                .build().create();
 
         String webPath = destinationDir + DamascusProps.DS + projectName + DamascusProps.DS;
 
@@ -250,9 +282,9 @@ public class CommonUtil {
      */
     static public void deleteUnusedGradleAssets(String rootPath) {
         List<String> paths = new ArrayList<>(Arrays.asList(
-            DamascusProps._GRADLEW_UNIX_FILE_NAME,
-            DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
-            DamascusProps._GRADLE_FOLDER_NAME
+                DamascusProps._GRADLEW_UNIX_FILE_NAME,
+                DamascusProps._GRADLEW_WINDOWS_FILE_NAME,
+                DamascusProps._GRADLE_FOLDER_NAME
         ));
         for (String path : paths) {
             FileUtils.deleteQuietly(new File(rootPath + path));
@@ -291,9 +323,9 @@ public class CommonUtil {
     static public List<File> getTargetFiles(String rootPath, List<String> patterns) {
         String result = String.join("|", patterns);
         return FileUtils.listFiles(
-            new File(rootPath),
-            new RegexFileFilter("(" + result + ")"),
-            TrueFileFilter.INSTANCE
+                new File(rootPath),
+                new RegexFileFilter("(" + result + ")"),
+                TrueFileFilter.INSTANCE
         ).stream().collect(Collectors.toList());
 
     }
@@ -312,13 +344,13 @@ public class CommonUtil {
 
             //Convert contents
             String converted =
-                patterns.entrySet()
-                    .stream()
-                    .reduce(
-                        fileContents,
-                        (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
-                        (s1, s2) -> null
-                    );
+                    patterns.entrySet()
+                            .stream()
+                            .reduce(
+                                    fileContents,
+                                    (s, e) -> s.replaceAll(e.getKey(), e.getValue()),
+                                    (s1, s2) -> null
+                            );
 
             FileUtils.writeStringToFile(file, converted, StandardCharsets.UTF_8);
         }
@@ -373,10 +405,10 @@ public class CommonUtil {
         String converted = contents;
         for (Map.Entry<String, String> replacement : replacements.entrySet()) {
             converted =
-                StringUtils.replace(
-                    converted,
-                    replacement.getKey(),
-                    replacement.getValue());
+                    StringUtils.replace(
+                            converted,
+                            replacement.getKey(),
+                            replacement.getValue());
         }
         return converted;
     }

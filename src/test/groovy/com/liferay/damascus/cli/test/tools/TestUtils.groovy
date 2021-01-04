@@ -114,16 +114,16 @@ class TestUtils {
      * @param expectedProjectDirName
      * @return
      */
-    static public def getPathMap(expectedProjectDirName) {
+    static public def getPathMap(projectName, expectedProjectDirName) {
         def DS = DamascusProps.DS;
         def workspaceRootDir = TestUtils.getTempPath() + "damascustest";
         def workspaceName = "workspace"
         def workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
         return [
-                rootPath   : workTempDir + DS + expectedProjectDirName,
-                apiPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-api",
-                servicePath: workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-service",
-                webPath    : workTempDir + DS + expectedProjectDirName + DS + expectedProjectDirName + "-web"
+                rootPath   : workTempDir + DS + projectName,
+                apiPath    : workTempDir + DS + projectName + DS + expectedProjectDirName + "-api",
+                servicePath: workTempDir + DS + projectName + DS + expectedProjectDirName + "-service",
+                webPath    : workTempDir + DS + projectName + DS + expectedProjectDirName + "-web"
         ];
     }
 }

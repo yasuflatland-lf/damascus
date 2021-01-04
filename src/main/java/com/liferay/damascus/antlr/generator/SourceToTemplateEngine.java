@@ -5,7 +5,7 @@ import com.liferay.damascus.cli.common.CommonUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.extern.java.Log;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Source to Template convert engine

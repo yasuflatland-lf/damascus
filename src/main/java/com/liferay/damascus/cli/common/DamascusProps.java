@@ -29,6 +29,8 @@ public class DamascusProps {
 
     public static final String SERVICE_XML = "service.xml";
 
+    public static final String GRADLE_LOCAL_PROP = "gradle-local.properties";
+
     public static final String DOT_SLASH_CURRENT_DIR = "." + DS;
 
     /**

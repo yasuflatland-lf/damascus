@@ -109,7 +109,7 @@ public class TemplateUtil {
 
         // You should do this ONLY ONCE in the whole application lifecycle:
         // Create and adjust the configuration singleton
-        _cfg = new Configuration(Configuration.VERSION_2_3_25);
+        _cfg = new Configuration(Configuration.VERSION_2_3_30);
 
         // Resource root path and initialize Freemarker configuration with the path
         File resourceRootPath = getResourceRootPath(version);
@@ -145,8 +145,10 @@ public class TemplateUtil {
         String rootPath = propertyContext.getString(DamascusProps.PROP_RESOURCE_ROOT_PATH);
         String defaultTemplatePath = DamascusProps.TEMPLATE_FILE_PATH + DamascusProps.SEP + version;
 
-        log.debug("getResourceRootPath : rootPath            : " + rootPath);
-        log.debug("getResourceRootPath : defaultTemplatePath : " + defaultTemplatePath);
+        if(log.isDebugEnabled()) {
+            log.debug("getResourceRootPath : rootPath            : " + rootPath);
+            log.debug("getResourceRootPath : defaultTemplatePath : " + defaultTemplatePath);
+        }
 
         if (rootPath.equals("")) {
 

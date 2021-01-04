@@ -30,6 +30,8 @@ repositories {
 
 dependencies {
 	compile group: "com.google.guava", name: "guava"<#if useTP?? && false == useTP>, version: "28.1-jre"</#if>, transitive: false
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
 	compileOnly group: "com.liferay", name: "com.liferay.friendly.url.api"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.function"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.lang"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>

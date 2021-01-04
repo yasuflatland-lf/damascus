@@ -5,6 +5,7 @@ import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -32,7 +33,7 @@ class CommonUtilTest extends Specification {
         FileUtils.writeStringToFile(file, "test", "utf-8")
     }
 
-    @Unroll("Worng path given")
+    @Unroll("Wrong path given")
     def "Wrong path given"() {
         when:
         def file_path = DS + "9999" + DS + template_path;
@@ -45,7 +46,7 @@ class CommonUtilTest extends Specification {
     @Unroll("Correct path given")
     def "Correct path given"() {
         when:
-        def file_path = SEP + template_path + SEP + DamascusProps.VERSION_72 + SEP + DamascusProps.BASE_JSON;
+        def file_path = SEP + template_path + SEP + DamascusProps.VERSION_73 + SEP + DamascusProps.BASE_JSON;
         def result = CommonUtil.readResource(CommonUtilTest.class, file_path);
 
         then:
@@ -85,22 +86,39 @@ class CommonUtilTest extends Specification {
         "target.txt"   | "target.txt"
     }
 
-    @Unroll("Gradle Run Test")
+    @Unroll("Gradle Run Test <#packageName> <#liferayVersion>")
     def "Gradle Run Test"() {
         setup:
+        //Cleanup environment
+        FileUtils.deleteDirectory(new File(workTempDir));
+        def templateUtil = Spy(TemplateUtil)
+        templateUtil.clear();
+        // Caching templates under the cache directory.
+        templateUtil.cacheTemplates(
+                CommonUtilTest.class,
+                DamascusProps.TEMPLATE_FOLDER_NAME,
+                DamascusProps.CACHE_DIR_PATH + DamascusProps.DS,
+                liferayVersion
+        );
+
+        //Create Workspace
+        CommonUtil.createWorkspaceWithProperties(liferayVersion, workTempDir, "ws");
         def createCommand = new CreateCommand();
 
         when:
-        CommonUtil.createServiceBuilderProject(liferayVersion, name, packageName, workTempDir)
-        def projectNameCommon = workTempDir + DS + name + DS + name;
+        def modulePath =
+                workTempDir + DS + "ws" + DS + "modules"
+
+        CommonUtil.createServiceBuilderProject(liferayVersion, name, packageName, modulePath)
+        def projectNameCommon = modulePath + DS + name + DS + name;
         def servicePath = new File(projectNameCommon + "-service");
 
         //Run gradle buildService
         CommonUtil.runGradle(servicePath.getAbsolutePath(), "buildService")
 
-        File implFile = CommonUtil.getPathFromName(new File(workTempDir), "FooModelImpl.java")
-        File tablesSql = CommonUtil.getPathFromName(new File(workTempDir), "tables.sql")
-        File f = new File(workTempDir + DS + name);
+        File implFile = CommonUtil.getPathFromName(new File(modulePath), "FooModelImpl.java")
+        File tablesSql = CommonUtil.getPathFromName(new File(modulePath), "tables.sql")
+        File f = new File(modulePath + DS + name);
 
         then:
         true == f.exists()
@@ -270,6 +288,23 @@ class CommonUtilTest extends Specification {
         "Bar_web" | DamascusProps.VERSION_73
     }
 
+    @Unroll("Smoke test for createWorkspaceWithProperties<#liferayVersion>")
+    def "Smoke test for createWorkspaceWithProperties"() {
+        when:
+        CommonUtil.createWorkspaceWithProperties(liferayVersion, workTempDir, "ws")
+        File f = new File(workTempDir + DS + "ws" + DS + DamascusProps.GRADLE_LOCAL_PROP)
+
+        then:
+        true == f.exists()
+
+        where:
+        liferayVersion           | _
+        DamascusProps.VERSION_70 | _
+        DamascusProps.VERSION_71 | _
+        DamascusProps.VERSION_72 | _
+        DamascusProps.VERSION_73 | _
+    }
+
     void dummyWriter(file, dummy_text) {
         file(dummy_text) {
             file.withWriter('UTF-8') { writer ->
@@ -351,6 +386,7 @@ class CommonUtilTest extends Specification {
                                 '    compile project(":First-api")\n' +
                                 '    compileOnly project(":First-api")\n' +
                                 '    compileOnly project(":First-service")    \n' +
+                                '    compile project(":modules:Employee:employee:employee-api")\n' +
                                 '}\n' +
                                 '\n' +
                                 'buildService {\n' +
@@ -393,9 +429,10 @@ class CommonUtilTest extends Specification {
 
         where:
         check_pattern                                                          | replace_patterns
+        [":modules:Employee:employee-api": ":modules:Employee:employee-api"]   | [/project.*:employee-api".*/: ":modules:Employee:employee-api"]
         ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": ""]
-        [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*":First-api".*/: "project(\":modules:First:First-api\")"]
-        [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
+        [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*:First-api".*/: "project(\":modules:First:First-api\")"]
+        [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*:First-service".*/: "project(\":modules:First:First-service\")"]
         ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
                 "(\":modules:First:First-api\")", /project.*":First-service".*/                                                                      : "project(\":modules:First:First-service\")"]
 
