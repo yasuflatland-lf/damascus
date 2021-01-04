@@ -11,10 +11,8 @@ import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.*;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,11 +46,11 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             System.out.println("Started creating service scaffolding. Fetching base.json");
 
             // base.json validation
-            validation(CREATE_TARGET_PATH + DamascusProps.BASE_JSON);
+            validation(getArgs().getBaseDir() + DamascusProps.BASE_JSON);
 
             // Mapping base.json into an object after parsing values
             DamascusBase dmsb = JsonUtil.getObject(
-                    CREATE_TARGET_PATH + DamascusProps.BASE_JSON,
+                    getArgs().getBaseDir() + DamascusProps.BASE_JSON,
                     DamascusBase.class
             );
 
@@ -72,7 +70,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
             // Get path to the service.xml
             String serviceXmlPath = _templateUtil.getServiceXmlPath(
-                    CREATE_TARGET_PATH,
+                    getArgs().getBaseDir(),
                     dashCaseProjectName
             );
 
@@ -89,7 +87,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
                     dmsb.getLiferayVersion(),
                     dashCaseProjectName,
                     dmsb.getPackageName(),
-                    CREATE_TARGET_PATH,
+                    getArgs().getBaseDir(),
                     dmsb.isWebExist()
             );
 
@@ -98,10 +96,23 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             // Generate service.xml based on base.json configurations and overwrite existing service.xml
             generateScaffolding(dmsb, DamascusProps.SERVICE_XML, serviceXmlPath, null);
 
+            System.out.println("Moving all modules projects into the same directory");
+
+            // Project origin path
+            String originPath = DamascusProps.CURRENT_DIR + DamascusProps.DS;
+            File srcDir = new File(originPath + dashCaseProjectName);
+            File distDir = new File(originPath);
+
+            // Resolve Project Directory: move modules directories into the current directory
+            resolveProjects(srcDir, distDir);
+
+            //Finalize Gradle Files appropriately.
+            resolveGradleFiles(distDir.getAbsolutePath());
+
             System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
 
             // Run "gradle buildService" to generate the skeleton of services.
-            CommonUtil.runGradle(serviceXmlPath, "buildService");
+            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
 
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
@@ -117,28 +128,13 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
                 System.out.println(".");
             }
 
-            System.out.println("Moving all modules projects into the same directory");
-
-            // Project origin path
-            String originPath = DamascusProps.CURRENT_DIR + dmsb.getProjectName() + DamascusProps.DS;
-            File srcDir = new File(originPath + dashCaseProjectName);
-            File distDir = new File(originPath);
-
-            // Finalize Project Directory: move modules directories into the current directory
-            finalizeProjects(srcDir, distDir);
-
-            System.out.println("Running \"gradle buildService\" to regenerate the service with scaffolding files.");
-
-            // Run "gradle buildService" to regenerate with added templates
-            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
-
             System.out.println("Done.");
 
         } catch (DamascusProcessException e) {
             // Damascus operation error
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -168,7 +164,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         params.put(DamascusProps.BASE_TEMPLATE_UTIL_OBJ, _templateUtil);
         params.put(DamascusProps.BASE_CASE_UTIL_OBJ, CaseUtil.getInstance());
         params.put(DamascusProps.BASE_CURRENT_APPLICATION, app);
-        params.put(DamascusProps.TEMPVALUE_FILEPATH, CREATE_TARGET_PATH);
+        params.put(DamascusProps.TEMPVALUE_FILEPATH, getArgs().getBaseDir());
 
         PropertyContext propertyContext = PropertyContextFactory.createPropertyContext();
         String author = propertyContext.getString(DamascusProps.PROP_AUTHOR);
@@ -223,7 +219,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * @throws IOException
      * @throws DamascusProcessException
      */
-    private void finalizeGradleFiles(String rootPath) throws IOException, DamascusProcessException {
+    private void resolveGradleFiles(String rootPath) throws IOException, DamascusProcessException {
 
         //Fetch replacement target files
         List<String> pathPatterns = new ArrayList<>(Arrays.asList(
@@ -236,6 +232,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             {
                 put("apply.*builder\".*\\n", "");
 
+                // Fix project path
                 for (File path : targetPaths) {
                     List<String> pathList = CommonUtil.invertPathWithSize(
                             path.getPath(), DamascusProps._DEPTH_OF_MINIMAL_PROJECT_PATH);
@@ -246,7 +243,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
                                         + " depth. Currently it's <" + path.getPath() + ">");
                     }
 
-                    put("project.*\":" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
+                    put("project.*:" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
                 }
             }
         };
@@ -267,9 +264,9 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
      * @throws IOException
      * @throws DamascusProcessException
      */
-    private void finalizeProjects(File srcDir, File destDir) throws IOException, DamascusProcessException {
+    private void resolveProjects(File srcDir, File destDir) throws IOException, DamascusProcessException {
 
-        if (!srcDir.exists()) {
+        if (!srcDir.isDirectory()) {
             log.info("srcDir does not exist");
             return;
         } else if (!srcDir.isDirectory()) {
@@ -297,9 +294,6 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         for (File file : deletePaths) {
             FileUtils.deleteQuietly(file);
         }
-
-        //Finalize Gradle Files appropriately.
-        finalizeGradleFiles(destDir.getAbsolutePath());
     }
 
     /**
@@ -318,6 +312,13 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         }
     }
 
-    private static final String CREATE_TARGET_PATH = "." + DamascusProps.DS;
+    /**
+     * Base.json directory path
+     *
+     * @return Base.json directory path
+     */
+    public String getBaseDir() {
+        return getArgs().getBaseDir();
+    }
 
 }

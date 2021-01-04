@@ -41,7 +41,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
         String processedTemplateDir = CommonUtil.normalizePath(args.getTemplateDirPath());
 
         if (null == processedTemplateDir) {
-            System.out.println("Template file path is invalid. <" + args.getTemplateDirPath() + ">");
+            log.error("Template file path is invalid. <" + args.getTemplateDirPath() + ">");
             return;
         }
 
@@ -49,7 +49,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
         String processedSourceRootPath = CommonUtil.normalizePath(args.getSourceRootPath());
 
         if (null == processedSourceRootPath) {
-            System.out.println("Base json directory path is invalid. <" + args.getSourceRootPath() + ">");
+            log.error("Base json directory path is invalid. <" + args.getSourceRootPath() + ">");
             return;
         }
 
@@ -71,7 +71,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
             LinkedHashMap<String, String> replacementPattern = getReplacementPatternByModel(dmsb, args.getModel());
 
             if (replacementPattern.isEmpty()) {
-                System.out.println("Model name has not been found. Model name <" + args.getModel() + ">");
+                log.error("Model name has not been found. Model name <" + args.getModel() + ">");
                 return;
             }
 
@@ -96,8 +96,7 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
                 .process();
 
         } catch (DamascusProcessException e) {
-            System.out.println(e.getMessage());
-
+            log.error(e.getMessage());
         }
 
         System.out.println("Done.");

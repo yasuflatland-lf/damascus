@@ -386,6 +386,7 @@ class CommonUtilTest extends Specification {
                                 '    compile project(":First-api")\n' +
                                 '    compileOnly project(":First-api")\n' +
                                 '    compileOnly project(":First-service")    \n' +
+                                '    compile project(":modules:Employee:employee:employee-api")\n' +
                                 '}\n' +
                                 '\n' +
                                 'buildService {\n' +
@@ -428,9 +429,10 @@ class CommonUtilTest extends Specification {
 
         where:
         check_pattern                                                          | replace_patterns
+        [":modules:Employee:employee-api": ":modules:Employee:employee-api"]   | [/project.*:employee-api".*/: ":modules:Employee:employee-api"]
         ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": ""]
-        [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*":First-api".*/: "project(\":modules:First:First-api\")"]
-        [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*":First-service".*/: "project(\":modules:First:First-service\")"]
+        [":modules:First:First-api": ":modules:First:First-api"]               | [/project.*:First-api".*/: "project(\":modules:First:First-api\")"]
+        [":modules:First:First-service": ":modules:First:First-service"]       | [/project.*:First-service".*/: "project(\":modules:First:First-service\")"]
         ["null": "apply plugin: \"com.liferay.portal.tools.service.builder\""] | ["apply.*plugin:.*\"com.liferay.portal.tools.service.builder\".*\\n": "", /project.*":First-api\".*/: "project" +
                 "(\":modules:First:First-api\")", /project.*":First-service".*/                                                                      : "project(\":modules:First:First-service\")"]
 

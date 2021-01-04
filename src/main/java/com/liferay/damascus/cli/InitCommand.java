@@ -34,12 +34,11 @@ public class InitCommand extends BaseCommand<InitArgs> {
     public void execute() throws Exception {
         System.out.println("Creating base.json");
         Damascus damascus = getDamascus();
-        InitArgs args = getArgs();
 
         //Parse template and output
         _templateUtil.process(
                 InitCommand.class,
-                args.getLiferayVersion(),
+                getArgs().getLiferayVersion(),
                 DamascusProps.BASE_JSON,
                 getParameters(damascus),
                 getTargetDir()

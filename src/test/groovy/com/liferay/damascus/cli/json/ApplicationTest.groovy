@@ -37,7 +37,9 @@ class ApplicationTest extends Specification {
         //Execute all tests under modules
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
 
-        TestUtils.setFinalStatic(CreateCommand.class.getDeclaredField("CREATE_TARGET_PATH"), workTempDir + DS);
+        // Set base.json directory
+        TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
+
         createCommand = new CreateCommand();
     }
 
