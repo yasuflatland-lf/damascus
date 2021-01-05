@@ -1,11 +1,9 @@
 # Damascus
-
-[![Build Status](https://travis-ci.org/yasuflatland-lf/damascus.svg?branch=master)](https://travis-ci.org/yasuflatland-lf/damascus)
+![CI](https://github.com/yasuflatland-lf/damascus/workflows/CI/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/yasuflatland-lf/damascus/badge.svg?branch=master)](https://coveralls.io/github/yasuflatland-lf/damascus?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/qqpdw6drt8w07ljp?svg=true)](https://ci.appveyor.com/project/yasuflatland-lf/damascus)
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/liferay-damascus/community)
 
-Damascus is a Liferay Blade tool extension for generating scaffoldings of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see [this official document](https://yasuflatland-lf.github.io/damascus-doc/)
+Damascus is a Liferay Blade tool extension for generating scaffolding of Service builder portlet with CRUD functionality based on a configuration json file, base.json. For more detailed usage, please see [this official document](https://yasuflatland-lf.github.io/damascus-doc/)
 
 The list of what Damascus automatically generate is as follows
 * CRUD functionality with a model
@@ -25,12 +23,12 @@ The list of what Damascus automatically generate is as follows
 * Template generation
 
 ### Required environment
-* Liferay 7.3 CE GA2 and higher.
-* Liferay 7.2 CE GA1 and higher.
-* Liferay 7.1 CE GA1 and higher.
-* Liferay 7.0 CE GA7 and Liferay DXP SP11 or higher versions.
-* Java 1.8 or above
-* gradle 5.4.6 or above need to be installed
+* Liferay 7.3 CE GA2 and later.
+* Liferay 7.2 CE GA1 and later.
+* Liferay 7.1 CE GA1 and later.
+* Liferay 7.0 CE GA7 and Liferay DXP SP11 or later versions.
+* Java 1.8
+* gradle 6.7 or above need to be installed
 * jpm needs to be installed. (instruction to install is as follows)
 
 ### How to Install
@@ -88,8 +86,8 @@ A contribution is always welcome! In terms of an Enhancement request, please fol
 
 1. After implementing your feature, please add a test as well. Spock test is preferable because it's more readable and flexible to add tests later on. To add tests, tests are separated by classes, and in a test class, each test should be written each method basis.
 2. Run test locally with ```./gradlew clean test --info``` until your code pass all tests
-3. Send a PR to /development branch. According to the status of Travis CI / Appveyor, I may create a feature branch and request you to make it pass the test on Travis CI / Appveyor environment.
-4. After all tests pass on Travis CI / Appveyor, will merge into the development branch and release into master at some points according to the impact of the code.
+3. Send a PR to /development branch. According to the status of Github Action, I may create a feature branch and request you to make it pass the test on Github Action environment.
+4. After all tests pass on Github Action, will merge into the development branch and release into master at some points according to the impact of the code.
 
 ### What does Damascus stand for?
 Damascus is named after "Damascus blade", which is a strong/sharp blade made out from Damascus steel and forged with lost technology. Liferay has it's an official development tool, "Blade", so I gave this name in the hope of reinforcement or extension of Blade tool.
