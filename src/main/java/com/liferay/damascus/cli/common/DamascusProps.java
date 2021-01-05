@@ -166,6 +166,7 @@ public class DamascusProps {
 
     public static final int _DEPTH_OF_MINIMAL_PROJECT_PATH = 3;
 
+    public static final String MODULES_ROOT = "modules";
 
     /**
      * Attribute keys for dmsc tags (dmsc:root, dmsc:sync)

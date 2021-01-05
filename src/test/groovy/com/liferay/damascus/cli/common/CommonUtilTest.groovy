@@ -5,6 +5,7 @@ import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
+import org.apache.commons.lang3.StringUtils
 import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -166,24 +167,24 @@ class CommonUtilTest extends Specification {
         workTempDir + DS + "bar"      | workTempDir + DS + "bar" + DS
     }
 
-    @Unroll("Gradlew search Success test")
+    @Unroll("Gradlew search Success test dir1<#dir1> whereToCreateFile<#whereToCreateFile>")
     def "Gradlew search Success test"() {
         when:
         def targetFile = (CommonUtil.isWindows()) ? "gradlew.bat" : "gradlew";
         FileUtils.forceMkdir(new File(dir1))
         fileCreate(whereToCreateFile + DS + targetFile)
-        def file = CommonUtil.getPathFromNameInParents(new File(dir1 + dir3), targetFile)
-        def expectedFile = new File(workTempDir + DS + whereToCreateFile + DS + targetFile);
+        File file = CommonUtil.getPathFromNameInParents(new File(dir1), targetFile)
+        File expectedFile = new File(workTempDir + DS + whereToCreateFile + DS + targetFile);
 
         then:
-        expectedFile == file
+        expectedFile.equals(file)
 
         where:
-        dir1                                                       | whereToCreateFile  | dir3
-        workTempDir + DS + "foo" + DS + "modules" + DS + "bar"     | "foo"              | ""
-        workTempDir + DS + "foo" + DS + "modules" + DS + "modules" | "foo"              | ""
-        workTempDir + DS + "foo" + DS + "bar"                      | "foo"              | ""
-        workTempDir + DS + "foo" + DS + "bar"                      | "foo" + DS + "bar" | ""
+        dir1                                                       | whereToCreateFile
+        workTempDir + DS + "foo" + DS + "modules" + DS + "bar"     | "foo"
+        workTempDir + DS + "foo" + DS + "modules" + DS + "modules" | "foo"
+        workTempDir + DS + "foo" + DS + "bar"                      | "foo"
+        workTempDir + DS + "foo" + DS + "bar"                      | "foo" + DS + "bar"
     }
 
     @Unroll("Gradlew search Fail test")
@@ -202,7 +203,6 @@ class CommonUtilTest extends Specification {
         workTempDir + DS + "foo" + DS + "modules" + DS + "bar"     | "bar"              | ""
         workTempDir + DS + "foo" + DS + "modules" + DS + "modules" | "foo" + DS + "bar" | ""
     }
-
 
     @Unroll("Smoke test for Create Service Builder project name <#name> package <#packageName>")
     def "Smoke test for Create Service Builder project"() {
@@ -496,5 +496,27 @@ class CommonUtilTest extends Specification {
         path                                               | _size_ | _returned_size_
         "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | 3      | 3
         "/dummy/temp/sample-sb/sample-sb-api/build.gradle" | 5      | 5
+    }
+
+    @Unroll("getModulePath Test testPath<#testPath> expected<#expected>")
+    def "getModulePath Test"() {
+        when:
+        def targetDir = workTempDir + DS + 'tmpfolder';
+        FileUtils.forceMkdir(new File(targetDir + testPath))
+
+        def result = CommonUtil.getModulePath(targetDir + testPath)
+
+        then:
+        result.equals(expected)
+
+        cleanup:
+        FileUtils.cleanDirectory(new File(targetDir))
+
+        where:
+        testPath                             | expected
+        "/workspace/modules/foo/bar/dar"     | ":modules:foo:bar:dar"
+        "/modules/aa/bb/modules/foo/bar/dar" | ":modules:foo:bar:dar"
+        "/foo/bar"                           | ""
+        "/foo/bar/modules"                   | ":modules"
     }
 }

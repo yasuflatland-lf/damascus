@@ -20,8 +20,8 @@ plugins {
     id 'com.github.kt3k.coveralls' version '2.10.2'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 //Need for Windows
 def defaultEncoding = 'UTF-8'

@@ -2,13 +2,11 @@ package com.liferay.damascus.cli
 
 import com.beust.jcommander.internal.Maps
 import com.liferay.damascus.cli.common.*
-import com.liferay.damascus.cli.json.DamascusBase
 import com.liferay.damascus.cli.test.tools.TestUtils
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
 import org.apache.commons.lang3.StringUtils
-import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -241,8 +239,8 @@ class CreateCommandTest extends Specification {
                     [path: pathMap["webPath"], target: ".*PortletLayoutFinder.java", amount: 1],
                     [path: pathMap["webPath"], target: ".*AdminPortlet.java", amount: 1],
                     [path: pathMap["webPath"], target: ".*PanelApp.java", amount: 1],
-                    [path: pathMap["rootPath"], target: ".*build.gradle", amount: 4],
-                    [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 1]
+                    [path: pathMap["rootPath"], target: ".*build.gradle", amount: 3],
+                    [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 0]
             ];
         } else if (liferayVersion.equals(DamascusProps.VERSION_72)) {
 
@@ -298,8 +296,8 @@ class CreateCommandTest extends Specification {
                     [path: pathMap["webPath"], target: ".*PortletLayoutFinder.java", amount: 1],
                     [path: pathMap["webPath"], target: ".*AdminPortlet.java", amount: 1],
                     [path: pathMap["webPath"], target: ".*PanelApp.java", amount: 1],
-                    [path: pathMap["rootPath"], target: ".*build.gradle", amount: 4],
-                    [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 1]
+                    [path: pathMap["rootPath"], target: ".*build.gradle", amount: 3],
+                    [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 0]
             ];
         }
 
@@ -352,82 +350,9 @@ class CreateCommandTest extends Specification {
                 [path: pathMap["webPath"], target: ".*PortletLayoutFinder.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*AdminPortlet.java", amount: 1],
                 [path: pathMap["webPath"], target: ".*PanelApp.java", amount: 1],
-                [path: pathMap["rootPath"], target: ".*build.gradle", amount: 4],
-                [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 1]
+                [path: pathMap["rootPath"], target: ".*build.gradle", amount: 3],
+                [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 0]
         ];
-
-    }
-
-    //TODO:This test should be executed when a bundle generation with arbitrary templates is implemented.
-    @Ignore("Liferay Version and Template need to be separated.")
-    @Unroll("Run Damascus with a different template")
-    def "Run Damascus with a different template"() {
-        setup:
-        //Initialize
-        setupEx(liferayVersion);
-
-        Map params = Maps.newHashMap();
-
-        //Set parameters
-        params.put("projectName", projectName)
-        params.put("liferayVersion", liferayVersion)
-        params.put("packageName", packageName)
-        String entityName = projectName.replace("-", "")
-        params.put("entityName", entityName)
-        params.put("entityNameLower", StringUtils.lowerCase(entityName))
-        Map damascus = Maps.newHashMap();
-        damascus.put('damascus', params);
-
-        //Output base.json with parameters and create the default templates
-        def templateUtil = Spy(TemplateUtil)
-
-        templateUtil.process(
-                TemplateUtilTest.class,
-                liferayVersion,
-                DamascusProps.BASE_JSON,
-                damascus,
-                workTempDir + DS + DamascusProps.BASE_JSON)
-
-        File org = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
-        File dist = new File(DamascusProps.TEMPLATE_FILE_PATH + DS + liferayVersion);
-        FileUtils.copyDirectory(org, dist)
-
-        // Delete base.json and the default template so that following method can create a new one
-        // and see if Damascus actually can point a new template.
-        FileUtils.deleteQuietly(new File(workTempDir + DS + DamascusProps.BASE_JSON))
-        FileUtils.deleteQuietly(org)
-
-        when:
-        // Once clear _cfg to initialize with an actual test target template directory
-        templateUtil.clear()
-
-        //Output base.json with parameters and create the default templates
-        templateUtil.process(
-                TemplateUtilTest.class,
-                liferayVersion,
-                DamascusProps.BASE_JSON,
-                damascus,
-                workTempDir + DS + DamascusProps.BASE_JSON)
-
-        //Run damascus create
-        String[] args = ["create"]
-        Damascus.main(args)
-
-        then:
-        def checkLoop = getCheckLoop(expectedProjectDirName, liferayVersion)
-
-        checkLoop.each { trow ->
-            def targetFile1 = FileUtils.listFiles(new File(trow.path), new RegexFileFilter(trow.target), TrueFileFilter.INSTANCE)
-            assert trow.amount == targetFile1.size()
-        }
-
-        cleanup:
-        FileUtils.copyDirectory(dist, org)
-        FileUtils.deleteQuietly(dist)
-
-        where:
-        projectName | liferayVersion | packageName        | expectedProjectDirName
-        "SampleSB"  | "mytemp"       | "com.liferay.test" | "sample-sb"
 
     }
 

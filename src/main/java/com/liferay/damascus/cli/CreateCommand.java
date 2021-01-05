@@ -106,7 +106,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             // Resolve Project Directory: move modules directories into the current directory
             resolveProjects(srcDir, distDir);
 
-            //Finalize Gradle Files appropriately.
+            // Resolve gradle files
             resolveGradleFiles(distDir.getAbsolutePath());
 
             System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
@@ -127,6 +127,19 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
 
                 System.out.println(".");
             }
+
+            System.out.println("Finishing up the project files format.");
+
+            // Resolve template generated gradle files
+            resolveGradleFiles(distDir.getAbsolutePath());
+
+            // Clean up files at the end
+            finalCleanupProjectFiles(DamascusProps.CURRENT_DIR);
+
+            System.out.println("Running \"gradle buildService\" again to generate the service according to the template generated services.");
+
+            // Run "gradle buildService" to generate the skeleton of services.
+            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
 
             System.out.println("Done.");
 
@@ -230,8 +243,6 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         //Configure replace strings regex pattern
         Map<String, String> patterns = new HashMap<String, String>() {
             {
-                put("apply.*builder\".*\\n", "");
-
                 // Fix project path
                 for (File path : targetPaths) {
                     List<String> pathList = CommonUtil.invertPathWithSize(
@@ -243,7 +254,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
                                         + " depth. Currently it's <" + path.getPath() + ">");
                     }
 
-                    put("project.*:" + pathList.get(0) + "\".*", "project(\":" + String.join(":", Lists.reverse(pathList)) + "\")");
+                    put("project.*:" + pathList.get(0) + "\".*", "project(\"" + CommonUtil.getModulePath(path.getAbsolutePath()) + "\")");
                 }
             }
         };
@@ -290,6 +301,27 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
         List<File> deletePaths = CommonUtil.getTargetFiles(DamascusProps.CURRENT_DIR, pathPatterns);
         deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME));
         deletePaths.add(new File(DamascusProps.CURRENT_DIR + DamascusProps.DS + DamascusProps._GRADLE_FOLDER_NAME));
+
+        for (File file : deletePaths) {
+            FileUtils.deleteQuietly(file);
+        }
+    }
+
+    /**
+     * Clean up project files at the end of process.
+     * <p>
+     * For example, project root gradle related files are necessarily during the build process,
+     * but they cause of errors once the all template generation process is done.
+     *
+     * This method cleans up the unnecessarily files at the end of building project.
+     *
+     * @param projectRootPath
+     */
+    private void finalCleanupProjectFiles(String projectRootPath) {
+        List<File> deletePaths = new ArrayList<>();
+        deletePaths.add(new File(projectRootPath + DamascusProps.DS + DamascusProps._BUILD_GRADLE_FILE_NAME));
+        deletePaths.add(new File(projectRootPath + DamascusProps.DS + DamascusProps._GRADLE_FOLDER_NAME));
+        deletePaths.add(new File(projectRootPath + DamascusProps.DS + DamascusProps._GRADLE_SETTINGS_FILE_NAME));
 
         for (File file : deletePaths) {
             FileUtils.deleteQuietly(file);

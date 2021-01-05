@@ -384,17 +384,6 @@ public class CommonUtil {
     }
 
     /**
-     * Validate if this method called inside of a jar
-     *
-     * @param clazz Target class
-     * @return true if it's in a jar or false
-     */
-    static public boolean isInsideJar(Class<?> clazz) {
-        File path = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
-        return path.isFile();
-    }
-
-    /**
      * Replace keywords in contents
      *
      * @param contents
@@ -447,5 +436,37 @@ public class CommonUtil {
         }
 
         return validatedPath;
+    }
+
+    /**
+     * Get Module Path
+     *
+     * @param path Target Path
+     * @return Module path for build.gradle
+     * @throws IOException
+     */
+    static public String getModulePath(String path) throws IOException {
+
+        // Modules folder must be included in the path
+        if(!path.contains(DamascusProps.MODULES_ROOT)) {
+            log.error(DamascusProps.MODULES_ROOT + " is not included in the path <" + path + ">");
+            return "";
+        }
+
+        // Build a reverse path list
+        File filePath = getDirFromPath(new File(path));
+
+        List<String> pathList = invertPathToList(filePath.getAbsolutePath());
+        List<String> modulePath = new ArrayList<>();
+
+        for( String dir : pathList ) {
+            modulePath.add(dir);
+            if(dir.equals(DamascusProps.MODULES_ROOT)) {
+                break;
+            }
+        }
+
+        // Build a module path
+        return ":" + StringUtils.join(Lists.reverse(modulePath), ":");
     }
 }
