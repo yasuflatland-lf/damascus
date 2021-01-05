@@ -10,25 +10,26 @@ import spock.lang.Unroll
 
 class JsonUtilTest extends Specification {
     static def DS = DamascusProps.DS;
-    static def SEP = "/";
     static def workTempDir = TestUtils.getTempPath() + "damascustest";
 
     def template_path = DamascusProps.TEMPLATE_FOLDER_NAME;
-    def resource_path = SEP + template_path + SEP + DamascusProps.VERSION_72 + SEP
-    def base_json_path = resource_path + DamascusProps.BASE_JSON;
 
     def setup() {
-        TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CACHE_DIR_PATH"), TestUtils.getTempPath() + ".damascus");
         FileUtils.deleteDirectory(new File(workTempDir));
         FileUtils.forceMkdir(new File(workTempDir))
-        FileUtils.deleteDirectory(new File(DamascusProps.CACHE_DIR_PATH));
-        FileUtils.forceMkdir(new File(DamascusProps.CACHE_DIR_PATH))
+        FileUtils.deleteDirectory(new File(workTempDir));
+        FileUtils.forceMkdir(new File(workTempDir))
+    }
+
+    // Return base.json path depending on the version
+    def getBaseJsonPath(version) {
+        return DS + template_path + DS + version + DS + DamascusProps.BASE_JSON
     }
 
     @Unroll("JSON Read Smoke test")
     def "JSON Read Smoke test"() {
         when:
-        def retrivedObj = JsonUtil.getObjectFromResource(base_json_path, DamascusBase.class, JsonUtilTest.class)
+        def retrivedObj = JsonUtil.getObjectFromResource(getBaseJsonPath(version), DamascusBase.class, JsonUtilTest.class)
 
         //TODO:need to add more fields validation, especialy placeholders where need to be replaced later.
         then:
@@ -42,12 +43,18 @@ class JsonUtilTest extends Specification {
         true == (retrivedObj.applications.get(0).fields.get(0).getTitle().equals("\${damascus.projectName} Id"))
         true == (retrivedObj.applications.get(0).fields.get(0).getType().equals(com.liferay.damascus.cli.json.fields.Long.class.getName()))
         true == retrivedObj.applications.get(0).fields.get(0).getClass().equals(com.liferay.damascus.cli.json.fields.Long.class)
+
+        where:
+        version                  | _
+        DamascusProps.VERSION_73 | _
+        DamascusProps.VERSION_72 | _
+        DamascusProps.VERSION_71 | _
     }
 
     @Unroll("JSON Write Smoke test")
     def "JSON Write Smoke test"() {
         when:
-        def retrivedObj = JsonUtil.getObjectFromResource(base_json_path, DamascusBase.class, JsonUtilTest.class)
+        def retrivedObj = JsonUtil.getObjectFromResource(getBaseJsonPath(version), DamascusBase.class, JsonUtilTest.class)
 
         def target_file_path = workTempDir + DS + "test.json"
         JsonUtil.writer(target_file_path, retrivedObj)
@@ -57,12 +64,17 @@ class JsonUtilTest extends Specification {
         true == f.exists()
         false == f.isDirectory()
 
+        where:
+        version                  | _
+        DamascusProps.VERSION_73 | _
+        DamascusProps.VERSION_72 | _
+        DamascusProps.VERSION_71 | _
     }
 
     @Unroll("JSON Read from given path")
     def "JSON Read from given path"() {
         when:
-        def retrivedObj = JsonUtil.getObjectFromResource(base_json_path, DamascusBase.class, JsonUtilTest.class)
+        def retrivedObj = JsonUtil.getObjectFromResource(getBaseJsonPath(version), DamascusBase.class, JsonUtilTest.class)
 
         def target_file_path = workTempDir + DS + "test.json"
         JsonUtil.writer(target_file_path, retrivedObj)
@@ -86,6 +98,11 @@ class JsonUtilTest extends Specification {
         true == (serializedObj.applications.get(0).fields.get(0).getType().equals(com.liferay.damascus.cli.json.fields.Long.class.getName()))
         true == serializedObj.applications.get(0).fields.get(0).getClass().equals(com.liferay.damascus.cli.json.fields.Long.class)
 
+        where:
+        version                  | _
+        DamascusProps.VERSION_73 | _
+        DamascusProps.VERSION_72 | _
+        DamascusProps.VERSION_71 | _
     }
 
     @Ignore("Skip this test due to JsonProperty required only valid for constructor's parameter and currently doesn't work properly for List somehow.")
@@ -97,13 +114,14 @@ class JsonUtilTest extends Specification {
         def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
         dmsb.applications.get(0).asset = null
         JsonUtil.writer(out_file_path, dmsb)
-        def serializedObj = JsonUtil.getObject(out_file_path, DamascusBase.class)
 
         then:
         thrown(JsonMappingException.class)
 
         where:
         projectName | liferayVersion           | packageName
+        "Todo"      | DamascusProps.VERSION_73 | "com.liferay.test.foo.bar"
+        "Todo"      | DamascusProps.VERSION_72 | "com.liferay.test.foo.bar"
         "Todo"      | DamascusProps.VERSION_71 | "com.liferay.test.foo.bar"
     }
 }
