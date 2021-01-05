@@ -1,6 +1,5 @@
 package com.liferay.damascus.cli.common
 
-import com.beust.jcommander.ParameterException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.liferay.damascus.cli.json.DamascusBase
 import com.liferay.damascus.cli.test.tools.TestUtils
