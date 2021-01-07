@@ -16,7 +16,12 @@ import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Junction;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -47,6 +52,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import ${packageName}.exception.${capFirstModel}ValidateException;
 import ${packageName}.model.${capFirstModel};
+import ${packageName}.model.impl.${capFirstModel}Impl;
 import ${packageName}.service.base.${capFirstModel}LocalServiceBaseImpl;
 import ${packageName}.service.util.${capFirstModel}Validator;
 import com.liferay.trash.exception.RestoreEntryException;
@@ -1266,7 +1272,7 @@ public class ${capFirstModel}LocalServiceImpl extends ${capFirstModel}LocalServi
 			${capFirstModel}.class.getName(), entry.getPrimaryKey(), entry,
 			serviceContext, workflowContext);
 	}
-
+	
 	private static final int[] STATUS_ANY = {
 		WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_DENIED,
 		WorkflowConstants.STATUS_DRAFT, WorkflowConstants.STATUS_EXPIRED,
