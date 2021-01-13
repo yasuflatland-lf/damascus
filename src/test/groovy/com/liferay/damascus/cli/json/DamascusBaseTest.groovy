@@ -22,7 +22,7 @@ class DamascusBaseTest extends Specification {
     static def createCommand;
 
     def setupEx(version) {
-        //Cleanup enviroment
+        //Cleanup environment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
         def templateUtil = Spy(TemplateUtil)
 
@@ -34,7 +34,9 @@ class DamascusBaseTest extends Specification {
         //Execute all tests under modules
         workTempDir = workspaceRootDir + DS + workspaceName + DS + "modules";
 
-        TestUtils.setFinalStatic(CreateCommand.class.getDeclaredField("CREATE_TARGET_PATH"), workTempDir + DS);
+        // Set base.json directory
+        TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS);
+
         createCommand = new CreateCommand();
     }
 
@@ -66,6 +68,7 @@ class DamascusBaseTest extends Specification {
 
         where:
         key1      | value1     | key2   | value2   | liferayVersion
+        "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_73
         "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_72
         "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_71
         "keytest" | "valutest" | "key2" | "value2" | DamascusProps.VERSION_70
@@ -81,9 +84,9 @@ class DamascusBaseTest extends Specification {
         //
         // Generate custom value base.json
         //
-        def paramFilePath = workTempDir + DS + DamascusProps.BASE_JSON
         def projectName = "Todo"
         def expectedProjectDirName = "todo"
+        def paramFilePath = workTempDir + DS + projectName + DS + DamascusProps.BASE_JSON
         def packageName = "com.liferay.test.foo.bar"
 
         DamascusBase dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, paramFilePath, false)
@@ -115,12 +118,15 @@ class DamascusBaseTest extends Specification {
             }
         }
 
+        // Set base.json directory
+        TestUtils.setFinalStatic(DamascusProps.class.getDeclaredField("CURRENT_DIR"), workTempDir + DS + projectName + DS);
+
         //Run damascus create
         String[] args = ["create"]
         Damascus.main(args)
 
         //Target path map of a project
-        def pathMap = TestUtils.getPathMap(expectedProjectDirName)
+        def pathMap = TestUtils.getPathMap(projectName, expectedProjectDirName)
         def targetFile1 = FileUtils.listFiles(new File(pathMap["webPath"]), new RegexFileFilter(".*testfile.jsp"), TrueFileFilter.INSTANCE)
 
         then:
@@ -137,6 +143,7 @@ class DamascusBaseTest extends Specification {
 
         where:
         key1   | value1   | key2   | value2   | liferayVersion
+        "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_73
         "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_72
         "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_71
         "key1" | "FOOFOO" | "key2" | "BARBAR" | DamascusProps.VERSION_70
@@ -169,6 +176,10 @@ class DamascusBaseTest extends Specification {
 
         where:
         result | web1_state | web2_state | web3_state | liferayVersion
+        true   | true       | true       | true       | DamascusProps.VERSION_73
+        false  | false      | false      | false      | DamascusProps.VERSION_73
+        true   | false      | true       | true       | DamascusProps.VERSION_73
+        true   | true       | true       | false      | DamascusProps.VERSION_73
         true   | true       | true       | true       | DamascusProps.VERSION_72
         false  | false      | false      | false      | DamascusProps.VERSION_72
         true   | false      | true       | true       | DamascusProps.VERSION_72

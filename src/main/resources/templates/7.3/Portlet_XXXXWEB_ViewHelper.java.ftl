@@ -10,6 +10,7 @@ package ${packageName}.web.util;
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
+import com.liferay.portal.kernel.portlet.LiferayActionRequest;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
@@ -20,24 +21,42 @@ import com.liferay.portal.kernel.search.SearchContextFactory;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.search.hits.SearchHit;
+import com.liferay.portal.search.hits.SearchHits;
+import com.liferay.portal.search.query.BooleanQuery;
+import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.query.Query;
+import com.liferay.portal.search.searcher.SearchRequest;
+import com.liferay.portal.search.searcher.SearchRequestBuilder;
+import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
+import com.liferay.portal.search.searcher.SearchResponse;
+import com.liferay.portal.search.searcher.Searcher;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.service.${capFirstModel}LocalServiceUtil;
 import ${packageName}.web.portlet.action.${capFirstModel}Configuration;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +166,75 @@ public class ${capFirstModel}ViewHelper {
 	public SearchContainerResults<${capFirstModel}> getListFromIndex(
 			PortletRequest request, int start, int end, int state)
 		throws SearchException {
+		
+		int total = 0;
+		List<${capFirstModel}> tempResults = new ArrayList<>();
+		
+	<#if advancedSearch>
+		
+		Map<String, Object> advSearchKeywords = new HashMap<>();
+		try {			
+			advSearchKeywords =	getAdvSearchKeywordsObject(request);
+		} catch(ParseException e) {
+			e.printStackTrace();
+		}
+		
+		if(!advSearchKeywords.isEmpty()) {
+			ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
+			BooleanQuery booleanQuery = getBooleanQuery(advSearchKeywords);
+			
+			SearchRequestBuilder searchRequestBuilder =
+				    searchRequestBuilderFactory.builder();
+			searchRequestBuilder.emptySearchEnabled(true);
+			
+			searchRequestBuilder.withSearchContext(
+				    searchContext -> {
+						searchContext.setAttribute(Field.STATUS, state);
+						searchContext.setStart(start);
+						searchContext.setEnd(end);
+						searchContext.setEntryClassNames(new String[] {${capFirstModel}.class.getName()});
+				        searchContext.setCompanyId(themeDisplay.getCompanyId());
+				    });
+			
+			SearchRequest searchRequest = 
+				    searchRequestBuilder.query(booleanQuery).build();
+					
+			
+			SearchResponse searchResponse = searcher.search(searchRequest);
+			SearchHits searchHits = searchResponse.getSearchHits();
+			List<SearchHit> searchHitsList = searchHits.getSearchHits();
+					
+			total = GetterUtil.getInteger(searchHits.getTotalHits());
+			
+			for(SearchHit searchHit : searchHitsList) {
+				${capFirstModel} resReg = null;
+
+				// Entry
+
+				long entryId = GetterUtil.getLong(searchHit.getDocument().getLong(Field.ENTRY_CLASS_PK));
+
+				try {
+					resReg = ${capFirstModel}LocalServiceUtil.get${capFirstModel}(entryId);
+
+					resReg = resReg.toEscapedModel();
+
+					tempResults.add(resReg);
+				}
+				catch (Exception e) {
+					if (_log.isWarnEnabled()) {
+						_log.warn(
+							"${capFirstModel} search index is stale and contains entry " +
+								entryId);
+					}
+
+					continue;
+				}
+			}
+		} else {
+		
+	</#if>
+	
 		// Search Key
 
 		String searchFilter = ParamUtil.getString(
@@ -175,8 +262,7 @@ public class ${capFirstModel}ViewHelper {
 
 		// Initialize return values
 
-		int total = results.getLength();
-		List<${capFirstModel}> tempResults = new ArrayList<>();
+		total = results.getLength();
 
 		for (int i = 0; i < results.getDocs().length; i++) {
 			Document doc = results.doc(i);
@@ -204,6 +290,10 @@ public class ${capFirstModel}ViewHelper {
 				continue;
 			}
 		}
+
+<#if advancedSearch>
+		}
+</#if>
 
 		return new SearchContainerResults<>(tempResults, total);
 	}
@@ -262,6 +352,186 @@ public class ${capFirstModel}ViewHelper {
 		return OrderByComparatorFactoryUtil.create(
 			"${capFirstModel}_${capFirstModel}", orderByCol, getOrder(orderByType));
 	}
+	
+	public static Map<String, String> getAdvSearchKeywords(LiferayActionRequest request) {
+		return getAdvSearchKeywords((PortletRequest) request);
+	}
+		
+	public static Map<String, String> getAdvSearchKeywords(PortletRequest request) {
+    	${capFirstModel}Configuration ${uncapFirstModel}Configuration =
+				(${capFirstModel}Configuration) request.getAttribute(${capFirstModel}Configuration.class.getName());
+				
+		PortletPreferences portletPreferences = request.getPreferences();
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+			HtmlUtil.escape(
+                portletPreferences.getValue(
+                    "dateFormat", ${uncapFirstModel}Configuration.dateFormat())));
+			
+    	Map<String, Object> advSearchKeywordsObj = new HashMap<>();
+    	
+    	try {
+    		advSearchKeywordsObj = getAdvSearchKeywordsObject(request);
+    	} catch(ParseException e) {
+    		e.printStackTrace();
+    	}		
+		
+    	Map<String, String> advSearchKeywords = new HashMap<>();
+    	
+    	for(String key : advSearchKeywordsObj.keySet()) {
+    		if(advSearchKeywordsObj.get(key) instanceof Map) {
+    			Map<String, Object> map = (Map<String, Object>) advSearchKeywordsObj.get(key);
+    			
+    			for(String hashKey : map.keySet()) {
+    				if(map.get(hashKey) instanceof Calendar) {
+    					advSearchKeywords.put(key + hashKey.substring(0, 1).toUpperCase() + hashKey.substring(1), 
+    							dateFormat.format(((Calendar) map.get(hashKey)).getTime()));    					
+    				} else if (map.get(hashKey) instanceof Long || 
+    						map.get(hashKey) instanceof Double || 
+    						map.get(hashKey) instanceof Integer ) {
+    					advSearchKeywords.put(key + hashKey.substring(0, 1).toUpperCase() + hashKey.substring(1), 
+    							map.get(hashKey).toString());
+    				}    				
+    			}
+    		} else if(advSearchKeywordsObj.get(key) instanceof String) {
+    			advSearchKeywords.put(key, (String) advSearchKeywordsObj.get(key));
+    		} 
+    	}
+    	return advSearchKeywords;
+    }
+	
+	protected static Map<String, Object> getAdvSearchKeywordsObject(PortletRequest request) throws ParseException {
+    	${capFirstModel}Configuration ${uncapFirstModel}Configuration =
+    	        (${capFirstModel}Configuration) request.getAttribute(${capFirstModel}Configuration.class.getName());
+    	
+    	PortletPreferences portletPreferences = request.getPreferences();
+    	String dateFormatVal = HtmlUtil.escape(
+                portletPreferences.getValue("dateFormat", 
+                		Validator.isNull(${uncapFirstModel}Configuration) ? "yyyy/MM/dd" : ${uncapFirstModel}Configuration.dateFormat()));
+    	
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatVal);
+    	
+    	Map<String, Object> advSearchKeywords = new HashMap<String, Object>();
+    	
+		<#list application.fields as field >
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Boolean"  		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.DocumentLibrary" 
+				>
+			</#if>
+			
+			<#if field.type?string == "com.liferay.damascus.cli.json.fields.Long" >
+				Map<String, Long> search${field.name?cap_first} = new HashMap<>();		    	
+		    	if(ParamUtil.getLong(request, "search${field.name?cap_first}Start", 0) != 0) {
+		    		search${field.name?cap_first}.put("start", ParamUtil.getLong(request, "search${field.name?cap_first}Start"));
+		    	}
+		    	if(ParamUtil.getLong(request, "search${field.name?cap_first}End", 0) != 0) {
+		    		search${field.name?cap_first}.put("end", ParamUtil.getLong(request, "search${field.name?cap_first}End"));		    		
+		    	}		    	
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>
+			<#if field.type?string == "com.liferay.damascus.cli.json.fields.Double" >
+				Map<String, Double> search${field.name?cap_first} = new HashMap<>();		    	
+		    	if(ParamUtil.getDouble(request, "search${field.name?cap_first}Start", 0) != 0) {
+		    		search${field.name?cap_first}.put("start", ParamUtil.getDouble(request, "search${field.name?cap_first}Start"));
+		    	}
+		    	if(ParamUtil.getDouble(request, "search${field.name?cap_first}End", 0) != 0) {
+		    		search${field.name?cap_first}.put("end", ParamUtil.getDouble(request, "search${field.name?cap_first}End"));		    		
+		    	}		    	
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>
+			<#if field.type?string == "com.liferay.damascus.cli.json.fields.Integer" >
+				Map<String, Integer> search${field.name?cap_first} = new HashMap<>();		    	
+		    	if(ParamUtil.getInteger(request, "search${field.name?cap_first}Start", 0) != 0) {
+		    		search${field.name?cap_first}.put("start", ParamUtil.getInteger(request, "search${field.name?cap_first}Start"));
+		    	}
+		    	if(ParamUtil.getInteger(request, "search${field.name?cap_first}End", 0) != 0) {
+		    		search${field.name?cap_first}.put("end", ParamUtil.getInteger(request, "search${field.name?cap_first}End"));		    		
+		    	}		    	
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Varchar"  		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.RichText" 		||
+				field.type?string == "com.liferay.damascus.cli.json.fields.Text"
+				>
+				if(!ParamUtil.getString(request, "search${field.name?cap_first}", "").isEmpty()) {
+		        	advSearchKeywords.put("search${field.name?cap_first}", ParamUtil.getString(request, "search${field.name?cap_first}"));
+		    	}
+			</#if>
+				
+					
+			<#if
+				field.type?string == "com.liferay.damascus.cli.json.fields.Date"     ||
+				field.type?string == "com.liferay.damascus.cli.json.fields.DateTime"
+				>
+				Map<String, Calendar> search${field.name?cap_first} = new HashMap<>();
+    	
+		    	if(!ParamUtil.getString(request, "search${field.name?cap_first}Start", "").isEmpty()) {
+		    		Date start = dateFormat.parse(ParamUtil.getString(request, "search${field.name?cap_first}Start"));
+		    		Calendar cal = Calendar.getInstance();
+		    		cal.setTime(start);
+		    		search${field.name?cap_first}.put("start", cal);
+		    	}
+		    	if(!ParamUtil.getString(request, "search${field.name?cap_first}End", "").isEmpty()) {
+		    		Date end = dateFormat.parse(ParamUtil.getString(request, "search${field.name?cap_first}End"));
+		    		Calendar cal = Calendar.getInstance();    		
+		    		cal.setTime(end);
+		    		cal.set(Calendar.HOUR_OF_DAY, 23);
+		    		cal.set(Calendar.MINUTE, 59);
+		    		cal.set(Calendar.SECOND, 59);
+		    		cal.set(Calendar.MILLISECOND, 0);
+		    		search${field.name?cap_first}.put("end", cal);
+		    	}
+		    	if(!search${field.name?cap_first}.isEmpty()) {
+		    		advSearchKeywords.put("search${field.name?cap_first}", search${field.name?cap_first});
+		    	}
+			</#if>				
+		</#list>
+		
+    	return advSearchKeywords;
+    }
+
+<#if advancedSearch>	
+	private BooleanQuery getBooleanQuery(Map<String, Object> advSearchKeywords) {
+		
+    	BooleanQuery booleanQuery = queries.booleanQuery();
+    	List<Query> queryList = new ArrayList<>();
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    	
+    	for(String key : advSearchKeywords.keySet()) {
+    		String column = key.replaceFirst("search","");
+    		column = column.substring(0, 1).toLowerCase() + column.substring(1, column.length());
+    		
+    		if(advSearchKeywords.get(key) instanceof Map) {
+    			Map<String, Object> map = (Map<String, Object>) advSearchKeywords.get(key);
+    			
+    			if(map.get("start") instanceof Calendar && map.get("end") instanceof Calendar) {
+    				queryList.add(queries.dateRangeTerm(column, true, true, 
+    						sdf.format(((Calendar)map.get("start")).getTime()), 
+    						sdf.format(((Calendar)map.get("end")).getTime())));    				
+    			} else if((map.get("start") instanceof Long && map.get("end") instanceof Long) || 
+    					(map.get("start") instanceof Double && map.get("end") instanceof Double) ||
+    					(map.get("start") instanceof Integer && map.get("end") instanceof Integer)) {
+    				queryList.add(queries.rangeTerm(column, true, true, map.get("start"), map.get("end")));
+        		}
+    		} else if(advSearchKeywords.get(key) instanceof String) {
+    			queryList.add(queries.match(column, advSearchKeywords.get(key)));
+    		}
+    	}
+    	
+    	booleanQuery.addMustQueryClauses(queryList.toArray(new Query[] {}));
+    	
+    	return booleanQuery;
+	}
+</#if>
 
 	/**
 	 * Order string to boolean
@@ -278,5 +548,15 @@ public class ${capFirstModel}ViewHelper {
 	}
 
 	private static Logger _log = LoggerFactory.getLogger(${capFirstModel}ViewHelper.class);
+	
+<#if advancedSearch>
+	@Reference
+	protected Queries queries;
 
+	@Reference
+	protected Searcher searcher;
+	
+	@Reference
+	protected SearchRequestBuilderFactory searchRequestBuilderFactory;
+</#if>	
 }

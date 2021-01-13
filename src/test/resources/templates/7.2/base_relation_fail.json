@@ -1,7 +1,7 @@
 {
   "projectName": "Employee",
   "packageName": "com.liferay.sb.employee",
-  "liferayVersion": "7.1",
+  "liferayVersion": "7.2",
   "useTargetPlatform": "false",
   "applications": [{
       "model": "Employee",

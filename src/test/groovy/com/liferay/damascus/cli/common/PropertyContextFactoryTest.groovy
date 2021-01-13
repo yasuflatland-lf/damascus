@@ -12,11 +12,11 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.tuple.Pair
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import spock.lang.Specification
 import spock.lang.Unroll
+import org.powermock.api.mockito.PowerMockito;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PropertyContextFactory.class)

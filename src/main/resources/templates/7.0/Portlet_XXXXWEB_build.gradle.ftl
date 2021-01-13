@@ -28,12 +28,6 @@ repositories {
     }
 }
 
-// TODO : This can be removed once you set up IDE. When you import this project into a IDE, you may be asked
-// a path to the gradle root. Then you run "gradle getHomeDir" and use the path for the IDE.
-task getHomeDir << {
-    println gradle.gradleHomeDir
-}
-
 dependencies {
     compile 'biz.aQute.bnd:biz.aQute.bndlib:3.1.0'
     compile 'com.google.errorprone:error_prone_annotations:2.0.19'

@@ -30,11 +30,13 @@ repositories {
 
 dependencies {
 	compile group: "com.google.guava", name: "guava"<#if useTP?? && false == useTP>, version: "28.1-jre"</#if>, transitive: false
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
 	compileOnly group: "com.liferay", name: "com.liferay.friendly.url.api"<#if useTP?? && false == useTP>, version: "3.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.function"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.lang"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.petra.string"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
-	compileOnly group: "com.liferay", name: "com.liferay.petra.sql.dsl.api"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
+	compileOnly group: "com.liferay", name: "com.liferay.petra.sql.dsl.api"<#if useTP?? && false == useTP>, version: "1.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.portal.aop.api"<#if useTP?? && false == useTP>, version: "2.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.portal.search.api"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.portal.search.spi"<#if useTP?? && false == useTP>, version: "4.0.0"</#if>
@@ -65,8 +67,6 @@ buildscript {
         }
     }
 }
-
-apply plugin: "com.liferay.portal.tools.service.builder"
 
 buildService {
 	apiDir = "../${dashcaseProjectName}-api/src/main/java"

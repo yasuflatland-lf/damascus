@@ -2,6 +2,8 @@ package com.liferay.damascus.antlr.common;
 
 import com.liferay.damascus.antlr.template.DmscSrcParser;
 import com.liferay.damascus.antlr.template.DmscSrcParserBaseListener;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,10 +33,14 @@ public class DmscSrcParserExListener extends DmscSrcParserBaseListener {
     /**
      * Set errors
      *
-     * @param errors
+     * @param errorsNew
      */
-    public void setErrors(List<String> errors) {
-        errors.addAll(errors);
+    public void setErrors(List<String> errorsNew) {
+        List<String> newList = Stream.concat(errorsNew.stream(), errors.stream())
+            .collect(Collectors.toList());
+
+        errors.clear();
+        errors.addAll(newList);
     }
 
     /**

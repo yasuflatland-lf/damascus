@@ -2,11 +2,8 @@ package com.liferay.damascus.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.liferay.damascus.cli.BaseArgs;
 import com.liferay.damascus.cli.validators.PackageNameValidator;
 import com.liferay.damascus.cli.validators.ProjectNameValidator;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 /**

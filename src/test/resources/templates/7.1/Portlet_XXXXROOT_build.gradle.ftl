@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${dashcaseProjectName}/build.gradle">
+<#assign createPath = "${createPath_val}/build.gradle">
 buildscript {
 	dependencies {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins", version: "3.13.26"

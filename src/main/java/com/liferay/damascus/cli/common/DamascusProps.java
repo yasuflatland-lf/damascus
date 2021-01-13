@@ -29,6 +29,8 @@ public class DamascusProps {
 
     public static final String SERVICE_XML = "service.xml";
 
+    public static final String GRADLE_LOCAL_PROP = "gradle-local.properties";
+
     public static final String DOT_SLASH_CURRENT_DIR = "." + DS;
 
     /**
@@ -164,6 +166,7 @@ public class DamascusProps {
 
     public static final int _DEPTH_OF_MINIMAL_PROJECT_PATH = 3;
 
+    public static final String MODULES_ROOT = "modules";
 
     /**
      * Attribute keys for dmsc tags (dmsc:root, dmsc:sync)

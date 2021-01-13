@@ -5,7 +5,7 @@ import com.liferay.damascus.cli.common.CommonUtil;
 import com.liferay.damascus.cli.common.DamascusProps;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.extern.java.Log;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Source to Template convert engine
@@ -171,7 +170,7 @@ public class SourceToTemplateEngine {
 
     // White list of searching directory.
     // TODO: This value must be configured in settings.properties under .damascus
-    static public final List<String> EXT_WHITE_LIST =
+    public static final List<String> EXT_WHITE_LIST =
         Arrays.asList(
             ".*.java",
             ".*.jsp",

@@ -1,5 +1,5 @@
 <#include "./valuables.ftl">
-<#assign createPath = "${createPath_val}/${dashcaseProjectName}/README.md">
+<#assign createPath = "${createPath_val}/README.md">
 # Damascus generated service
 
 Damascus generates scaffolding files to save time for the tedious parts of the development. 

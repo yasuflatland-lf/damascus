@@ -1,8 +1,8 @@
 {
   "projectName": "Employee",
   "packageName": "com.liferay.sb.employee",
-  "liferayVersion": "7.1",
-  "useTargetPlatform": "false",
+  "liferayVersion": "7.3",
+  "useTargetPlatform": "true",
   "applications": [{
       "model": "Employee",
       "title": "Employee Test",

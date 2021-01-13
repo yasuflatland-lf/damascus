@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -26,9 +27,11 @@ import ${packageName}.constants.${capFirstModel}PortletKeys;
 import ${packageName}.model.${capFirstModel};
 import ${packageName}.web.internal.security.permission.resource.${capFirstModel}EntryPermission;
 import ${packageName}.web.util.${capFirstModel}ViewHelper;
+import ${packageName}.web.portlet.action.${capFirstModel}Configuration;
 import com.liferay.trash.TrashHelper;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,6 +40,7 @@ import java.util.Map;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
+import javax.portlet.PortletPreferences;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -145,6 +149,15 @@ public class ${capFirstModel}DisplayContext {
 		navigationPortletURL.setParameter(
 			SearchContainer.DEFAULT_ORDER_BY_TYPE_PARAM, orderByType);
 
+		
+	<#if advancedSearch>							
+		Map<String, String> advSearchKeywords = _${uncapFirstModel}ViewHelper.getAdvSearchKeywords(_liferayPortletRequest);
+	
+		for(String key : advSearchKeywords.keySet()) {
+			navigationPortletURL.setParameter(key, advSearchKeywords.get(key));
+		}
+	</#if>
+
 		SearchContainer<${capFirstModel}> _searchContainer = new SearchContainer<>(
 			_liferayPortletRequest,
 			PortletURLUtil.clone(navigationPortletURL, _liferayPortletResponse),
@@ -157,8 +170,12 @@ public class ${capFirstModel}DisplayContext {
 		_searchContainer.setOrderByType(orderByType);
 
 		SearchContainerResults<${capFirstModel}> searchContainerResults = null;
-
+	
+	<#if advancedSearch>
+		if (Validator.isNull(keywords) && advSearchKeywords.isEmpty()) {
+	<#else>
 		if (Validator.isNull(keywords)) {
+	</#if>		
 			searchContainerResults = _${uncapFirstModel}ViewHelper.getListFromDB(
 				_liferayPortletRequest, _searchContainer,
 				new int[] {WorkflowConstants.STATUS_APPROVED});
@@ -171,7 +188,15 @@ public class ${capFirstModel}DisplayContext {
 
 		_searchContainer.setTotal(searchContainerResults.getTotal());
 		_searchContainer.setResults(searchContainerResults.getResults());
-
+	
+	<#if advancedSearch>
+		if(!advSearchKeywords.isEmpty()) {
+			PortletURL iteratorURL = _searchContainer.getIteratorURL();
+			iteratorURL.setParameter(DisplayTerms.KEYWORDS, "");
+			_searchContainer.setIteratorURL(iteratorURL);
+		}
+	</#if>	
+		
 		return _searchContainer;
 	}
 

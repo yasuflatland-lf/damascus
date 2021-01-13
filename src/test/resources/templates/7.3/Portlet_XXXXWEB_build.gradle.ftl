@@ -21,6 +21,8 @@ dependencies {
 	compile group: "org.apache.poi", name: "poi-ooxml"<#if useTP?? && false == useTP>, version: "4.1.2"</#if>
 	compile group: "org.apache.poi", name: "poi-ooxml-schemas"<#if useTP?? && false == useTP>, version: "4.1.2"</#if>
 
+	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+
 	compileOnly group: "com.liferay", name: "com.liferay.application.list.api"<#if useTP?? && false == useTP>, version: "5.1.+"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.asset.api"<#if useTP?? && false == useTP>, version: "3.0.+"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.asset.display.page.api"<#if useTP?? && false == useTP>, version: "6.3.0"</#if>

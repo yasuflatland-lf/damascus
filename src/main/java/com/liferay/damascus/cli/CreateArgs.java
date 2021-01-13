@@ -1,7 +1,6 @@
 package com.liferay.damascus.cli;
 
 import com.beust.jcommander.Parameters;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -5,8 +5,6 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 
-apply plugin: "com.liferay.portal.tools.service.builder"
-
 //Need for Windows
 def defaultEncoding = 'UTF-8'
 

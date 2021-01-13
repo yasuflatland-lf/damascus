@@ -55,8 +55,6 @@ buildscript {
     }
 }
 
-apply plugin: "com.liferay.portal.tools.service.builder"
-
 buildService {
 	apiDir = "../${dashcaseProjectName}-api/src/main/java"
 }

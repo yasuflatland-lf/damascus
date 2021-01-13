@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import ${packageName}.web.util.${capFirstModel}ViewHelper;
 import ${packageName}.web.internal.security.permission.resource.${capFirstModel}Permission;
 import com.liferay.trash.TrashHelper;
 
@@ -332,9 +333,23 @@ public class ${capFirstModel}ManagementToolbarDisplayContext
 		navigationPortletURL.setParameter(
 			SearchContainer.DEFAULT_ORDER_BY_TYPE_PARAM, orderByType);
 
+<#if advancedSearch>
+		Map<String, String> advSearchKeywords = ${capFirstModel}ViewHelper.getAdvSearchKeywords(liferayPortletRequest);
+		
+		for(String key : advSearchKeywords.keySet()) {
+			navigationPortletURL.setParameter(key, advSearchKeywords.get(key));
+		}
+
+		if (advSearchKeywords.isEmpty()) {
+</#if>
+		
 		if (Validator.isNotNull(keywords)) {
 			navigationPortletURL.setParameter(DisplayTerms.KEYWORDS, keywords);
 		}
+
+<#if advancedSearch>
+		}
+</#if>
 
 		return navigationPortletURL;
 	}
