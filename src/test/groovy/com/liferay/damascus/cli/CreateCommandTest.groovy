@@ -296,6 +296,8 @@ class CreateCommandTest extends Specification {
                     [path: pathMap["webPath"], target: ".*PortletLayoutFinder.java", amount: 1],
                     [path: pathMap["webPath"], target: ".*AdminPortlet.java", amount: 1],
                     [path: pathMap["webPath"], target: ".*PanelApp.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*InfoDisplayObjectProvider.java", amount: 1],
+                    [path: pathMap["webPath"], target: ".*AssetInfoDisplayContributor.java", amount: 1],
                     [path: pathMap["rootPath"], target: ".*build.gradle", amount: 3],
                     [path: pathMap["rootPath"], target: ".*settings.gradle", amount: 0]
             ];

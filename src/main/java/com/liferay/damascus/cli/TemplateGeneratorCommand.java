@@ -24,8 +24,7 @@ import java.util.List;
  */
 @Slf4j
 public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs> {
-    public TemplateGeneratorCommand() {
-    }
+    public TemplateGeneratorCommand() {}
 
     public TemplateGeneratorCommand(Damascus damascus) {
         super(damascus, null);
@@ -95,11 +94,11 @@ public class TemplateGeneratorCommand extends BaseCommand<TemplateGeneratorArgs>
                 .build()
                 .process();
 
-        } catch (DamascusProcessException e) {
-            log.error(e.getMessage());
-        }
+            System.out.println("Done.");
 
-        System.out.println("Done.");
+        } catch (DamascusProcessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
