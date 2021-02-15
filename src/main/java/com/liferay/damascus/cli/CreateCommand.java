@@ -1,6 +1,5 @@
 package com.liferay.damascus.cli;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.liferay.damascus.cli.common.*;
 import com.liferay.damascus.cli.exception.DamascusProcessException;
