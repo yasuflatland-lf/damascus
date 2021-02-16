@@ -28,11 +28,9 @@ def defaultEncoding = 'UTF-8'
 
 repositories {
     mavenCentral()
-    jcenter()
     maven { url 'https://repo.gradle.org/gradle/libs-releases'}
     maven { url 'https://repo.gradle.org/gradle/libs-releases-local' }
     maven { url "http://repository.jboss.org/nexus/content/groups/public-jboss" }
-    maven { url "http://repository.apache.org/content/groups/public" }
     maven { url "http://repository.springsource.com/maven/bundles/release" }
     maven { url "http://repository.codehaus.org" }
     maven { url "http://download.java.net/maven/2" }
