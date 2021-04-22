@@ -25,9 +25,4 @@ ${application.model?lower_case}-updated-successfully=The data has been updated.
 ${application.model?lower_case}-deleted-successfully=The data has been deleted.
 </#list>
 there-was-an-unexpected-error.-please-refresh-the-current-page=Unexpected error. Please refresh.
-permissions=Permissions
-view=View
-edit=Update
-remove=Delete
-trash=Move to trash
 # </dmsc:sync> #
