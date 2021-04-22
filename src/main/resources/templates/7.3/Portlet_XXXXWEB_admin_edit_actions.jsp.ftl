@@ -80,7 +80,7 @@ String primKey = String.valueOf(${uncapFirstModel}.getPrimaryKey());
 			<portlet:param name="resourcePrimKey" value="<%= primKey %>" />
 		</portlet:actionURL>
 
-		<liferay-ui:icon iconCssClass="icon-remove" label="<%= true %>" markupView="lexicon" message="remove" url="<%= delete${capFirstModel}URL.toString() %>" />
+		<liferay-ui:icon iconCssClass="icon-remove" label="<%= true %>" markupView="lexicon" message="delete" url="<%= delete${capFirstModel}URL.toString() %>" />
 	</c:if>
 
 	<c:if test="<%= ${capFirstModel}EntryPermission.contains(permissionChecker, ${uncapFirstModel}, ActionKeys.DELETE) %>">
@@ -94,6 +94,6 @@ String primKey = String.valueOf(${uncapFirstModel}.getPrimaryKey());
 			<portlet:param name="resourcePrimKey" value="<%= primKey %>" />
 		</portlet:actionURL>
 
-		<liferay-ui:icon iconCssClass="icon-trash" label="<%= true %>" markupView="lexicon" message="trash" url="<%= moveToTrash${capFirstModel}URL.toString() %>" />
+		<liferay-ui:icon iconCssClass="icon-trash" label="<%= true %>" markupView="lexicon" message="move-to-recycle-bin" url="<%= moveToTrash${capFirstModel}URL.toString() %>" />
 	</c:if>
 </liferay-ui:icon-menu>
