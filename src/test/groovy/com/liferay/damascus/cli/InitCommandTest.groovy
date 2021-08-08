@@ -32,9 +32,9 @@ class InitCommandTest extends Specification {
         System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err)));
     }
 
-    //TODO: Write inititialize parameter combination error vailidation
+    //TODO: Write inititialize parameter combination error validation
 
-    @Unroll("Smoke test for init Success Pattern(#garvs #result)")
+    @Unroll
     def "Smoke test for Init Command Success Pattern"() {
         when:
         String[] args = garvs
@@ -55,7 +55,7 @@ class InitCommandTest extends Specification {
         ["init", "-c", "Bar-Foo", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_71] | "Bar-Foo"
     }
 
-    @Unroll("Smoke test for init Error Pattern(#garvs)")
+    @Unroll
     def "Smoke test for Init Command Error Pattern"() {
         when:
         String[] args = garvs
@@ -77,7 +77,7 @@ class InitCommandTest extends Specification {
         ["init", "-c", "Bar_", "-p", "com.liferay.test", "-v", DamascusProps.VERSION_72]    | _
     }
 
-    @Unroll("Smoke test for init Error Pattern(#argv1 #argv2)")
+    @Unroll
     def "Package name test for Error Pattern"() {
         when:
         String[] args = garvs
