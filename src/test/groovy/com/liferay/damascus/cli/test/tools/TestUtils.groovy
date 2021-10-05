@@ -7,7 +7,6 @@ import com.liferay.damascus.cli.common.TemplateUtil
 import com.liferay.damascus.cli.common.TemplateUtilTest
 import com.liferay.damascus.cli.json.DamascusBase
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FilenameUtils
 import org.apache.commons.lang3.StringUtils
 
 import java.lang.reflect.Field
@@ -65,7 +64,7 @@ class TestUtils {
      * @param outputDelete
      * @return
      */
-    static public def createBaseJsonMock(projectName,liferayVersion,packageName,output_file_path, outputDelete = true) {
+    static public def createBaseJsonMock(projectName, liferayVersion, packageName, output_file_path, outputDelete = true) {
         Map params = Maps.newHashMap()
 
         params.put("projectName", projectName)
@@ -84,7 +83,7 @@ class TestUtils {
         //Load into object
         def retrivedObj = JsonUtil.getObject(output_file_path, DamascusBase.class)
 
-        if(outputDelete) {
+        if (outputDelete) {
             //Delete temporally file
             Files.deleteIfExists(Paths.get(output_file_path));
         }
@@ -102,7 +101,7 @@ class TestUtils {
      */
     static public def getTempPath() {
         def retStr = System.getProperty("java.io.tmpdir");
-        if(!retStr.endsWith(DamascusProps.DS)) {
+        if (!retStr.endsWith(DamascusProps.DS)) {
             retStr = retStr + DamascusProps.DS;
         }
         return retStr;
@@ -126,4 +125,5 @@ class TestUtils {
                 webPath    : workTempDir + DS + projectName + DS + expectedProjectDirName + "-web"
         ];
     }
+
 }

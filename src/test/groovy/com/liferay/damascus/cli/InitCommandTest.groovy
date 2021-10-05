@@ -1,7 +1,6 @@
 package com.liferay.damascus.cli
 
-import com.beust.jcommander.JCommander
-import com.beust.jcommander.ParameterException
+
 import com.liferay.damascus.cli.common.DamascusProps
 import com.liferay.damascus.cli.common.TemplateUtil
 import com.liferay.damascus.cli.test.tools.TestUtils
@@ -12,7 +11,6 @@ import spock.lang.Unroll
 class InitCommandTest extends Specification {
     def DS = DamascusProps.DS;
     def workTempDir = TestUtils.getTempPath() + "damascustest";
-    def initCommand;
 
     protected final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     protected final ByteArrayOutputStream errContent = new ByteArrayOutputStream();

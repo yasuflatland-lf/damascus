@@ -43,7 +43,7 @@ jar {
     manifest {
         attributes(
             "Bundle-SymbolicName": "com.liferay.damascus.cli",
-            "Bundle-Version": "1.1.6",
+            "Bundle-Version": "1.1.7",
             "Bundle-Description": "Liferay extension tool for scaffolding service builder portlet",
             "Main-Class": "com.liferay.damascus.cli.Damascus",
             "JPM-Command": "damascus"
@@ -61,8 +61,8 @@ dependencies {
     implementation 'com.jayway.jsonpath:json-path:2.6.+'
 
     implementation 'org.freemarker:freemarker:2.3.31'
-    implementation 'org.gradle:gradle-tooling-api:6.7.1'
-    implementation 'com.liferay:com.liferay.project.templates:5.0.101'
+    implementation 'org.gradle:gradle-tooling-api:7.1.1'
+    implementation 'com.liferay:com.liferay.project.templates:5.0.157'
 
     implementation 'org.slf4j:slf4j-api:1.7.+'
     implementation 'org.slf4j:slf4j-log4j12:1.7.+'
@@ -113,3 +113,43 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestReport
+
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+// Output each test title
+tasks.withType(Test) {
+    testLogging {
+        // set options for log level LIFECYCLE
+        events TestLogEvent.FAILED,
+                TestLogEvent.PASSED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_OUT
+        exceptionFormat TestExceptionFormat.FULL
+        showExceptions true
+        showCauses true
+        showStackTraces true
+
+        // set options for log level DEBUG and INFO
+        debug {
+            events TestLogEvent.STARTED,
+                    TestLogEvent.FAILED,
+                    TestLogEvent.PASSED,
+                    TestLogEvent.SKIPPED,
+                    TestLogEvent.STANDARD_ERROR,
+                    TestLogEvent.STANDARD_OUT
+            exceptionFormat TestExceptionFormat.FULL
+        }
+        info.events = debug.events
+        info.exceptionFormat = debug.exceptionFormat
+
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+    }
+}
