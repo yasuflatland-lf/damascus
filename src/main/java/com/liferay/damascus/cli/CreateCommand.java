@@ -111,7 +111,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             System.out.println("Running \"gradle buildService\" to generate the service based on parsed service.xml");
 
             // Run "gradle buildService" to generate the skeleton of services.
-            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
+            CommonUtil.runGradle(distDir.getAbsolutePath() + DamascusProps.DS + dashCaseProjectName + DamascusProps.DIR_SERVICE_SUFFIX, "buildService");
 
             //Parse all templates and generate scaffold files.
             for (Application app : dmsb.getApplications()) {
@@ -138,7 +138,7 @@ public class CreateCommand extends BaseCommand<CreateArgs> {
             System.out.println("Running \"gradle buildService\" again to generate the service according to the template generated services.");
 
             // Run "gradle buildService" to generate the skeleton of services.
-            CommonUtil.runGradle(distDir.getAbsolutePath(), "buildService");
+            CommonUtil.runGradle(distDir.getAbsolutePath() + DamascusProps.DS + dashCaseProjectName + DamascusProps.DIR_SERVICE_SUFFIX, "buildService");
 
             System.out.println("Done.");
 

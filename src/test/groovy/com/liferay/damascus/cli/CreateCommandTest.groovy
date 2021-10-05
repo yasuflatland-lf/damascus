@@ -3,6 +3,7 @@ package com.liferay.damascus.cli
 import com.beust.jcommander.internal.Maps
 import com.liferay.damascus.cli.common.*
 import com.liferay.damascus.cli.test.tools.TestUtils
+import lombok.extern.slf4j.Slf4j
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.RegexFileFilter
 import org.apache.commons.io.filefilter.TrueFileFilter
@@ -12,6 +13,7 @@ import spock.lang.Unroll
 
 import java.nio.charset.StandardCharsets
 
+@Slf4j
 class CreateCommandTest extends Specification {
     static def DS = DamascusProps.DS;
     static def workspaceRootDir = TestUtils.getTempPath() + "damascustest";
@@ -22,6 +24,7 @@ class CreateCommandTest extends Specification {
     def setupEx(version) {
         //Cleanup environment
         FileUtils.deleteDirectory(new File(workspaceRootDir));
+
         def templateUtil = Spy(TemplateUtil)
         templateUtil.clear();
 
@@ -47,11 +50,11 @@ class CreateCommandTest extends Specification {
 
     @Unroll("Smoke test for generating Project Version<#liferayVersion> Project<#projectName> Package<#packageName>")
     def "Smoke test for generating Project"() {
-
-        when:
+        setup:
         //Initialize
         setupEx(liferayVersion);
 
+        when:
         def projectNameCommon = workTempDir + DS + projectName + DS + projectName;
         def service_path = new File(projectNameCommon + "-service");
         def api_path = new File(projectNameCommon + "-api");
@@ -110,10 +113,11 @@ class CreateCommandTest extends Specification {
 
     @Unroll("Create Test from Main ProjectName<#projectName> version <#liferayVersion> Package <#packageName>")
     def "Create Test from Main"() {
-        when:
+        setup:
         //Initialize
         setupEx(liferayVersion);
 
+        when:
         //Set parameters
         Map params = Maps.newHashMap();
         params.put("projectName", projectName)
@@ -360,10 +364,11 @@ class CreateCommandTest extends Specification {
 
     @Unroll("Template creation tests with asset flags variations <#baseFilename> <#prohibitedTerms> <#prohibitedInServiceImpl>")
     def "Template creation tests with asset flags variations"() {
-        when:
+        setup:
         //Initialize
         setupEx(liferayVersion);
 
+        when:
         Map params = Maps.newHashMap();
 
         //Set parameters
@@ -437,10 +442,11 @@ class CreateCommandTest extends Specification {
 
     @Unroll("Do not generate web test <#projectName> version <#liferayVersion> Package <#packageName> expectedProjectDirName <#expectedProjectDirName>")
     def "Do not generate web test"() {
-        when:
+        setup:
         //Initialize
         setupEx(liferayVersion);
 
+        when:
         def target_file_path = workTempDir + DS + DamascusProps.BASE_JSON
         def dmsb = TestUtils.createBaseJsonMock(projectName, liferayVersion, packageName, target_file_path)
         dmsb.applications.get(0).web = false
@@ -469,10 +475,11 @@ class CreateCommandTest extends Specification {
 
 	@Unroll("RelationValidator Test version<#version>")
 	def "RelationValidator test"() {
-		when:
-		//Initialize
-		setupEx(version);
+        setup:
+        //Initialize
+        setupEx(version);
 
+		when:
 		def buffer = new ByteArrayOutputStream()
 		System.err = new PrintStream(buffer)
 
@@ -498,10 +505,11 @@ class CreateCommandTest extends Specification {
 
     @Unroll("Relation Create Test <#projectName> <#version> <#packageName> <#base_json_name>")
     def "Relation Create Test"() {
-        when:
+        setup:
         //Initialize
         setupEx(version);
 
+        when:
         def buffer = new ByteArrayOutputStream()
         System.err = new PrintStream(buffer)
 

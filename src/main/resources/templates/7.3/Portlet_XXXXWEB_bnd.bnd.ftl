@@ -20,6 +20,7 @@ Import-Package:\
 Web-ContextPath: /${dashcaseProjectName}-web
 -dsannotations-options: inherit
 -includeresource:\
+	@commons-math3-*.jar,
 	@poi-*.jar,\
 	@poi-ooxml-*.jar,\
 	@poi-ooxml-schemas-*.jar
