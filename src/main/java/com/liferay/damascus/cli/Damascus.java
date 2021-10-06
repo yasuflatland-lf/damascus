@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 public class Damascus {
 
-    public final static String VERSION = "1.2.2";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "1.2.3";// + "_" + LocalDateTime.now().toString();
 
     /**
      * Main
@@ -195,7 +195,7 @@ public class Damascus {
                 Class<?> throwableClass = e.getClass();
 
                 System.err.println("Exception thrown while loading services." + System.lineSeparator() + "Exception: "
-                                       + throwableClass.getName() + ": " + e.getMessage() + System.lineSeparator());
+                    + throwableClass.getName() + ": " + e.getMessage() + System.lineSeparator());
 
                 Throwable cause = e.getCause();
 

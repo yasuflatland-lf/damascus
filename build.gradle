@@ -1,17 +1,8 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:latest.release'
-    }
-}
 
 plugins {
-    id "io.freefair.lombok" version "6.1.0-m3"
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
     id 'java'
-    id 'java-gradle-plugin'
+    id "io.freefair.lombok" version "6.1.0-m3"
     id 'groovy'
     id 'eclipse'
     id 'idea'
@@ -34,6 +25,7 @@ repositories {
 }
 
 generateGrammarSource {
+    mustRunAfter "checkLombokConfig"
     arguments << "-lib" << "src/main/antlr/"
     arguments << "-package" << "com.liferay.damascus.antlr.template"
     outputDirectory = file('src/main/java/com/liferay/damascus/antlr/template')
@@ -43,7 +35,7 @@ jar {
     manifest {
         attributes(
             "Bundle-SymbolicName": "com.liferay.damascus.cli",
-            "Bundle-Version": "1.1.7",
+            "Bundle-Version": '1.2.3',
             "Bundle-Description": "Liferay extension tool for scaffolding service builder portlet",
             "Main-Class": "com.liferay.damascus.cli.Damascus",
             "JPM-Command": "damascus"

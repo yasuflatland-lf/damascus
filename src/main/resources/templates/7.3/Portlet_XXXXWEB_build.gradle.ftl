@@ -22,6 +22,8 @@ dependencies {
 	compile group: "org.apache.poi", name: "poi-ooxml-schemas"<#if useTP?? && false == useTP>, version: "4.1.2"</#if>
 
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	// Comment out above and remove comment below if it's DXP.
+	//compileOnly group: "com.liferay.portal", name: "release.dxp.api"
 
 	compileOnly group: "com.liferay", name: "com.liferay.application.list.api"<#if useTP?? && false == useTP>, version: "5.1.+"</#if>
 	compileOnly group: "com.liferay", name: "com.liferay.asset.api"<#if useTP?? && false == useTP>, version: "3.0.+"</#if>
