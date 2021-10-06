@@ -13,6 +13,8 @@ def defaultEncoding = 'UTF-8'
 
 dependencies {
 	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	// Comment out above and remove comment below if it's DXP.
+	//compileOnly group: "com.liferay.portal", name: "release.dxp.api"
 	compileOnly group: "javax.portlet", name: "portlet-api"<#if useTP?? && false == useTP>, version: "3.0.1"</#if>
 	compileOnly group: "javax.servlet", name: "javax.servlet-api"<#if useTP?? && false == useTP>, version: "3.0.1"</#if>
 
