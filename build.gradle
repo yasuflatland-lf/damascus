@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.+'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.12.+'
     implementation 'joda-time:joda-time:2.10.+'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.9'
 
     implementation group: 'org.antlr', name: 'antlr4', version: '4.8-1'
     implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.8-1'
