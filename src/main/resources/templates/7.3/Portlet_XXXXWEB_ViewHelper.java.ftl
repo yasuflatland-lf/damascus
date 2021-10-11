@@ -366,8 +366,8 @@ public class ${capFirstModel}ViewHelper {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
 			HtmlUtil.escape(
                 portletPreferences.getValue(
-                    "dateFormat", ${uncapFirstModel}Configuration.dateFormat())));
-			
+                    "dateFormat", Validator.isNull(${uncapFirstModel}Configuration) ? "yyyy/MM/dd" : ${uncapFirstModel}Configuration.dateFormat())));
+
     	Map<String, Object> advSearchKeywordsObj = new HashMap<>();
     	
     	try {

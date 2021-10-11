@@ -18,7 +18,7 @@ import java.util.*;
 @Slf4j
 public class Damascus {
 
-    public final static String VERSION = "1.2.2";// + "_" + LocalDateTime.now().toString();
+    public final static String VERSION = "1.2.3";// + "_" + LocalDateTime.now().toString();
 
     /**
      * Main
@@ -60,13 +60,13 @@ public class Damascus {
             BaseArgs baseArgs = _getBaseArgs(jc, commandName);
 
             if (null == baseArgs || baseArgs.isHelp()) {
-                printUsage(commandName, args, jc);
+                printUsage(jc);
                 return;
             }
 
             // Execute command
             if (!_runCommand(commands, baseArgs, commandName)) {
-                printUsage(commandName, args, jc);
+                printUsage(jc);
                 return;
             }
 
@@ -78,14 +78,14 @@ public class Damascus {
                     stringBuilder.append(" " + arg);
                 }
                 if (null != jc) {
-                    printUsage(null, args, jc);
+                    printUsage(jc);
                 }
 
             } else if (e instanceof ParameterException) {
                 if (null != jc) {
                     System.err.println(jc.getParsedCommand() + ": " + e.getMessage());
                 }
-                printUsage(commandName, args, jc);
+                printUsage(jc);
             } else {
                 e.printStackTrace();
             }
@@ -96,18 +96,11 @@ public class Damascus {
     /**
      * Print Usage
      *
-     * @param commandName
-     * @param args
      * @param jc
      */
-    protected void printUsage(String commandName, String[] args, JCommander jc) {
-        if (null != commandName && 1 <= args.length) {
-            commandName = args[0];
-            jc.usage(commandName);
-        } else {
-            System.out.println("Version : " + VERSION);
-            jc.usage();
-        }
+    protected void printUsage(JCommander jc) {
+        System.out.println("Version : " + VERSION);
+        jc.usage();
     }
 
     /**
@@ -202,7 +195,7 @@ public class Damascus {
                 Class<?> throwableClass = e.getClass();
 
                 System.err.println("Exception thrown while loading services." + System.lineSeparator() + "Exception: "
-                                       + throwableClass.getName() + ": " + e.getMessage() + System.lineSeparator());
+                    + throwableClass.getName() + ": " + e.getMessage() + System.lineSeparator());
 
                 Throwable cause = e.getCause();
 

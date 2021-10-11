@@ -5,16 +5,20 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
-        java: [1.8]
+        java: [8]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-      - uses: eskatos/gradle-command-action@v1
+          distribution: 'adopt'
+          cache: gradle
+      - name: run test
+        uses: gradle/gradle-build-action@v2
         with:
-          arguments: check
+          gradle-version: 7.2
+          arguments: test
       - name: Generate Coveralls Test Report
         run: ./gradlew jacocoTestReport coveralls
         env:
@@ -22,5 +26,4 @@ jobs:
           CI_NAME: Github Actions
           CI_BRANCH: ${{github.ref}}
           CI_PULL_REQUEST: ${{github.event.pull_request.html_url}}
-
           

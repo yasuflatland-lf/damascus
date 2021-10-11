@@ -1,18 +1,13 @@
 package com.liferay.damascus.cli.json
 
-import com.beust.jcommander.ParameterException
+
 import com.beust.jcommander.internal.Lists
 import com.liferay.damascus.cli.CreateCommand
-import com.liferay.damascus.cli.Damascus
 import com.liferay.damascus.cli.common.CommonUtil
 import com.liferay.damascus.cli.common.DamascusProps
-import com.liferay.damascus.cli.common.JsonUtil
 import com.liferay.damascus.cli.common.TemplateUtil
 import com.liferay.damascus.cli.test.tools.TestUtils
-import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.filefilter.RegexFileFilter
-import org.apache.commons.io.filefilter.TrueFileFilter
 import spock.lang.Specification
 import spock.lang.Unroll
 

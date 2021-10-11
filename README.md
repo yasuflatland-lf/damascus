@@ -40,7 +40,7 @@ curl https://raw.githubusercontent.com/yasuflatland-lf/damascus/master/installer
 
 **Windows**
 1. [Download jpm](https://raw.githubusercontent.com/jpm4j/jpm4j.installers/master/dist/jpm-setup.exe) and install.
-2. Install damascus.jar with jpm as follows. ```jpm install https://github.com/yasuflatland-lf/damascus/raw/master/latest/damascus.jar```
+2. Install damascus-all.jar with jpm as follows. ```jpm install https://github.com/yasuflatland-lf/damascus/raw/master/latest/damascus-all.jar```
 
 ### How to update
 1. Run jpm remove damascus to uninstall damascus.
@@ -50,15 +50,15 @@ curl https://raw.githubusercontent.com/yasuflatland-lf/damascus/master/installer
 ### Getting started
 Let's make a Todo app with damascus
 1. Create a Liferay workspace with Blade cli or Liferay IDE / Liferay Developer Studio. For more details, please see [this document](https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-1/blade-cli).
-2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus init -c Todo -p com.liferay.sb.test -v 7.2```
+2. After creating Liferay workspace, navigate to under ```modules``` folder and run ```damascus init -c Todo -p com.liferay.sb.test -v 7.3```
 3. Navigate to ```todo``` folder. You'll see ```base.json``` file is created. For detailed configuration, please see [the official documentation](https://yasuflatland-lf.github.io/damascus-doc/). Just for demonstration now, we'll create a scaffolding as it is.
 4. Type ```damascus create``` and damascus will create a scaffolding service and portlet according to the base.json file.
 5. Start up your Liferay server and in the ```Todo``` folder, type ```blade deploy```. Blade will run properly and service and portlet will be deployed.
 
 ### How to compile Damascus on your own?
 1. Clone this repository to your local. Please make sure you've already installed Gradle 3.0 or above and jpm.
-2. At the root directory, run ```./gradlew assemble``` then ```damascus.jar``` will be created under ```/build/libs/``` directory.
-3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install your jar with ```jpm install ./damascus.jar```.
+2. At the root directory, run ```./gradlew shadowJar``` then ```damascus-all.jar``` will be created under ```/build/libs/``` directory.
+3. If you've already installed damascus, uninstall it first with ```jpm remove damascus```. Then install your jar with ```jpm install ./damascus-all.jar```.
 
 ### Proxy settings
 Please see more detailed settings [here](https://github.com/yasuflatland-lf/damascus/wiki/4.-Proxy-settings)
