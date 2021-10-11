@@ -18,7 +18,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 7.2
-          arguments: build
+          arguments: test
       - name: Generate Coveralls Test Report
         run: ./gradlew jacocoTestReport coveralls
         env:
